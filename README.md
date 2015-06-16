@@ -22,4 +22,4 @@ It's annoying that this is neccesary, but that's the way things are with cross-d
 
 See https://github.com/davidjbradshaw/iframe-resizer for more details on that.
 
-See the docs directory for instructions on how to run this app locally and in heroku.
+### See the docs directory for instructions on how to run this app locally and in heroku.
