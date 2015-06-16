@@ -1,8 +1,8 @@
 
 ### A Harvard-specific Django LTI app 
-## that allows course authors to insert a "course information" widget
-## containing live-updated course information from the registrar into 
-## any page with a rich content editor.
+# that allows course authors to insert a "course information" widget
+# containing live-updated course information from the registrar into 
+# any page with a rich content editor.
 
 It replaces functionality formerly provided by isites.
 
