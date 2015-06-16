@@ -65,12 +65,13 @@
     <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/><span>{{ field.value }}</span></div>
 {% endfor %}
 
-    <input type="hidden" id="widget_url" name="url" value="" />
-    <input type="hidden" name="width" value="100%" />
-	<input type="hidden" id="widget_height" name="height" value="" />
-    <input type="hidden" name="title" value="Course Info" />
-    <input type="hidden" name="return_type" value="iframe" />
-    <input type="submit" name="insert" value="insert" />
+    <input type="hidden" id="widget_url"    name="url"         value=""            />
+    <input type="hidden"                    name="width"       value="100%"        />
+	<input type="hidden" id="widget_height" name="height"      value=""            />
+    <input type="hidden"                    name="title"       value="Course Info" />
+    <input type="hidden"                    name="return_type" value="iframe"      />
+
+    <input type="submit"                    name="insert"      value="insert"      />
 </form>
 
 {% endblock %}
