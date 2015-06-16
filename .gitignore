@@ -35,3 +35,5 @@ tmp
 .env_heroku
 *.sqlite3
 static_root
+
+dce_venv
