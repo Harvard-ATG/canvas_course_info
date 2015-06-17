@@ -36,4 +36,4 @@ tmp
 *.sqlite3
 static_root
 
-dce_venv
+dcei_venv
