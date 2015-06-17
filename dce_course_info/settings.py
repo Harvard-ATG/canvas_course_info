@@ -68,9 +68,9 @@ TEMPLATE_DIRS = (
 
 LTI_APPS = {
     'course_info': {
-        'id': 'course_info',
+        'id': 'course_info_import',#TODO: check damages. Changed from course_info
         'name': 'Course Info',
-        'menu_title': 'Course Info',
+        'menu_title': 'Import Course Info', #changed from 'Course Info'
         'extensions_provider': 'canvas.instructure.com',
         'description': "Insert live updating course info widget into canvas pages.",
         'privacy_level': 'public',
