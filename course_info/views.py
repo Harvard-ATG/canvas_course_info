@@ -112,3 +112,15 @@ def editor(request):
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
     return render(request, 'course_info/editor.html',course_context)
 
+
+def oembed_handler(request): #TODO
+    #this is the view that is going to handle the huge url Canvas throws at us,
+    #returning html for the Canvas Rich Text Editor
+
+    #for now this is identical to widget(request)
+    course_instance_id = request.GET.get('course_instance_id')
+    return render(request, 'course_info/widget.html',
+                  __course_context(request,course_instance_id,
+                    request.GET.getlist('f')))
+    # return HttpResponse(keys.to_xml(), content_type='text/xml')
+    #return render(request, 'course_info/widget.html', course_context)
