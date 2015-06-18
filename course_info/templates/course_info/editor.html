@@ -5,6 +5,7 @@
 
 {% block extra_js %}
 
+{% comment %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
             $('#widget_edit_form').submit(function (event) {
@@ -47,11 +48,13 @@
             }
         });
     </script>
+{% endcomment %}
+
 {% endblock %}
 
 {% block content %}
 
-    {#    TODO: edit text to mirror functionality#}
+    {#    TODO: edit text to mirror functionality #}
     <h4>Please select the fields you wish to display from the list below and hit "insert" to include a
         live-updating course information widget in this page.</h4>
 
@@ -60,28 +63,26 @@
     <br/>
     <div id="widget_edit_form_container" class="container-fluid">
 
-    <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
+        <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
-        {% for field in fields %}
-            <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}"
-                        checked/><span>{{ field.value }}</span></div><br/>
-        {% endfor %}
+            {# TODO: figure out what we actually want in the popup #}
+            {% for field in fields %}
+                <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}"
+                            checked/><span>{{ field.value }}</span></div><br/>
+            {% endfor %}
 
-        {# This was originally implemented with a javascript hijacking#}
-{#        <input type="hidden" id="widget_url" name="url" value="localhost:8000/course_info/oembed"/>#}
-        <input type="hidden" name="return_type" value="oembed"/>
-{#        <input type="hidden" name="endpoint" value="localhost:8000/course_info/oembed"/>#}
-        {# working API #} <input type="hidden" name="endpoint" value="http://soundcloud.com/oembed"/>
-        {# working oembed URL #} <input type="hidden" name="url" value="http://soundcloud.com/kygo"/>
-
+            {# This was originally implemented with a javascript hijacking#}
+            {# need a live site, or else canvas won't be able to process the oembed request#}
+            {# that's why the soundcloud request worked and ours got no response #}
+            {# TODO: will likely need to dynamically insert correct URLs #}
+            {# with jscript/embedded py as the info goes out #}
+            <input type="hidden" id="widget_url" name="url" value="TODO:URL"/>
+            <input type="hidden" name="return_type" value="oembed"/>
+            <input type="hidden" name="endpoint" value="TODO:URL"/>
+            {#         working API  <input type="hidden" name="endpoint" value="http://soundcloud.com/oembed"/> #}
+            {#         working oembed URL  <input type="hidden" name="url" value="http://soundcloud.com/kygo"/> #}
+            <br/>
+            <input type="submit" class="btn btn-default" name="insert" value="insert"/>
+        </form>
         <br/>
-
-        {#        <input type="hidden"                    name="width"       value="100%"        />#}
-        {#        <input type="hidden" id="widget_height" name="height"      value=""            />#}
-        {#        <input type="hidden"                    name="title"       value="Course Info" />#}
-        {#        <input type="hidden"                    name="return_type" value="iframe"      />#}
-
-        <input type="submit" class="btn btn-default" name="insert" value="insert"/>
-    </form>
-    <br/>
 {% endblock %}
