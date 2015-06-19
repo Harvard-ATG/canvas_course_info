@@ -10,7 +10,7 @@
         $(document).ready(function () {
             //using .ready() for now
             //TODO: use .onSubmit()
-            $('#widget_edit_form').ready(function (event) {
+            $('#widget_edit_form').onSubmit(function (event) {
                 var p = $(location).attr('protocol');
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?course_instance_id={{ course_instance_id }}';
@@ -70,8 +70,11 @@
 
             {# TODO: figure out what we actually want in the popup #}
             {% for field in fields %}
-                <div><input type="hidden" id="{{ field.key }}" type="checkbox" value="{{ field.key }}"
-                            checked/><span type="hidden">{{ field.value }}</span></div><br/>
+                <div>
+                    <input type="hidden" id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/>
+{#                    <span type="hidden">{{ field.value }}</span>#}
+                </div>
+                <br/>
             {% endfor %}
 
             {# TODO: will likely need to dynamically insert correct URLs #}
