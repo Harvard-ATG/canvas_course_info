@@ -121,12 +121,26 @@ def oembed_handler(request):  # TODO
     # this is the view that is going to handle the huge url Canvas throws at us,
     # returning oembed JSON or XML for the Canvas Rich Text Editor
 
-    print("HEY WHAT'S UP HELLO")
 
-    htmlstring = "<div>Hey What's up Hello" \
+    print("OEMBED CALL")
+
+    dynamic_string = "error"
+    dynamic_var = 2 + 3
+
+
+
+    try:
+        course_instance_id = request.GET.get('course_instance_id')
+        dynamic_string = render(request, 'course_info/widget.html',__course_context(request, course_instance_id, request.GET.getlist('f')))
+        # dynamic_string = __mungeFields(dynamic_string)
+    except "error":
+        print("Dynamic String Error")
+
+    html_string = "<div>Hey What's up Hello" \
                     "<h1>Course Info</h1>" \
                     "<br/>" \
-                    "<p>TODO: Dynamic stuff</p>" \
+                    "<p>" + str(dynamic_var) + "</p>" \
+                    "<p>" +  str(dynamic_string) + "</p>" \
                  "</div>" \
 
 
@@ -141,7 +155,7 @@ def oembed_handler(request):  # TODO
         "version": "1.0",
         "author_url": "http://www.TODO.com",
         "type": "rich",
-        "html": htmlstring,
+        "html": html_string,
         "width": 550
     })
     return HttpResponse(response, content_type="application/json")
