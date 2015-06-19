@@ -133,9 +133,14 @@ def oembed_handler(request):  # TODO
     #THIS WORKS!!!
     #NOW TO GENERATE IT FROM ISITES.
     response = json.JSONEncoder().encode({
-        "cache_age": "3153600000", "url": "http://www.example.com", "height": "null",
-        "provider_url": "http://www.example.com", "provider_name": "Yep", "author_name": "Ye", "version": "1.0",
-        "author_url": "http://www.example.com", "type": "rich",
+        "url": "http://www.TODO.com",
+        "height": "null",
+        "provider_url": "http://www.TODO.com",
+        "provider_name": "TODO",
+        "author_name": "TODO",
+        "version": "1.0",
+        "author_url": "http://www.TODO.com",
+        "type": "rich",
         "html": htmlstring,
         "width": 550
     })
