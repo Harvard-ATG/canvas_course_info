@@ -119,17 +119,9 @@ def editor(request):
 
 def oembed_handler(request):  # TODO
     # this is the view that is going to handle the huge url Canvas throws at us,
-    # returning html for the Canvas Rich Text Editor
+    # returning oembed JSON or XML for the Canvas Rich Text Editor
 
     print("HEY WHAT'S UP HELLO")
-
-    # response = {
-    #     course_instance_id : request.GET.get('course_instance_id'),
-    #
-    # }
-    # course_data = {
-    #     request.GET.get('course_instance_id')
-    # }
 
     # response = json.JSONEncoder().encode(
     #     # {"foo": ["bar", "baz"]}
@@ -153,9 +145,9 @@ def oembed_handler(request):  # TODO
     }
 
     response = json.JSONEncoder().encode(data)
-    return HttpResponse(response, content_type="application/json")
+    # return HttpResponse(response, content_type="application/json")
 
-    # return render(request, 'course_info/example.json')
+    return render(request, 'course_info/example.json')
 
     # for now this is identical to widget(request)
     # course_instance_id = request.GET.get('course_instance_id')
