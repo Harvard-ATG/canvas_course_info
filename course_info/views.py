@@ -109,7 +109,7 @@ def editor(request):
         course_instance_id = settings.COURSE_INSTANCE_ID
     else:
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-    print("course_instance_id: " + course_instance_id)
+    #print("course_instance_id: " + course_instance_id)
     keys = ['title', 'course.registrar_code_display', 'term.display_name', 'instructors_display', 'location',
             'meeting_time', 'description', 'notes']
     course_context = __course_context(request, course_instance_id, keys)
@@ -123,35 +123,40 @@ def oembed_handler(request):  # TODO
     # returning oembed JSON or XML for the Canvas Rich Text Editor
 
 
-    print("OEMBED CALL")
+    #print("OEMBED CALL")
 
-    dynamic_string = "error"
     dynamic_var = 2 + 3
 
-    # TODO: Cite if it works
+    # http://stackoverflow.com/a/2077410
+    #TODO: see if we actually need this. Python's already pretty good with strings
     def escape(t):
-        #  .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        return (t
-            .replace('"', "'")
-            )
+        # if we need more: .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return (t.replace('"', "'"))
 
-    try:
-        course_instance_id = request.GET.get('course_instance_id')
-        dynamic_string = render(request, 'course_info/widget.html',__course_context(request, course_instance_id, request.GET.getlist('f')))
+    request
 
-    except "error":
-        print("Dynamic String Error")
+    course_instance_id = request.GET.get('course_instance_id')
 
-    html_string = "<div>Hey What's up Hello" \
-                    "<h1>Course Info</h1>" \
-                    "<br/>" \
-                    "<p>" + str(dynamic_var) + "</p>" \
-                    "<p>" +  escape(str(dynamic_string)) + "</p>" \
-                 "</div>" \
+    #this is where we need to be specific.
+    # we want the scripts but not the head tags...
+    #could use request.body
+    dynamic_string = render(request.path, 'course_info/widget.html',__course_context(request, course_instance_id, request.GET.getlist('f')))
 
+    #print(escape(str(dynamic_string)))
+    print(request.body)
 
-    #THIS WORKS!!!
-    #NOW TO GENERATE IT FROM ISITES.
+    # why the hell does this work:
+    # http://localhost:8000/course_info/oembed&url=http://localhost:8000/course_info/widget.html?course_instance_id=312976&amp;f=title&amp;f=course.registrar_code_display&amp;f=term.display_name&amp;f=instructors_display&amp;f=location&amp;f=meeting_time&amp;f=description&amp;f=notes&page_view_id=414bbdab-b559-41e8-a712-1370d47c5a24
+    # but
+
+    html_string = \
+        "<div>Hey What's up Hello" \
+            "<h1>Course Info</h1>" \
+            "<br/>" \
+            "<p>" + str(dynamic_var) + "</p>" \
+            "<div id='course_info_embed'>" +  escape(str(dynamic_string)) + "</div>" \
+        "</div>" \
+
     response = json.JSONEncoder().encode({
         "url": "http://www.TODO.com",
         "height": "null",
@@ -165,65 +170,3 @@ def oembed_handler(request):  # TODO
         "width": 550
     })
     return HttpResponse(response, content_type="application/json")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # course_instance_id = request.GET.get('course_instance_id')
-    # course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    # print(course_info)
-    # return HttpResponse("<p>Look under the Hood, brah</p>", content_type="text/xml")
-
-
-    # return render(request, "course_info/dyn.xml")
-
-
-    # return(widget(request))
-
-    # # for now this is identical to widget(request)
-    # course_instance_id = request.GET.get('course_instance_id')
-    # # return render(request.GET.get('url'), 'course_info/widget.html',
-    # #               __course_context(request,course_instance_id,
-    # #                 request.GET.getlist('f')))
-    # #return render(request, 'course_info/widget.html', course_context)
-    #
-
-    # course_instance_id = request.GET.get('course_instance_id')
-    # render(request, 'course_info/widget.html', __course_context(request, course_instance_id, request.GET.getlist('f')))
-    #
-    # return HttpResponse(course_html, content_type="text/html")
-
-    # data = {
-    #     "cache_age": "3153600000",
-    #     "url": "https:\/\/twitter.com\/jack\/statuses\/20",
-    #     "height": "null",
-    #     "provider_url": "https:\/\/twitter.com",
-    #     "provider_name": "Twitter",
-    #     "author_name": "Jack",
-    #     "version": "1.0",
-    #     "author_url": "https:\/\/twitter.com\/jack",
-    #     "type": "rich",
-    #     "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
-    #     "width": 550
-    # }
-    #
-    #
-    #
-    # response = json.JSONEncoder().encode(data)
-    # return HttpResponse(response, content_type="application/json")
-
-    # return render(request, 'course_info/example.json')
