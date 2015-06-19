@@ -16,8 +16,7 @@
                         function () {
                             widget_url += '&amp;f=' + $(this).val();
                         });
-                    console.log($('#widget_url'))
-                $('#widget_url').val(widget_url);
+                $('#url').val(widget_url);
 
                 var widget_height = estimateHeight();
                 if (widget_height > 100 && widget_height < 1000) {
@@ -81,7 +80,7 @@
             <input type="hidden" name="return_type" value="oembed"/>
             {#  <input type="hidden" name="endpoint" value="TODO:URL"/>#}
             <input type="hidden" name="endpoint" value="http://ec2-52-26-169-34.us-west-2.compute.amazonaws.com:8000/course_info/oembed"/>
-            <input type="hidden" name="widget_url" value=""/>
+            <input type="hidden" name="url" value=""/>
             <br/>
             <input type="submit" class="btn btn-default" name="insert" value="insert"/>
         </form>
