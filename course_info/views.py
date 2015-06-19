@@ -147,17 +147,20 @@ def oembed_handler(request):  # TODO
 
     # why the hell does this work:
     # http://localhost:8000/course_info/oembed&url=http://localhost:8000/course_info/widget.html?course_instance_id=312976&amp;f=title&amp;f=course.registrar_code_display&amp;f=term.display_name&amp;f=instructors_display&amp;f=location&amp;f=meeting_time&amp;f=description&amp;f=notes&page_view_id=414bbdab-b559-41e8-a712-1370d47c5a24
-    # but
+    # but you get nothing in the table when it comes from Canvas?
+    # I think it has something to do with Canvas passing widget.html a more complicated request from its own servers
 
-    #very sketch hardcoded debugging implementation of removing the doctype flag.
-    html_string = str(dynamic_string)[65:]
+    html_string = str(dynamic_string)
     print(html_string)
-    # html_string = \
-    #     "<div>Hey What's up Hello" \
-    #         "<h1>Course Info</h1>" \
-    #         "<br/>" \
-    #         "<div id='course_info_embed'>" +  escape(str(dynamic_string)) + "</div>" \
-    #     "</div>" \
+
+    demonstration_data = 30 << 20
+
+    demonstration_string = \
+        "<div>Hey What's up Hello" \
+            "<h1>Course Info</h1>" \
+            "<br/>" \
+            "<div id='course_info_embed'>" + str(demonstration_data) + "</div>" \
+        "</div>" \
 
     response = json.JSONEncoder().encode({
         "url": "http://www.TODO.com",
@@ -168,7 +171,7 @@ def oembed_handler(request):  # TODO
         "version": "1.0",
         "author_url": "http://www.TODO.com",
         "type": "rich",
-        "html": html_string,
+        "html": demonstration_string + html_string,
         "width": 550
     })
     return HttpResponse(response, content_type="application/json")
