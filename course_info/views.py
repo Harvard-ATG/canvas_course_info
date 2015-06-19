@@ -123,8 +123,8 @@ def oembed_handler(request):  # TODO
 
     print("HEY WHAT'S UP HELLO")
 
-    course_instance_id = request.GET.get('course_instance_id')
-    course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
+    #course_instance_id = request.GET.get('course_instance_id')
+    #course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
     #print(course_info)
     #return HttpResponse("<p>Look under the Hood, brah</p>", content_type="text/html")
     return(widget(request))
