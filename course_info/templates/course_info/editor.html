@@ -9,17 +9,19 @@
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
             //using .ready() for now
-            //TODO: use .onSubmit()
-            $('#widget_edit_form').ready(function (event) {
+            //TODO: use .submit()
+            $('#widget_edit_form').submit(function (event) {
                 var p = $(location).attr('protocol');
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?course_instance_id={{ course_instance_id }}';
-                $('#widget_edit_form input:checkbox').each(
-                        function () {
+                //TODO: bugfix - for some reason this isn't working.
+                $('#widget_edit_form input:checkbox:checked').each(
+                        function(){
                             widget_url += '&amp;f=' + $(this).val();
                         });
                 $('#widget_url').val(widget_url);
-                console.log($('#widget_url'));
+                console.log($('#widget_url').val());
+                console.log("just logged the widget url element")
 
                 var widget_height = estimateHeight();
                 if (widget_height > 100 && widget_height < 1000) {
@@ -27,7 +29,7 @@
                 }
             });
 
-            $("#widget_edit_form_container input").on("change", function (e) {
+            $("#widget_edit_form_container input").on("change", function(e) {
                 console.log("widget height estimate changed to:", estimateHeight());
             });
 
@@ -39,7 +41,7 @@
                 var $container = $('<div></div>');
                 var height;
 
-                $checked.each(function (idx) {
+                $checked.each(function(idx) {
                     var $field = $(this).next().clone().wrap("<div></div>").parent();
                     $container.append($field);
                 });
@@ -57,7 +59,7 @@
 
 {% block content %}
 
-    {#    TODO: edit text to mirror functionality #}
+        TODO: edit text to mirror functionality
     <h4>Please select the fields you wish to display from the list below and hit "insert" to include a
         live-updating course information widget in this page.</h4>
 
@@ -68,16 +70,16 @@
 
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
-            {# TODO: figure out what we actually want in the popup #}
+             TODO: figure out what we actually want in the popup
             {% for field in fields %}
                 <div>
-                    <input type="hidden" id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/>
-{#                    <span type="hidden">{{ field.value }}</span>#}
+                    <input id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/>
+                    <span>{{ field.value }}</span>
                 </div>
                 <br/>
             {% endfor %}
 
-            {# TODO: will likely need to dynamically insert correct URLs #}
+             TODO: will likely need to dynamically insert correct URLs
             <input type="hidden" name="return_type" value="oembed"/>
             <input type="hidden" name="endpoint" value="http://ec2-52-26-169-34.us-west-2.compute.amazonaws.com:8000/course_info/oembed"/>
             <input type="hidden" id="widget_url" name="url" value=""/>
@@ -86,3 +88,30 @@
         </form>
         <br/>
 {% endblock %}
+
+{% comment %}
+
+    <p>Please select the fields you wish to display from the list below and hit "insert" to include a
+        live-updating course information widget in this page.</p>
+
+    <p>The information in this widget is provided by the registrar's office.
+        If any of it is outdated or incorrect, please contact the catalog coordinator in your department.</p>
+
+    <div id="widget_edit_form_container" class="container-fluid">
+
+    <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
+
+        {% for field in fields  %}
+            <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/><span>{{ field.value }}</span></div>
+        {% endfor %}
+
+        <input type="hidden" id="widget_url"    name="url"         value=""            />
+        <input type="hidden"                    name="width"       value="100%"        />
+        <input type="hidden" id="widget_height" name="height"      value=""            />
+        <input type="hidden"                    name="title"       value="Course Info" />
+        <input type="hidden"                    name="return_type" value="iframe"      />
+
+        <input type="submit"                    name="insert"      value="insert"      />
+    </form>
+
+{% endcomment %}
