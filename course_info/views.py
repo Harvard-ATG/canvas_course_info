@@ -126,10 +126,16 @@ def oembed_handler(request):  # TODO
     #course_instance_id = request.GET.get('course_instance_id')
     #course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
     #print(course_info)
-    #return HttpResponse("<p>Look under the Hood, brah</p>", content_type="text/html")
-    return(widget(request))
+    return HttpResponse("<p>Look under the Hood, brah</p>", content_type="text/html")
+    #return(widget(request))
 
-
+    # # for now this is identical to widget(request)
+    # course_instance_id = request.GET.get('course_instance_id')
+    # # return render(request.GET.get('url'), 'course_info/widget.html',
+    # #               __course_context(request,course_instance_id,
+    # #                 request.GET.getlist('f')))
+    # #return render(request, 'course_info/widget.html', course_context)
+    #
 
 
 
@@ -162,9 +168,4 @@ def oembed_handler(request):  # TODO
 
     #return render(request, 'course_info/widget.html')
 
-    # for now this is identical to widget(request)
-    # course_instance_id = request.GET.get('course_instance_id')
-    # return render(request, 'course_info/widget.html',
-    #               __course_context(request,course_instance_id,
-    #                 request.GET.getlist('f')))
-    # return render(request, 'course_info/widget.html', course_context)
+
