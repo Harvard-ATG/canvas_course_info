@@ -123,6 +123,9 @@ def oembed_handler(request):  # TODO
 
     print("HEY WHAT'S UP HELLO")
 
+    htmlstring = "<div>Hey What's up Hello</div>"
+
+
     #THIS WORKS!!!
     #NOW TO GENERATE IT FROM ISITES.
     response = json.JSONEncoder().encode({
@@ -130,7 +133,7 @@ def oembed_handler(request):  # TODO
         "provider_url": "https://twitter.com", "provider_name": "Twitter", "author_name": "Jack", "version": "1.0",
         "author_url": "https://twitter.com/jack", "type": "rich",
         #"html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
-        "html": '<blockquote class="twitter-tweet"><p lang="en" dir="ltr">just setting up my twttr</p>- Jack (@jack) <a href="https://twitter.com/jack/status/20">March 21, 2006</a></blockquote>\n<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>',
+        "html": htmlstring,
         "width": 550
     })
     return HttpResponse(response, content_type="application/json")
