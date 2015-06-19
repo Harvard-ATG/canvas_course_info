@@ -140,22 +140,22 @@ def oembed_handler(request):  # TODO
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
     #could use request.body
-    dynamic_string = render(request.path, 'course_info/widget.html',__course_context(request, course_instance_id, request.GET.getlist('f')))
+    dynamic_string = render(request, 'course_info/widget.html', __course_context(request, course_instance_id, request.GET.getlist('f')))
 
     #print(escape(str(dynamic_string)))
-    print(request.body)
+    print(dynamic_string)
 
     # why the hell does this work:
     # http://localhost:8000/course_info/oembed&url=http://localhost:8000/course_info/widget.html?course_instance_id=312976&amp;f=title&amp;f=course.registrar_code_display&amp;f=term.display_name&amp;f=instructors_display&amp;f=location&amp;f=meeting_time&amp;f=description&amp;f=notes&page_view_id=414bbdab-b559-41e8-a712-1370d47c5a24
     # but
 
-    html_string = \
-        "<div>Hey What's up Hello" \
-            "<h1>Course Info</h1>" \
-            "<br/>" \
-            "<p>" + str(dynamic_var) + "</p>" \
-            "<div id='course_info_embed'>" +  escape(str(dynamic_string)) + "</div>" \
-        "</div>" \
+    html_string = dynamic_string
+    # html_string = \
+    #     "<div>Hey What's up Hello" \
+    #         "<h1>Course Info</h1>" \
+    #         "<br/>" \
+    #         "<div id='course_info_embed'>" +  escape(str(dynamic_string)) + "</div>" \
+    #     "</div>" \
 
     response = json.JSONEncoder().encode({
         "url": "http://www.TODO.com",
