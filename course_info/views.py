@@ -144,7 +144,13 @@ def oembed_handler(request):  # TODO
          "width": 550
     }
 
-    response = json.JSONEncoder().encode(data)
+    response = json.JSONEncoder().encode({
+        "cache_age": "3153600000", "url": "https:\/\/twitter.com\/jack\/statuses\/20", "height": "null",
+         "provider_url": "https:\/\/twitter.com", "provider_name": "Twitter", "author_name": "Jack", "version": "1.0",
+         "author_url": "https:\/\/twitter.com\/jack", "type": "rich",
+         "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
+         "width": 550
+    })
     return HttpResponse(response, content_type="application/json")
 
     # this needs to be live or canvas can't access it.
