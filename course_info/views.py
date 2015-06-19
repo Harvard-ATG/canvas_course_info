@@ -15,11 +15,10 @@ import json
 
 log = logging.getLogger(__name__)
 
+
 @require_GET
 def tool_config(request):
-
     app_config = settings.LTI_APPS['course_info']
-
 
     launch_url = request.build_absolute_uri(reverse('lti_launch'))
 
@@ -45,10 +44,11 @@ def tool_config(request):
         launch_url=launch_url,
         secure_launch_url=launch_url,
         extensions=extensions,
-        description = app_config['description']
+        description=app_config['description']
     )
 
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
+
 
 @login_required
 @require_POST
@@ -57,39 +57,40 @@ def lti_launch(request):
     return editor(request)
 
 
-def __course_context(request,course_instance_id,keys):
-    key2class={
-            'title': 'course_info_textHeader1',
-            'course.registrar_code_display':'course_info_textHeader2',
-            'term.display_name':'course_info_textHeader2',
-            'instructors_display':'course_info_textHeader2',
-            'location':'course_info_textHeader2',
-            'meeting_time':'course_info_textHeader2'
+def __course_context(request, course_instance_id, keys):
+    key2class = {
+        'title': 'course_info_textHeader1',
+        'course.registrar_code_display': 'course_info_textHeader2',
+        'term.display_name': 'course_info_textHeader2',
+        'instructors_display': 'course_info_textHeader2',
+        'location': 'course_info_textHeader2',
+        'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    context = { 'fields':[], 'course_instance_id': course_instance_id}
-    for key in keys :
+    context = {'fields': [], 'course_instance_id': course_instance_id}
+    for key in keys:
         if '.' in key:
             keyparts = key.split('.')
-            field  = { 'key': key, 'value': course_info[keyparts[0]][keyparts[1]]}
-        else :
-            field  = { 'key': key, 'value': course_info[key]}
-        field['class']=''
-        if key in key2class :
-            field['class']= key2class[key]
+            field = {'key': key, 'value': course_info[keyparts[0]][keyparts[1]]}
+        else:
+            field = {'key': key, 'value': course_info[key]}
+        field['class'] = ''
+        if key in key2class:
+            field['class'] = key2class[key]
         context['fields'].append(field)
     context['fields'] = __mungeFields(context['fields'])
     return context
 
+
 def __mungeFields(fields):
-    for field in fields :
-        if field['key'] == 'notes' :
-            field['value']= '<b>Note:</b> ' + field['value']
-        elif field['key'] == 'location' :
+    for field in fields:
+        if field['key'] == 'notes':
+            field['value'] = '<b>Note:</b> ' + field['value']
+        elif field['key'] == 'location':
             field['value'] = '<b>Location:</b> ' + field['value']
-        elif field['key'] == 'meeting_time' :
+        elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
-        field['value'] = field['value'].replace('<br /> <br />','<br />')
+        field['value'] = field['value'].replace('<br /> <br />', '<br />')
     return fields
 
 
@@ -97,22 +98,23 @@ def __mungeFields(fields):
 def widget(request):
     course_instance_id = request.GET.get('course_instance_id')
     return render(request, 'course_info/widget.html',
-                  __course_context(request,course_instance_id,
-                    request.GET.getlist('f')))
+                  __course_context(request, course_instance_id,
+                                   request.GET.getlist('f')))
 
 
 def editor(request):
-    if settings.COURSE_INSTANCE_ID :
-        #course_instance_id = "312976"
+    if settings.COURSE_INSTANCE_ID:
+        # course_instance_id = "312976"
         course_instance_id = settings.COURSE_INSTANCE_ID
-    else :
+    else:
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
     print("course_instance_id: " + course_instance_id)
-    keys = ['title','course.registrar_code_display','term.display_name','instructors_display','location','meeting_time','description','notes']
-    course_context = __course_context(request,course_instance_id,keys)
-    #course_context['line_guestimate'] =keys*2
+    keys = ['title', 'course.registrar_code_display', 'term.display_name', 'instructors_display', 'location',
+            'meeting_time', 'description', 'notes']
+    course_context = __course_context(request, course_instance_id, keys)
+    # course_context['line_guestimate'] =keys*2
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
-    return render(request, 'course_info/editor.html',course_context)
+    return render(request, 'course_info/editor.html', course_context)
 
 
 def oembed_handler(request):  # TODO
@@ -137,24 +139,23 @@ def oembed_handler(request):  # TODO
     # return HttpResponse(response, content_type="application/json")
 
     data = {
-        "cache_age": "3153600000", "url": "https:\/\/twitter.com\/jack\/statuses\/20", "height": "null",
-         "provider_url": "https:\/\/twitter.com", "provider_name": "Twitter", "author_name": "Jack", "version": "1.0",
-         "author_url": "https:\/\/twitter.com\/jack", "type": "rich",
-         "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
-         "width": 550
+        "cache_age": "3153600000",
+        "url": "https:\/\/twitter.com\/jack\/statuses\/20",
+        "height": "null",
+        "provider_url": "https:\/\/twitter.com",
+        "provider_name": "Twitter",
+        "author_name": "Jack",
+        "version": "1.0",
+        "author_url": "https:\/\/twitter.com\/jack",
+        "type": "rich",
+        "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
+        "width": 550
     }
 
-    response = json.JSONEncoder().encode({
-        "cache_age": "3153600000", "url": "https:\/\/twitter.com\/jack\/statuses\/20", "height": "null",
-         "provider_url": "https:\/\/twitter.com", "provider_name": "Twitter", "author_name": "Jack", "version": "1.0",
-         "author_url": "https:\/\/twitter.com\/jack", "type": "rich",
-         "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
-         "width": 550
-    })
+    response = json.JSONEncoder().encode(data)
     return HttpResponse(response, content_type="application/json")
 
-    # this needs to be live or canvas can't access it.
-    #return render(request, 'course_info/example.json')
+    # return render(request, 'course_info/example.json')
 
     # for now this is identical to widget(request)
     # course_instance_id = request.GET.get('course_instance_id')
