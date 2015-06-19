@@ -136,8 +136,17 @@ def oembed_handler(request):  # TODO
     # )
     # return HttpResponse(response, content_type="application/json")
 
+    data = {
+        "Hey": [
+            "What's Up", "Hello"
+        ]
+    }
+
+    response = json.JSONEncoder().encode(data)
+    return HttpResponse(response, content_type="application/json")
+
     # this needs to be live or canvas can't access it.
-    return render(request, 'course_info/example.json')
+    #return render(request, 'course_info/example.json')
 
     # for now this is identical to widget(request)
     # course_instance_id = request.GET.get('course_instance_id')
