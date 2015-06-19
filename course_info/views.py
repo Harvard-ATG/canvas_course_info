@@ -149,7 +149,7 @@ def oembed_handler(request):  # TODO
     # http://localhost:8000/course_info/oembed&url=http://localhost:8000/course_info/widget.html?course_instance_id=312976&amp;f=title&amp;f=course.registrar_code_display&amp;f=term.display_name&amp;f=instructors_display&amp;f=location&amp;f=meeting_time&amp;f=description&amp;f=notes&page_view_id=414bbdab-b559-41e8-a712-1370d47c5a24
     # but
 
-    html_string = dynamic_string
+    html_string = str(dynamic_string)
     # html_string = \
     #     "<div>Hey What's up Hello" \
     #         "<h1>Course Info</h1>" \
