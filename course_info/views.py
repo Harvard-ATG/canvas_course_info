@@ -12,6 +12,7 @@ from dce_lti_py.tool_config import ToolConfig
 from icommons import ICommonsApi
 
 import json
+import cgi
 
 log = logging.getLogger(__name__)
 
@@ -127,12 +128,17 @@ def oembed_handler(request):  # TODO
     dynamic_string = "error"
     dynamic_var = 2 + 3
 
-
+    # TODO: Cite if it works
+    def escape(t):
+        #  .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+        return (t
+            .replace('"', "'")
+            )
 
     try:
         course_instance_id = request.GET.get('course_instance_id')
         dynamic_string = render(request, 'course_info/widget.html',__course_context(request, course_instance_id, request.GET.getlist('f')))
-        # dynamic_string = __mungeFields(dynamic_string)
+
     except "error":
         print("Dynamic String Error")
 
@@ -140,7 +146,7 @@ def oembed_handler(request):  # TODO
                     "<h1>Course Info</h1>" \
                     "<br/>" \
                     "<p>" + str(dynamic_var) + "</p>" \
-                    "<p>" +  str(dynamic_string) + "</p>" \
+                    "<p>" +  escape(str(dynamic_string)) + "</p>" \
                  "</div>" \
 
 
