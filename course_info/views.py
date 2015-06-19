@@ -127,7 +127,11 @@ def oembed_handler(request):  # TODO
     #course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
     #print(course_info)
     #return HttpResponse("<p>Look under the Hood, brah</p>", content_type="text/xml")
-    return render(request, "course_info/dyn.xml")
+
+
+    #return render(request, "course_info/dyn.xml")
+
+
     #return(widget(request))
 
     # # for now this is identical to widget(request)
@@ -137,11 +141,6 @@ def oembed_handler(request):  # TODO
     # #                 request.GET.getlist('f')))
     # #return render(request, 'course_info/widget.html', course_context)
     #
-
-
-
-
-
 
     # course_instance_id = request.GET.get('course_instance_id')
     # render(request, 'course_info/widget.html', __course_context(request, course_instance_id, request.GET.getlist('f')))
@@ -161,12 +160,21 @@ def oembed_handler(request):  # TODO
     #     "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
     #     "width": 550
     # }
-
-
-
-    #response = json.JSONEncoder().encode(data)
+    #
+    #
+    #
+    # response = json.JSONEncoder().encode(data)
     # return HttpResponse(response, content_type="application/json")
 
-    #return render(request, 'course_info/widget.html')
+    #return render(request, 'course_info/example.json')
 
+
+    response = json.JSONEncoder().encode({
+        "cache_age": "3153600000", "url": "https:\/\/twitter.com\/jack\/statuses\/20", "height": "null",
+         "provider_url": "https:\/\/twitter.com", "provider_name": "Twitter", "author_name": "Jack", "version": "1.0",
+         "author_url": "https:\/\/twitter.com\/jack", "type": "rich",
+         "html": "\u003Cblockquote class=\"twitter-tweet\"\u003E\u003Cp lang=\"en\" dir=\"ltr\"\u003Ejust setting up my twttr\u003C\/p\u003E&mdash; Jack (@jack) \u003Ca href=\"https:\/\/twitter.com\/jack\/status\/20\"\u003EMarch 21, 2006\u003C\/a\u003E\u003C\/blockquote\u003E\n\u003Cscript async src=\"\/\/platform.twitter.com\/widgets.js\" charset=\"utf-8\"\u003E\u003C\/script\u003E",
+         "width": 550
+    })
+    return HttpResponse(response, content_type="application/json")
 
