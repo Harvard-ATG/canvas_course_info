@@ -5,7 +5,7 @@
 
 {% block extra_js %}
 
-{#{% comment %}#}
+{% comment %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
             //using .ready() for now
@@ -51,7 +51,7 @@
             }
         });
     </script>
-{#{% endcomment %}#}
+{% endcomment %}
 
 {% endblock %}
 
@@ -69,10 +69,10 @@
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
             {# TODO: figure out what we actually want in the popup #}
-            {% for field in fields %}
-                <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}"
-                            checked/><span>{{ field.value }}</span></div><br/>
-            {% endfor %}
+{#            {% for field in fields %}#}
+{#                <div><input id="{{ field.key }}" type="checkbox" value="{{ field.key }}"#}
+{#                            checked/><span>{{ field.value }}</span></div><br/>#}
+{#            {% endfor %}#}
 
             {# This was originally implemented with a javascript hijacking#}
             {# need a live site, or else canvas won't be able to process the oembed request#}
