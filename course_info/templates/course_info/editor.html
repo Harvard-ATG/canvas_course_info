@@ -6,13 +6,11 @@
 {% block extra_js %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
-            //using .ready() for now
-            //TODO: use .submit()
-            $('#widget_edit_form').submit(function (event) {
+            $('#widget_edit_form').submit(function(event){
                 var p = $(location).attr('protocol');
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?course_instance_id={{ course_instance_id }}';
-                var endpoint_url = p + '//' + h + '/course_info/oembed'
+                var endpoint_url = p + '//' + h + '/course_info/oembed';
 
                 $('#widget_edit_form input:checkbox:checked').each(
                         function(){
@@ -20,10 +18,9 @@
                         });
 
                 $('#widget_url').val(widget_url);
-                console.log($('#widget_url').val());
-                console.log("just logged the widget url element")
 
-                $('#oembed_url').val(endpoint_url)
+                $('#oembed_url').val(endpoint_url);
+
                 var widget_height = estimateHeight();
                 if (widget_height > 100 && widget_height < 1000) {
                     $("#widget_height").val(widget_height);
@@ -67,13 +64,11 @@
 
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
-             TODO: figure out what we actually want in the popup
             {% for field in fields %}
                 <div>
                     <input id="{{ field.key }}" type="checkbox" value="{{ field.key }}" checked/>
                     <span>{{ field.value }}</span>
                 </div>
-                <br/>
             {% endfor %}
 
             <input type="hidden" name="return_type" value="oembed"/>
