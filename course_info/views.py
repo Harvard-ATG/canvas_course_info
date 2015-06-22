@@ -142,7 +142,7 @@ def oembed_handler(request):  # TODO
         # "author_name": "TODO",
         # "version": "1.0",
         # "author_url": "http://www.TODO.com",
-        # "type": "rich",
+        "type": "rich",
         # "width": 550
     })
     return HttpResponse(response, content_type="application/json")
