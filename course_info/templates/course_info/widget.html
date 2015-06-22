@@ -1,37 +1,9 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block extra_css %}
-{% endblock %}
-{% block extra_head %}
-    <base target="_blank">
-{% endblock %}
+{# it appears canvas strips all style and script elements when inserting from oEmbed. #}
+{# unfortunately this means we can't really format anything server-side #}
 
 {% block content %}
-    {# unfortunately this is going into canvas so we can't load local js/css without explicitly putting it in here #}
 
     <div id="course_info_container" class="container-fluid">
-    <div>hello</div>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-        <style>
-            td {
-                border-width: thin;
-                border-style: solid;
-                border-color: #dbdbdb;
-                padding: 5px;
-            }
-
-            .course_info_textHeader1 {
-                font-weight: bold;
-                font-size: 16px;
-            }
-
-            .course_info_textHeader2 {
-                font-weight: bold;
-                font-size: 13px;
-                font-color: red;
-            }
-        </style>
 
         <table border="0" cellpadding="0" cellspacing="5">
             <tbody>

@@ -80,13 +80,13 @@ def __course_context(request, course_instance_id, keys):
     context['fields'] = __mungeFields(context['fields'])
     return context
 
-
+#TODO: this is where we can sneak in some basic inline styles without Canvas sniping it.
 def __mungeFields(fields):
     for field in fields:
         if field['key'] == 'notes':
             field['value'] = '<b>Note:</b> ' + field['value']
         elif field['key'] == 'location':
-            field['value'] = '<b>Location:</b> ' + field['value']
+            field['value'] = '<style>#body{color:blue}<style><b>Location:</b> ' + field['value']
         elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
