@@ -156,7 +156,7 @@ def oembed_handler(request):  # TODO
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
     #could use request.body
-    dynamic_string = render(request, 'course_info/widget.html', course_info_context, requested_info) #__course_context(request, course_instance_id, requested_info))#request.GET.getlist('f')))
+    dynamic_string = render(request, 'course_info/widget.html', course_info_context) #__course_context(request, course_instance_id, requested_info))#request.GET.getlist('f')))
 
     #print(escape(str(dynamic_string)))
     #print(dynamic_string)
