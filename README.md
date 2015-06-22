@@ -18,12 +18,12 @@ You can insert links, videos, iFrames, and images rather easily. However
 inserting editable, custom, rich content such as blocks of generated HTML is a bit more involved.
 
 To do this you need to use/implement the oEmbed protocol.
-At its core, your launch app must send canvas three values (implemented as inputs here):
+At its core, your launch app must send canvas three values (implemented as inputs in this app):
 
 ```
-return_type = oembed
-endpoint = oembed_location (more on this in a bit)
-url = dynamic_url
+the return_type (which will be oembed)
+the endpoint: the oembed_location (more on this in a bit)
+the url: some dynamic query url
 ```
 
 the "url" could more aptly be named the "parameters" - what Canvas does is concatenate the url
@@ -43,7 +43,7 @@ A full oEmbed submission (to Canvas) would like the HTML below
 And the query Canvas would send out would be as follows:
 https://api.twitter.com/1/statuses/oembed.json?url=https://twitter.com/Jack/status/20
 
-Notice the insertion of "url=" here - the full url is included as a query parameter.
+Notice the insertion of "url="  --  the full url is included as a query parameter.
 For all intents and purposes, the fact that it's a url is irrelevant, though customary.
 
 The above example makes the steps for a developer to insert rich content into
