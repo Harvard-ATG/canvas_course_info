@@ -122,6 +122,7 @@ def editor(request):
 def oembed_handler(request):  # TODO
     # This view handles the huge url Canvas throws at us, reconciles it with iCommons,
     # and returns oEmbed JSON for the Canvas Rich Text Editor
+    # www.oembed.com
 
     url = request.GET.get('url')
     parsed_url = urlparse.urlparse(url)
@@ -132,17 +133,9 @@ def oembed_handler(request):  # TODO
 
     html_string = str(render(request, 'course_info/widget.html', course_info_context))
 
-    #This is the oEmbed Protocol
+    #Returning just enough oEmbed to satisfy Canvas
     response = json.JSONEncoder().encode({
         "html": html_string,
-        # "url": "http://www.TODO.com",
-        # "height": "null",
-        # "provider_url": "http://www.TODO.com",
-        # "provider_name": "TODO",
-        # "author_name": "TODO",
-        # "version": "1.0",
-        # "author_url": "http://www.TODO.com",
-        "type": "rich",
-        # "width": 550
+        "type": "",
     })
     return HttpResponse(response, content_type="application/json")
