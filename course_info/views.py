@@ -127,7 +127,7 @@ def oembed_handler(request):  # TODO
     course_instance_id = parsed_qs['course_instance_id'][0]
     course_info_context = __course_context(request, course_instance_id, requested_info)
 
-    html_string = str(render(request, 'course_info/widget.html', course_info_context))
+    html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type="none"))
 
     #Returning just enough oEmbed to satisfy Canvas
     response = json.JSONEncoder().encode({
