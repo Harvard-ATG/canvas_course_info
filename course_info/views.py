@@ -89,7 +89,8 @@ def __mungeFields(fields):
         elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
-    fields['style'] = "<style>testing testing hey what's up hello</style>"
+    #fields['style'] = ["<style>testing testing hey what's up hello</style>"]
+    print(fields)
     return fields
 
 
