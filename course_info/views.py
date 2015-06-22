@@ -136,7 +136,7 @@ def oembed_handler(request):  # TODO
 
     #request
 
-    course_instance_id_data = request.GET.get('course_instance_id')
+    #course_instance_id = request.GET.get('course_instance_id')
     url = request.GET.get('url')
 
     parsed_url = urlparse.urlparse(url)
@@ -144,12 +144,13 @@ def oembed_handler(request):  # TODO
 
     parsed_qs = urlparse.parse_qs(escape(parsed_url.query))
     requested_info = parsed_qs['f']
+    course_instance_id = parsed_qs['course_instance_id']
     print(requested_info)
 
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
     #could use request.body
-    dynamic_string = render(request, 'course_info/widget.html', __course_context(request, course_instance_id_data, requested_info))#request.GET.getlist('f')))
+    dynamic_string = render(request, 'course_info/widget.html', __course_context(request, course_instance_id, requested_info))#request.GET.getlist('f')))
 
     #print(escape(str(dynamic_string)))
     #print(dynamic_string)
