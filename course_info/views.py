@@ -128,9 +128,9 @@ def oembed_handler(request):  # TODO
     course_info_context = __course_context(request, course_instance_id, requested_info)
 
     # unfortunately the content-type is going to display because of the way the render function works
-    # hacky workaround is to remove the first 12 characters from the html_string. Sorry
-    html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type=""))
-    html_string = html_string[12:]
+    # hacky workaround is to remove the first 13 characters from the html_string. Sorry
+    html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type= " "))
+    html_string = html_string[13:]
 
     #Returning just enough oEmbed to satisfy Canvas
     response = json.JSONEncoder().encode({
