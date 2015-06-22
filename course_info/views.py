@@ -132,7 +132,7 @@ def oembed_handler(request):  # TODO
     #TODO: see if we actually need this. Python's already pretty good with strings
     def escape(t):
         # if we need more: .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        return (t.replace('"', "'"))
+        return (t.replace('"', "'")).replace("&", "&amp;")
 
     #request
 
@@ -142,7 +142,7 @@ def oembed_handler(request):  # TODO
     parsed_url = urlparse.urlparse(url)
     print(parsed_url)
 
-    parsed_qs = urlparse.parse_qs(parsed_url)
+    parsed_qs = urlparse.parse_qs(escape(parsed_url.query))
     requested_info = parsed_qs['f']
     print(requested_info)
 
