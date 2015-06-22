@@ -91,7 +91,7 @@ def __mungeFields(fields):
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
     #fields['style'] = ["<style>testing testing hey what's up hello</style>"]
     print(fields)
-    fields.append({'value': u'<style>#heywhatsuphellostyle{color:fetty}</style>', 'key': 'style', 'class': 'course_info_textHeader1'})
+    fields.append({'value': '<style>#heywhatsuphellostyle{color:fetty}</style>', 'key': 'style', 'class': 'course_info_textHeader1'})
     return fields
 
 
