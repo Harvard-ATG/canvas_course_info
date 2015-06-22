@@ -153,7 +153,7 @@ def oembed_handler(request):  # TODO
     html_string = str(dynamic_string)
     print(html_string)
 
-    demonstration_data = 30 << 20
+    demonstration_data = "<h2>" +  str(11 << 20) + "</h2>"
 
     demonstration_string = \
         "<div>Hey What's up Hello" \
@@ -163,6 +163,7 @@ def oembed_handler(request):  # TODO
         "</div>" \
 
     response = json.JSONEncoder().encode({
+        "html": demonstration_string + html_string,
         "url": "http://www.TODO.com",
         "height": "null",
         "provider_url": "http://www.TODO.com",
@@ -171,7 +172,6 @@ def oembed_handler(request):  # TODO
         "version": "1.0",
         "author_url": "http://www.TODO.com",
         "type": "rich",
-        "html": demonstration_string + html_string,
         "width": 550
     })
     return HttpResponse(response, content_type="application/json")
