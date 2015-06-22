@@ -8,10 +8,39 @@
 
 {% block content %}
 
+    <script type="text/javascript" charset="utf8">
+        /*
+        $(document).ready(function () {
+            var p = $(location).attr('protocol');
+            var h = $(location).attr('host');
+            //var css_url1 = p + '//' + h + '/static/bootstrap3/js/bootstrap.js';
+            var css_url1 = p + '//' + h + '/static/bootstrap3/css/bootstrap.css';
+            var css_url2 = p + '//' + h + '/static/css/course_info.css';
+        });
+
+        $("#widget_css1").href(css_url1);
+        $("#widget_css2").href(css_url2);
+        */
+
+        //no jQuery it would seem.
+        var stylesheet1 = document.getElementById("widget_css1");
+        var stylesheet2 = document.getElementById("widget_css2");
+
+        var l = window.location.host;
+        console.log(l.host);
+
+        var url1 = l + '/static/bootstrap3/css/bootstrap.css';
+        var url2 = l + '/static/css/course_info.css';
+
+        stylesheet1.setAttribute("href", url1);
+        stylesheet2.setAttribute("href", url2);
+
+    </script>
+
     {# trying to force in the styles#}
-    <script type="text/javascript" src="/static/bootstrap3/js/bootstrap.js"></script>
-    <link rel="stylesheet" href="/static/bootstrap3/css/bootstrap.css">
-    <link rel="stylesheet" href="/static/css/course_info.css">
+{#    <script id="widget_js" type="text/javascript" src=""></script>#}
+    <link id="widget_css1" rel="stylesheet" href="">
+    <link id="widget_css2" rel="stylesheet" href="">
 
     <div id="course_info_container" class="container-fluid">
 
