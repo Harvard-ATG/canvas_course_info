@@ -18,7 +18,7 @@ You can insert links, videos, iFrames, and images rather easily. However
 inserting editable, custom, rich content such as blocks of generated HTML is a bit more involved.
 
 To do this you need to use/implement the oEmbed protocol.
-At its core, your launch app must send canvas three values (implemented as inputs in this app):
+At its core, your launch app must send Canvas three values (implemented as inputs in this app):
 
 ```
 the return_type (which will be oembed)
@@ -31,16 +31,16 @@ onto the endpoint, and then send that request out from their servers. This means
 **you must have a live server to develop with oEmbed.**
 
 Using another site's oEmbed API is rather straightforward - they've implemented it.
-Just insert their endpoint (designated oembed path, for example: http://www.twitter.com/oembed)
+Just insert their endpoint (the designated oembed path -- for example: http://www.twitter.com/oembed)
 and the desired query url (for example http://www.twitter.com/Jack/status/20)
 
-A full oEmbed submission (to Canvas) would like the HTML below
+A full oEmbed submission setup (to Canvas, from Twitter, through your app) would look like the HTML below:
 
-    <input type="hidden" name="return_type" value="oembed"/>
-    <input type="hidden" name="endpoint" value="https://api.twitter.com/1/statuses/oembed.json?"/>
-    <input type="hidden" name="url" value="https://twitter.com/Jack/status/20"/>
+    <input type="hidden"   name="return_type"  value="oembed"/>
+    <input type="hidden"   name="endpoint"     value="https://api.twitter.com/1/statuses/oembed.json?"/>
+    <input type="hidden"   name="url"          value="https://twitter.com/Jack/status/20"/>
 
-And the query Canvas would send out would be as follows:
+The query Canvas would send out after it recieved those inputs would be as follows:
 https://api.twitter.com/1/statuses/oembed.json?url=https://twitter.com/Jack/status/20
 
 Notice the insertion of "url="  --  the full url is included as a query parameter.
@@ -49,12 +49,12 @@ For all intents and purposes, the fact that it's a url is irrelevant, though cus
 The above example makes the steps for a developer to insert rich content into
 Canvas' editor somewhat clearer. Here's what it boils down to:
 
-You'll need an LTI launch, which sends canvas to the
+You'll need an LTI launch, which sends Canvas to the
 'endpoint' path, with the 'url' parameter. This endpoint path should be a view that you
 have programmed to respond to such a request.
 oEmbed must return either XML or JSON, with "type" and "html" objects.
 
-For example, the following oEmbed-like JSON could be sent back to canvas from your Django view:
+For example, the following oEmbed-like JSON could be sent back to Canvas from your Django view:
 
 ```python
 response_json = json.JSONEncoder().encode({
