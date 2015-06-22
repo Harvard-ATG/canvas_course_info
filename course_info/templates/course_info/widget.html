@@ -6,33 +6,12 @@
     <base target="_blank">
 {% endblock %}
 
-{% block extra_js %}
-
-    <script src="{% static 'js/iframeResizer.contentWindow.js' %}"></script>
-
-
-    <script type="text/javascript" charset="utf8">
-        // The code below attempts to send a message to the parent window to resize the iFrame to fit the content,
-        // which appears to be supported in the Instructure codebase here:
-        //
-        // https://github.com/instructure/canvas-lms/blob/master/public/javascripts/tool_inline.js
-        //
-        // However, for one reason or another, this doesn't seem to be working, so commenting out (for now).
-        /*
-         $(document).ready(function() {
-         window.postMessage(JSON.stringify({
-         subject: 'lti.frameResize',
-         height: $(document).height()
-         }), '*');
-         });
-         // Note: we figured out the reason: tool_inline.js isn't loaded on pages where there's no LTI launch.
-         // https://github.com/instructure/canvas-lms/issues/541
-         */
-    </script>
-
-{% endblock %}
-
 {% block content %}
+
+    {# trying to force in the styles#}
+    <script type="text/javascript" src="/static/bootstrap3/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap3/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/course_info.css">
 
     <div id="course_info_container" class="container-fluid">
 
