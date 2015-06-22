@@ -8,11 +8,8 @@ from django.views.decorators.http import require_GET, require_POST
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from dce_lti_py.tool_config import ToolConfig
-
 from icommons import ICommonsApi
-
 import json
-import cgi
 import urlparse
 
 log = logging.getLogger(__name__)
@@ -110,7 +107,6 @@ def editor(request):
         course_instance_id = settings.COURSE_INSTANCE_ID
     else:
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-    #print("course_instance_id: " + course_instance_id)
     keys = ['title', 'course.registrar_code_display', 'term.display_name', 'instructors_display', 'location',
             'meeting_time', 'description', 'notes']
     course_context = __course_context(request, course_instance_id, keys)
@@ -136,6 +132,6 @@ def oembed_handler(request):  # TODO
     #Returning just enough oEmbed to satisfy Canvas
     response = json.JSONEncoder().encode({
         "html": html_string,
-        "type": "",
+        "type": "rich"
     })
     return HttpResponse(response, content_type="application/json")
