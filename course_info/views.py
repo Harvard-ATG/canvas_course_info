@@ -132,6 +132,27 @@ def oembed_handler(request):  # TODO
     html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type= " "))
     html_string = html_string[13:]
 
+    html_string = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">' + html_string
+
+    html_string = '\
+    <style>\
+        td {\
+            border-width: thin;\
+            border-style: solid;\
+            border-color: #dbdbdb;\
+            padding: 5px;\
+        }\
+        .course_info_textHeader1 {\
+            font-weight: bold;\
+            font-size: 16px;\
+        }\
+        .course_info_textHeader2 {\
+            font-weight: bold;\
+            font-size: 13px;\
+            font-color: red;\
+        }\
+    </style>' + html_string
+
     #Returning just enough oEmbed to satisfy Canvas
     response = json.JSONEncoder().encode({
         "html": html_string,
