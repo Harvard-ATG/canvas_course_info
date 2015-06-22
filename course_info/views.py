@@ -89,9 +89,6 @@ def __mungeFields(fields):
         elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
-    #fields['style'] = ["<style>testing testing hey what's up hello</style>"]
-    print(fields)
-    fields.insert(0, {'value': '<style>insert style here?</style>', 'key': 'style', 'class': 'course_info_textHeader1'})
     return fields
 
 
