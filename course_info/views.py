@@ -120,32 +120,20 @@ def editor(request):
 
 
 def oembed_handler(request):  # TODO
-    # this is the view that is going to handle the huge url Canvas throws at us,
-    # returning oembed JSON or XML for the Canvas Rich Text Editor
-
-
-    #print("OEMBED CALL")
-
-    dynamic_var = 2 + 3
-
-    # http://stackoverflow.com/a/2077410
-    #TODO: see if we actually need this. Python's already pretty good with strings
-    def escape(t):
-        # if we need more: .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        return (t.replace('"', "'")).replace("&", "&amp;")
+    # This view handles the huge url Canvas throws at us, reconciles it with iCommons,
+    # and returns oEmbed JSON for the Canvas Rich Text Editor
 
     url = request.GET.get('url')
-
     parsed_url = urlparse.urlparse(url)
-
     parsed_qs = urlparse.parse_qs(parsed_url.query)
     requested_info = parsed_qs['f']
     course_instance_id = parsed_qs['course_instance_id'][0]
-
     course_info_context = __course_context(request, course_instance_id, requested_info)
 
+    html_string = str(render(request, 'course_info/widget.html', course_info_context))
+
     response = json.JSONEncoder().encode({
-        "html": str(render(request, 'course_info/widget.html', course_info_context)),
+        "html": html_string,
         "url": "http://www.TODO.com",
         "height": "null",
         "provider_url": "http://www.TODO.com",
