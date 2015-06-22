@@ -1,26 +1,46 @@
 
-# A Harvard-specific Django LTI app 
-that allows course authors to insert a "course information" widget
-containing live-updated course information from the registrar into 
-any page with a rich content editor.
+## A Harvard-specific Django LTI app 
+### that allows course authors to insert their old course information into
+#### the Canvas Rich Content Editor as formatted text
 
-It replaces functionality formerly provided by isites.
-
-Authors click an icon, which opens a widget editor window to let them choose
-which fields they would like to include in the widget. The widget is then 
-inserted into the page, and is live-updated using the icommons api.
+Authors click an icon, which opens an editor window to let him/her choose
+which fields he/she would like to include in the text editor. The text is then 
+inserted into the page, where he/she can further edit it if he/she so pleases.
 
 ## See the docs directory for instructions on how to run this app locally and in heroku.
 
-In order for the iframes to resize properly, you'll have to add something like the following
-to your canvas global js file:
 
-requirejs(["//your.trusted.server/static/js/consumer/iframeResizer.js"], function(iframeResize) {
-    iframeResize({log:true});
-});
+### A Note on oEmbed
+#####(www.oembed.com)
 
-Set log to false once you're satisfied it's working (will emit lots of messages to js console). 
+The Canvas Rich Content Editor can be rather unforgiving at the margin.
+You can insert links, videos, iFrames, and images rather easily, however
+inserting editable, rich content such as blocks of HTML is a bit more involved.
 
-It's annoying that this is neccesary, but that's the way things are with cross-domain iframes.
+To do this you need to use/implement the oEmbed protocol.
+At its core, your launch app must send canvas three values (implemented as inputs here):
+return_type = oembed
+endpoint = oembed_location (more on this in a bit)
+url = dynamic_url
 
-See https://github.com/davidjbradshaw/iframe-resizer for more details on that.
+the "url" could more aptly be named the "parameters" - what Canvas does is concatenate the url
+onto the endpoint, and then send that request out from their servers. This means that
+**you must have a live server to develop with oEmbed.**
+
+Using another site's oEmbed API is rather straightforward - they've implemented it.
+Just insert their endpoint (designated oembed path, for example: http://www.twitter.com/oembed)
+and the desired query url (for example http://www.twitter.com/Jack/status/20)
+
+A full oEmbed submission (to Canvas) would like the HTML below
+
+    <input type="hidden" name="return_type" value="oembed"/>
+    <input type="hidden" name="endpoint" value="https://api.twitter.com/1/statuses/oembed.json?"/>
+    <input type="hidden" name="url" value="https://twitter.com/Jack/status/20"/>
+
+And the query Canvas would send out would be as follows:
+    https://api.twitter.com/1/statuses/oembed.json?url=https://twitter.com/Jack/status/20
+
+Notice the insertion of "url=" here - the full url is included as a query parameter.
+For all intents and purposes, the fact that it's a url is irrelevant.
+The query could as easily have been "?parameters=Jack/status/20"
+
