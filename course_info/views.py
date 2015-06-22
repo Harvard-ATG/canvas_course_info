@@ -126,22 +126,23 @@ def oembed_handler(request):  # TODO
     url = request.GET.get('url')
     parsed_url = urlparse.urlparse(url)
     parsed_qs = urlparse.parse_qs(parsed_url.query)
-    requested_info = parsed_qs['f']
+    requested_info = parsed_qs['f'] #get all the selected checkboxes from the editor view
     course_instance_id = parsed_qs['course_instance_id'][0]
     course_info_context = __course_context(request, course_instance_id, requested_info)
 
     html_string = str(render(request, 'course_info/widget.html', course_info_context))
 
+    #This is the oEmbed Protocol
     response = json.JSONEncoder().encode({
         "html": html_string,
-        "url": "http://www.TODO.com",
-        "height": "null",
-        "provider_url": "http://www.TODO.com",
-        "provider_name": "TODO",
-        "author_name": "TODO",
-        "version": "1.0",
-        "author_url": "http://www.TODO.com",
-        "type": "rich",
-        "width": 550
+        # "url": "http://www.TODO.com",
+        # "height": "null",
+        # "provider_url": "http://www.TODO.com",
+        # "provider_name": "TODO",
+        # "author_name": "TODO",
+        # "version": "1.0",
+        # "author_url": "http://www.TODO.com",
+        # "type": "rich",
+        # "width": 550
     })
     return HttpResponse(response, content_type="application/json")
