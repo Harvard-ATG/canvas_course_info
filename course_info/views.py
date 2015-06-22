@@ -69,6 +69,7 @@ def __course_context(request, course_instance_id, keys):
         'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
+    print("course_info (icommons): " + course_info)
     context = {'fields': [], 'course_instance_id': course_instance_id}
     for key in keys:
         if '.' in key:
@@ -140,12 +141,15 @@ def oembed_handler(request):  # TODO
     url = request.GET.get('url')
 
     parsed_url = urlparse.urlparse(url)
+    print()
     print(parsed_url)
 
     parsed_qs = urlparse.parse_qs(escape(parsed_url.query))
     requested_info = parsed_qs['f']
     course_instance_id = parsed_qs['course_instance_id']
+    print(course_instance_id)
     print(requested_info)
+    print()
 
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
