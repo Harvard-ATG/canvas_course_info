@@ -13,6 +13,7 @@ from icommons import ICommonsApi
 
 import json
 import cgi
+import urlparse
 
 log = logging.getLogger(__name__)
 
@@ -133,11 +134,17 @@ def oembed_handler(request):  # TODO
         # if we need more: .replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
         return (t.replace('"', "'"))
 
-    request
+    #request
 
     course_instance_id_data = request.GET.get('course_instance_id')
     url = request.GET.get('url')
-    print(url)
+
+    parsed_url = urlparse.urlparse(url)
+    print(parsed_url)
+
+    parsed_qs = urlparse.parse_qs(parsed_url)
+    requested_info = parsed_qs['f']
+    print(requested_info)
 
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
