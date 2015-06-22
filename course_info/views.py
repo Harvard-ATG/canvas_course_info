@@ -135,15 +135,17 @@ def oembed_handler(request):  # TODO
 
     request
 
-    course_instance_id = request.GET.get('course_instance_id')
+    course_instance_id_data = request.GET.get('course_instance_id')
+    url = request.GET.get('url')
+    print(url)
 
     #this is where we need to be specific.
     # we want the scripts but not the head tags...
     #could use request.body
-    dynamic_string = render(request, 'course_info/widget.html', __course_context(request, course_instance_id, request.GET.getlist('f')))
+    dynamic_string = render(request, 'course_info/widget.html', __course_context(request, course_instance_id_data, request.GET.getlist('f')))
 
     #print(escape(str(dynamic_string)))
-    print(dynamic_string)
+    #print(dynamic_string)
 
     # why the hell does this work:
     # http://localhost:8000/course_info/oembed&url=http://localhost:8000/course_info/widget.html?course_instance_id=312976&amp;f=title&amp;f=course.registrar_code_display&amp;f=term.display_name&amp;f=instructors_display&amp;f=location&amp;f=meeting_time&amp;f=description&amp;f=notes&page_view_id=414bbdab-b559-41e8-a712-1370d47c5a24
@@ -151,9 +153,9 @@ def oembed_handler(request):  # TODO
     # I think it has something to do with Canvas passing widget.html a more complicated request from its own servers
 
     html_string = str(dynamic_string)
-    print(html_string)
+    #print(html_string)
 
-    demonstration_data = "<h2>" +  str(11 << 20) + "</h2>"
+    demonstration_data = "<h3> h3:" +  str(11 << 20) + "</h3>"
 
     demonstration_string = \
         "<div>Hey What's up Hello" \
