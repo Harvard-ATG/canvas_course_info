@@ -69,7 +69,7 @@ def __course_context(request, course_instance_id, keys):
         'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    print("course_info (icommons): " + course_info)
+    print("course_info (icommons): " + str(course_info))
     context = {'fields': [], 'course_instance_id': course_instance_id}
     for key in keys:
         if '.' in key:
