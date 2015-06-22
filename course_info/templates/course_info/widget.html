@@ -7,43 +7,10 @@
 {% endblock %}
 
 {% block content %}
+    {# unfortunately this is going into canvas so we can't load local js/css without explicitly putting it in here #}
 
-    <script type="text/javascript" charset="utf8">
-        /*
-        $(document).ready(function () {
-            var p = $(location).attr('protocol');
-            var h = $(location).attr('host');
-            //var css_url1 = p + '//' + h + '/static/bootstrap3/js/bootstrap.js';
-            var css_url1 = p + '//' + h + '/static/bootstrap3/css/bootstrap.css';
-            var css_url2 = p + '//' + h + '/static/css/course_info.css';
-        });
-
-        $("#widget_css1").href(css_url1);
-        $("#widget_css2").href(css_url2);
-        */
-
-        //no jQuery it would seem.
-        var stylesheet1 = document.getElementById("widget_css1");
-        var stylesheet2 = document.getElementById("widget_css2");
-
-        var l = window.location.host;
-        console.log(l.host);
-
-        //hardcode test
-        l = "ec2-52-26-169-34.us-west-2.compute.amazonaws.com:8000/";
-
-        var url1 = l + '/static/bootstrap3/css/bootstrap.css';
-        var url2 = l + '/static/css/course_info.css';
-
-        stylesheet1.setAttribute("href", url1);
-        stylesheet2.setAttribute("href", url2);
-
-    </script>
-
-    {# trying to force in the styles#}
-{#    <script id="widget_js" type="text/javascript" src=""></script>#}
-    <link id="widget_css1" rel="stylesheet" href="">
-    <link id="widget_css2" rel="stylesheet" href="">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <div id="course_info_container" class="container-fluid">
 
