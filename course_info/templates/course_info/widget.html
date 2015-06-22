@@ -8,6 +8,7 @@
         <table border="0" cellpadding="0" cellspacing="5">
             <tbody>
             {% for field in fields  %}
+                {#TODO: may have to do this with inline styles to make Canvas play nice #}
                 <tr><td class="{{ field.class }}">{% autoescape off %}{{ field.value }}{% endautoescape %}</td></tr>
             {% endfor %}
             </tbody>
