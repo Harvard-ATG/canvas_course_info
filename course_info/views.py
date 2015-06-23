@@ -127,6 +127,10 @@ def __mungeFields(fields):
 def widget(request):
     course_instance_id = request.GET.get('course_instance_id')
     context = __course_context(request, course_instance_id, request.GET.getlist('f'))
+
+    # Why doesn't this work? I want to take __mungeFields out from the context creator so
+    # it doesn't mess up the editor but it somehow doesn't work like this
+    #context['fields'] = __mungeFields(context['fields'])
     return render(request, 'course_info/widget.html', context)
 
 
@@ -141,6 +145,14 @@ def editor(request):
     course_context = __course_context(request, course_instance_id, keys)
     # course_context['line_guestimate'] =keys*2
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
+
+    # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
+    def clean(t):
+        return (t.replace("<b>", "").replace("</b>","").replace("<h1>","").replace("</h1>",""))
+    for field in course_context['fields']:
+        field['value'] = clean(field['value'])
+        print(field['value'])
+
     return render(request, 'course_info/editor.html', course_context)
 
 
