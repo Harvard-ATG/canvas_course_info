@@ -7,7 +7,7 @@ Authors click an icon, which opens an editor window to let him/her choose
 which fields he/she would like to include in the text editor. The text is then 
 inserted into the page, where he/she can further edit it if he/she so pleases.
 
-## See the docs directory for instructions on how to run this app locally and in heroku.
+## See the docs directory for instructions on how to run this app locally and in Heroku.
 
 
 ### A Note on oEmbed
@@ -46,8 +46,8 @@ https://api.twitter.com/1/statuses/oembed.json?url=https://twitter.com/Jack/stat
 Notice the insertion of "url="  --  the full url is included as a query parameter.
 For all intents and purposes, the fact that it's a url is irrelevant, though customary.
 
-The above example makes the steps for a developer to insert rich content into
-Canvas' editor somewhat clearer. Here's what it boils down to:
+**The above example makes the steps for a developer to insert rich content into
+Canvas' editor somewhat clearer. Here's what it boils down to:**
 
 You'll need an LTI launch, which sends Canvas to the
 'endpoint' path, with the 'url' parameter. This endpoint path should be a view that you
