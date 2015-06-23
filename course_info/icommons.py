@@ -36,9 +36,15 @@ class ICommonsApi(drest.API):
                                         serialize=True,
                                         trailing_slash=False)
 
+    #TODO: send the school_id to https://icommons.harvard.edu/api/course/v2/schools/
+    #then get the title_long value
+
+
+
 
     def get_course_info(self, course_instance_id):
         course_info={}
+        # get the course_instance data
         try:
             relative_url = '/course_instances/'+ course_instance_id+'/?format=json'
             response = self.make_request('GET',relative_url,headers=self.headers)
@@ -48,6 +54,19 @@ class ICommonsApi(drest.API):
         except Exception as e:
             log.error(e.message)
         return course_info
+
+
+    def get_school_info(self, school):
+        school_info = {}
+        try:
+            relative_url = '/schools/'+ school +'/?format=json'
+            response = self.make_request('GET', relative_url, headers=self.headers)
+            school_info = response.data.copy()
+        except drest.exc.dRestRequestError as e:
+            log.error(e.message)
+        except Exception as e:
+            log.error(e.message)
+        return school_info
 
 
 

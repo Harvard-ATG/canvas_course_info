@@ -66,7 +66,6 @@ def __course_context(request, course_instance_id, keys):
         'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    #print(course_info)
     context = {'fields': [], 'course_instance_id': course_instance_id}
     for key in keys:
         if '.' in key:
@@ -78,33 +77,28 @@ def __course_context(request, course_instance_id, keys):
         if key in key2class:
             field['class'] = key2class[key]
         context['fields'].append(field)
-    context['fields'] = __mungeFields(context['fields'])
+
+    school_info = ICommonsApi.from_request(request).get_school_info("hds")
+    context['fields'] = __mungeFields(context['fields'], school_info['title_long'])
     return context
 
-def __mungeFields(fields):
+def __mungeFields(fields, school_name):
     # Could possibly sneak in some more inline styles here
-    for field in fields:
-        # title,
-        # course.registrar_code_display,
-        # term.display_name,
-        # instructors_display,
-        # location,
-        # meeting_time,
-        # description,
-        # notes
-        def stern(value, default):
-            # special ternary to simplify the logic below
-            # deals with blank fields
-            if value == u' ' or value == u'' or value == '' or value == ' ':
-                return default
-            else:
-                return value
+    def stern(value, default):
+        # special ternary to simplify the logic below
+        # deals with blank fields
+        if value == u' ' or value == u'' or value == '' or value == ' ':
+            return default
+        else:
+            return value
 
-        # Can this be moved to widget.html? Right now the extra tags show up in the Canvas popup.
+    for field in fields:
         if field['key'] == 'title':
             field['value'] = '<h1>' + field['value'] + "</h1>"
         elif field['key'] == 'course.registrar_code_display':
-            field['value'] = '<b>TODO: add school here </b>' + field['value'] # include this? '<b> Registrar ID: </b>'
+            #TODO: make sure this works alright with all courses and schools
+            course_number = field['value'].split()[-1]
+            field['value'] = school_name + ": " + course_number
         elif field['key'] == 'term.display_name':
             field['value'] = field['value'] #include this? '<b>Term:</b> '
         elif field['key'] == 'instructors_display':
@@ -120,6 +114,7 @@ def __mungeFields(fields):
         elif field['key'] == 'notes':
             field['value'] = '<b>Note:</b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
+
     return fields
 
 
@@ -149,9 +144,9 @@ def editor(request):
     # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
     def clean(t):
         return (t.replace("<b>", "").replace("</b>","").replace("<h1>","").replace("</h1>",""))
+
     for field in course_context['fields']:
         field['value'] = clean(field['value'])
-        print(field['value'])
 
     return render(request, 'course_info/editor.html', course_context)
 
