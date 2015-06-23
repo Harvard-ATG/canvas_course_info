@@ -127,6 +127,7 @@ def __mungeFields(fields):
 def widget(request):
     course_instance_id = request.GET.get('course_instance_id')
     context = __course_context(request, course_instance_id, request.GET.getlist('f'))
+    context['fields'] = __mungeFields(context['fields'])
     return render(request, 'course_info/widget.html', context)
 
 
