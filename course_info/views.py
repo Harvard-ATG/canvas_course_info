@@ -92,12 +92,12 @@ def __mungeFields(fields):
         # meeting_time,
         # description,
         # notes
-        def stern(value, a):
+        def stern(value, default):
             #special ternary to simplify the logic below
-            if value == a:
+            if value != ' ' or value != '':
                 return value
             else:
-                return 'Unknown'
+                return default
 
         if field['key'] == 'title':
             field['value'] = '<h1>' + field['value'] + "</h1>"
@@ -112,7 +112,7 @@ def __mungeFields(fields):
         elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
         elif field['key'] == 'exam_group':
-            field['value'] = '<b>Exam Group: </b> ' + stern(field['value'])
+            field['value'] = '<b>Exam Group: </b> ' + stern(field['value'], 'Unknown')
         elif field['key'] == 'description':
             field['value'] = '<b>Course Description:</b> ' + field['value']
         elif field['key'] == 'notes':
