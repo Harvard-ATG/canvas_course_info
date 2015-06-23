@@ -127,7 +127,6 @@ def __mungeFields(fields):
 def widget(request):
     course_instance_id = request.GET.get('course_instance_id')
     context = __course_context(request, course_instance_id, request.GET.getlist('f'))
-    context['fields'] = __mungeFields(context['fields'])
     return render(request, 'course_info/widget.html', context)
 
 
@@ -142,6 +141,9 @@ def editor(request):
     course_context = __course_context(request, course_instance_id, keys)
     # course_context['line_guestimate'] =keys*2
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
+
+    # TODO: if we can, it would be nice to have the styling happen after the popup.
+    course_context['fields'] = __mungeFields(course_context['fields'])
     return render(request, 'course_info/editor.html', course_context)
 
 
