@@ -10,7 +10,7 @@ inserted into the page, where he/she can further edit it if he/she so pleases.
 ## See the docs directory for instructions on how to run this app locally and in Heroku.
 
 
-### A Note on oEmbed
+### A Note on oEmbed:
 **(www.oembed.com)**
 
 The Canvas Rich Content Editor can be rather unforgiving at the margin.

@@ -82,6 +82,7 @@ def __course_context(request, course_instance_id, keys):
 
 def __mungeFields(fields):
     #Could possibly sneak in some more inline styles here
+    print(fields);
     for field in fields:
         # title,
         # course.registrar_code_display,
@@ -95,15 +96,17 @@ def __mungeFields(fields):
         if field['key'] == 'title':
             field['value'] = '<h1>' + field['value'] + "</h1>"
         elif field['key'] == 'course.registrar_code_display':
-            field['value'] = '<b>' + field['value'] + '</b>' # include this? '<b> Registrar ID </b>'
+            field['value'] = '<b>TODO: add school here </b>' + field['value'] # include this? '<b> Registrar ID: </b>'
         elif field['key'] == 'term.display_name':
-            field['value'] = '<b>Term:</b> ' + field['value']
+            field['value'] = field['value'] #include this? '<b>Term:</b> '
         elif field['key'] == 'instructors_display':
             field['value'] = '<b>Course Instructor(s):</b> ' + field['value']
         elif field['key'] == 'location':
             field['value'] = '<b>Location:</b> ' + field['value']
         elif field['key'] == 'meeting_time':
             field['value'] = '<b>Meeting Time:</b> ' + field['value']
+        elif field['key'] == 'exam_group':
+            field['value'] = '<b>Exam Group</b> ' + field['value']
         elif field['key'] == 'description':
             field['value'] = '<b>Course Description:</b> ' + field['value']
         elif field['key'] == 'notes':
