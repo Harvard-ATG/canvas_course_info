@@ -66,7 +66,7 @@ def __course_context(request, course_instance_id, keys):
         'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    print(course_info);
+    #print(course_info)
     context = {'fields': [], 'course_instance_id': course_instance_id}
     for key in keys:
         if '.' in key:
@@ -78,11 +78,11 @@ def __course_context(request, course_instance_id, keys):
         if key in key2class:
             field['class'] = key2class[key]
         context['fields'].append(field)
-    context['fields'] = __mungeFields(context['fields'])
+    #context['fields'] = __mungeFields(context['fields'])
     return context
 
 def __mungeFields(fields):
-    #Could possibly sneak in some more inline styles here
+    # Could possibly sneak in some more inline styles here
     for field in fields:
         # title,
         # course.registrar_code_display,
@@ -93,12 +93,14 @@ def __mungeFields(fields):
         # description,
         # notes
         def stern(value, default):
-            #special ternary to simplify the logic below
-            if value != ' ' or value != '':
-                return value
-            else:
+            # special ternary to simplify the logic below
+            # deals with blank fields
+            if value == u' ' or value == u'' or value == '' or value == ' ':
                 return default
+            else:
+                return value
 
+        # Can this be moved to widget.html? Right now the extra tags show up in the Canvas popup.
         if field['key'] == 'title':
             field['value'] = '<h1>' + field['value'] + "</h1>"
         elif field['key'] == 'course.registrar_code_display':
@@ -106,15 +108,15 @@ def __mungeFields(fields):
         elif field['key'] == 'term.display_name':
             field['value'] = field['value'] #include this? '<b>Term:</b> '
         elif field['key'] == 'instructors_display':
-            field['value'] = '<b>Course Instructor(s):</b> ' + field['value']
+            field['value'] = field['value'] #include this? '<b>Course Instructor(s):</b> '
         elif field['key'] == 'location':
-            field['value'] = '<b>Location:</b> ' + field['value']
+            field['value'] = '<b>Location:</b> ' + stern(field['value'], 'Unknown')
         elif field['key'] == 'meeting_time':
-            field['value'] = '<b>Meeting Time:</b> ' + field['value']
+            field['value'] = '<b>Meeting Time:</b> ' + stern(field['value'], 'Unknown')
         elif field['key'] == 'exam_group':
             field['value'] = '<b>Exam Group: </b> ' + stern(field['value'], 'Unknown')
         elif field['key'] == 'description':
-            field['value'] = '<b>Course Description:</b> ' + field['value']
+            field['value'] = '<b>Course Description:</b> ' + stern(field['value'], 'None')
         elif field['key'] == 'notes':
             field['value'] = '<b>Note:</b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
@@ -124,9 +126,9 @@ def __mungeFields(fields):
 @require_GET
 def widget(request):
     course_instance_id = request.GET.get('course_instance_id')
-    return render(request, 'course_info/widget.html',
-                  __course_context(request, course_instance_id,
-                                   request.GET.getlist('f')))
+    context = __course_context(request, course_instance_id, request.GET.getlist('f'))
+    context['fields'] = __mungeFields(context['fields'])
+    return render(request, 'course_info/widget.html', context)
 
 
 def editor(request):
