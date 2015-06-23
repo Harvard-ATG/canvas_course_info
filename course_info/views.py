@@ -66,6 +66,7 @@ def __course_context(request, course_instance_id, keys):
         'meeting_time': 'course_info_textHeader2'
     }
     course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
+    print(course_info);
     context = {'fields': [], 'course_instance_id': course_instance_id}
     for key in keys:
         if '.' in key:
@@ -82,7 +83,6 @@ def __course_context(request, course_instance_id, keys):
 
 def __mungeFields(fields):
     #Could possibly sneak in some more inline styles here
-    print(fields);
     for field in fields:
         # title,
         # course.registrar_code_display,
@@ -130,7 +130,7 @@ def editor(request):
     else:
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
     keys = ['title', 'course.registrar_code_display', 'term.display_name', 'instructors_display', 'location',
-            'meeting_time', 'description', 'notes']
+            'meeting_time', 'exam_group', 'description', 'notes']
     course_context = __course_context(request, course_instance_id, keys)
     # course_context['line_guestimate'] =keys*2
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
