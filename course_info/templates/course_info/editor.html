@@ -63,7 +63,8 @@
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
 
-                return height * 1.75; //fudge factor, better go a little over than under.
+                // this does not appear to have any effect
+                return height * 5.0; //fudge factor, better go a little over than under.
             }
         });
     </script>
