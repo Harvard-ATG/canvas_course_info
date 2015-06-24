@@ -46,10 +46,10 @@
                 console.log("widget height estimate changed to:", estimateHeight());
             });
 
+            // See ReadMe for details on how to get resizing to work in Canvas.
             // This function attempts to determine the content height for the checked fields.
             // This value will be used to set the "height" attribute of the iFrame so that
             // the content fits.
-            // TODO: make this work better
             function estimateHeight() {
                 var $checked = $("#widget_edit_form_container input:checked");
                 var $container = $('<div></div>');
@@ -63,7 +63,7 @@
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
 
-                return height * 2.0; //fudge factor, better go a little over than under.
+                return height * 1.33; //fudge factor, better go a little over than under.
             }
         });
     </script>
