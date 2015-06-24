@@ -36,7 +36,7 @@
                         function(){
                             widget_url += '&amp;f=' + $(this).val();
                         });
-                
+
                 $('#widget_url').val(widget_url);
 
 
@@ -90,9 +90,9 @@
             <input type="hidden" id="oembed_url"    name="endpoint"     value=""/>{# Value inserted dynamically by JS above #}
             <input type="hidden" id="widget_url"    name="url"          value=""/> {# Value inserted dynamically by JS above #}
 
-            {#<input type="hidden"                    name="width"        value="100%"        />#}
-            {#<input type="hidden" id="widget_height" name="height"       value=""            />#}
-            {#<input type="hidden"                    name="title"        value="Course Info" />#}
+            <input type="hidden"                    name="width"        value="100%"        />
+            <input type="hidden" id="widget_height" name="height"       value=""            />
+            <input type="hidden"                    name="title"        value="Course Info" />
             <br/>
             <input type="submit" class="btn btn-default" id="oembed_submit" name="oembed_submit" value="oEmbed"/>
             <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="iFrame"/>
