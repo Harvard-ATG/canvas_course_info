@@ -28,6 +28,14 @@
          // Note: we figured out the reason: tool_inline.js isn't loaded on pages where there's no LTI launch.
          // https://github.com/instructure/canvas-lms/issues/541
          */
+
+        $(document).ready(function () {
+            var iframe = $("select[title='Course Id']");
+            console.log(iframe)
+            {#var iframe = window.parent.document.getElementById();#}
+            var container = document.getElementById('content');
+            iframe.style.height = container.offsetHeight + 'px';
+        });
     </script>
 
 {% endblock %}
