@@ -37,3 +37,4 @@ tmp
 static_root
 
 dcei_venv
+bin/*
