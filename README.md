@@ -1,13 +1,19 @@
 
 ## A Harvard-specific Django LTI app
 **that allows course authors to insert their old course information into
-the Canvas Rich Content Editor as formatted text**
+the Canvas Rich Content Editor as formatted text, or as a live-updating widget.**
 
 Authors click an icon, which opens an editor window to let him/her choose
-which fields he/she would like to include in the text editor. The text is then 
-inserted into the page, where he/she can further edit it if he/she so pleases.
+which fields he/she would like to include, and whether to insert them as editable
+text, or as a widget.
 
 ## See the docs directory for instructions on how to run this app locally and in Heroku.
+
+In order for the iframes to size properly, you'll have to add the following snippet to your canvas global js file:
+
+course_info/static/js/consumer/global.js
+
+It's annoying that this is necessary, but that's the way things are with cross-domain iframes.
 
 
 ### A Note on oEmbed:
