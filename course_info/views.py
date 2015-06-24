@@ -94,7 +94,8 @@ def __mungeFields(fields, school_name):
 
     for field in fields:
         if field['key'] == 'title':
-            field['value'] = '<h2>' + field['value'] + "</h2>"
+            pass
+            #field['value'] = '<h2>' + field['value'] + "</h2>"
         elif field['key'] == 'course.registrar_code_display':
             #TODO: make sure this works alright with all courses and schools
             course_number = stern(field['value'], "Unknown").split()[-1]
