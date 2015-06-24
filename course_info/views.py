@@ -142,8 +142,9 @@ def editor(request):
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
 
     # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
+    # TODO: make a permanent solution
     def clean(t):
-        return t.replace("<b>", "").replace("</b>","").replace("<h1>","").replace("</h1>","")
+        return t.replace("<b>", "").replace("</b>","").replace("<h3>","").replace("</h3>","")
 
     for field in course_context['fields']:
         field['value'] = clean(field['value'])
