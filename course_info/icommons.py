@@ -67,6 +67,3 @@ class ICommonsApi(drest.API):
         except Exception as e:
             log.error(e.message)
         return school_info
-
-
-

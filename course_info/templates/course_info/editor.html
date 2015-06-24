@@ -20,12 +20,6 @@
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?course_instance_id={{ course_instance_id }}';
 
-                $('#widget_url').val(widget_url);
-
-                $('#widget_edit_form input:checkbox:checked').each(
-                        function(){
-                            widget_url += '&amp;f=' + $(this).val();
-                        });
 
                 if ($("#return_type").val() ==  "oembed") {
                     var endpoint_url = p + '//' + h + '/course_info/oembed';
@@ -38,6 +32,12 @@
                     }
                 }
 
+                $('#widget_edit_form input:checkbox:checked').each(
+                        function(){
+                            widget_url += '&amp;f=' + $(this).val();
+                        });
+                
+                $('#widget_url').val(widget_url);
 
 
             });
