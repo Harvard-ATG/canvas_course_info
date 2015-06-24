@@ -143,7 +143,7 @@ def editor(request):
 
     # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
     def clean(t):
-        return (t.replace("<b>", "").replace("</b>","").replace("<h1>","").replace("</h1>",""))
+        return t.replace("<b>", "").replace("</b>","").replace("<h1>","").replace("</h1>","")
 
     for field in course_context['fields']:
         field['value'] = clean(field['value'])

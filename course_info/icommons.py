@@ -43,7 +43,7 @@ class ICommonsApi(drest.API):
 
 
     def get_course_info(self, course_instance_id):
-        course_info={}
+        course_info = {}
         # get the course_instance data
         try:
             relative_url = '/course_instances/'+ course_instance_id+'/?format=json'
