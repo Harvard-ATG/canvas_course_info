@@ -6,10 +6,10 @@
     <base target="_blank">
 {% endblock %}
 
+{# it appears canvas strips all style and script elements#}
+{# unfortunately this means we can't really format anything server-side #}
 {% block extra_js %}
-
     <script src="{% static 'js/iframeResizer.contentWindow.js' %}"></script>
-
 
     <script type="text/javascript" charset="utf8">
         // The code below attempts to send a message to the parent window to resize the iFrame to fit the content,
@@ -28,20 +28,8 @@
          // Note: we figured out the reason: tool_inline.js isn't loaded on pages where there's no LTI launch.
          // https://github.com/instructure/canvas-lms/issues/541
          */
-
-        $(document).ready(function () {
-            var iframe = $("select[title='Course Id']");
-            console.log(iframe)
-            {#var iframe = window.parent.document.getElementById();#}
-            var container = document.getElementById('content');
-            iframe.style.height = container.offsetHeight + 'px';
-        });
     </script>
-
 {% endblock %}
-
-{# it appears canvas strips all style and script elements when inserting from oEmbed. #}
-{# unfortunately this means we can't really format anything server-side #}
 
 {% block content %}
 

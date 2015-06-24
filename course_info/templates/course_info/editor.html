@@ -49,6 +49,7 @@
             // This function attempts to determine the content height for the checked fields.
             // This value will be used to set the "height" attribute of the iFrame so that
             // the content fits.
+            //this doesn't seem to be working properly
             function estimateHeight() {
                 var $checked = $("#widget_edit_form_container input:checked");
                 var $container = $('<div></div>');
@@ -86,10 +87,10 @@
                 </div>
             {% endfor %}
 
-            <input type="hidden" id="return_type"   name="return_type"  value=""/> {# Value inserted dynamically by JS above #}
-            <input type="hidden" id="oembed_url"    name="endpoint"     value=""/>{# Value inserted dynamically by JS above #}
-            <input type="hidden" id="widget_url"    name="url"          value=""/> {# Value inserted dynamically by JS above #}
-
+            {# Many of these values are inserted dynamically by the JS above #}
+            <input type="hidden" id="return_type"   name="return_type"  value=""/>
+            <input type="hidden" id="oembed_url"    name="endpoint"     value=""/>
+            <input type="hidden" id="widget_url"    name="url"          value=""/>
             <input type="hidden"                    name="width"        value="100%"        />
             <input type="hidden" id="widget_height" name="height"       value=""            />
             <input type="hidden"                    name="title"        value="Course Info" />
@@ -99,4 +100,5 @@
             <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="iFrame"/>
         </form>
         <br/>
+
 {% endblock %}
