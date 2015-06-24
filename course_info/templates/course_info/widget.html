@@ -8,6 +8,7 @@
 
 {# it appears canvas strips all style and script elements#}
 {# unfortunately this means we can't really format anything server-side #}
+{% comment %}
 {% block extra_js %}
     <script src="{% static 'js/iframeResizer.contentWindow.js' %}"></script>
 
@@ -30,6 +31,7 @@
          */
     </script>
 {% endblock %}
+{% endcomment %}
 
 {% block content %}
 
