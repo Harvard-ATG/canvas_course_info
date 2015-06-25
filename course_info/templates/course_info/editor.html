@@ -41,15 +41,16 @@
                     $('#oembed_url').val(endpoint_url);
                 }
 
-
-                $('#widget_edit_form input:checkbox:checked').each(
+                // modify the submission url to reflect the checked boxes
+                // does this have to be 'f' or can we change it?
+                // in this situation, I guess 'f' signifies "unchecked == false"
+                $(".course_info_checkbox").each(
                         function(){
                             widget_url += '&amp;f=' + $(this).val();
-                        });
+                        }
+                );
 
                 $('#widget_url').val(widget_url);
-
-
             });
 
             $("#widget_edit_form_container input").on("change", function(e) {
@@ -105,7 +106,7 @@
             {# could use this {{ var.example.strip|safe|removetags:"p img" }}#}
             {% for field in fields %}
                 <div>
-                    <input type="checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
+                    <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
                     <span>{{ field.value }}</span>
                 </div>
             {% endfor %}
