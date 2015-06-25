@@ -68,10 +68,10 @@ TEMPLATE_DIRS = (
 )
 
 LTI_APPS = {
-    'course_info': {# <- cannot be changed without causing issues
-        'id': 'course_info_import',#TODO: check damages. Changed from course_info
-        'name': 'Import Course Info', #TODO: check namechange damages (from Course Info)
-        'menu_title': 'Import Course Info', #changed from 'Course Info'
+    'course_info': {# <- Cannot be changed without causing issues
+        'id': 'course_info_import', # Changed from "course_info"
+        'name': 'Import Course Info', # Changed from "Course Info"
+        'menu_title': 'Import Course Info', # Changed from 'Course Info'
         'extensions_provider': 'canvas.instructure.com',
         'description': "A button to insert course info into canvas pages.",
         'privacy_level': 'public',
@@ -81,10 +81,13 @@ LTI_APPS = {
     }
 }
 
-SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
+# SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
+SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY') # not sure how to implement required functionality
 
 # this tells django who to send app error emails to
-ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
+# ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
+ADMINS = ((SECURE_SETTINGS.get('DJANGO_ADMIN_NAME'), SECURE_SETTINGS.get('DJANGO_ADMIN_EMAIL')))
+
 
 # From: addr of the app error emails
 # SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', 'root@localhost')
@@ -123,9 +126,10 @@ LTI_OAUTH_CREDENTIALS = {
 }
 
 # if you want to test locally and aren't getting real course instance ids from LTI launch params.
-COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
+# COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
+COURSE_INSTANCE_ID = SECURE_SETTINGS.get('COURSE_INSTANCE_ID')
 if COURSE_INSTANCE_ID :
-    COURSE_INSTANCE_ID=str(COURSE_INSTANCE_ID)
+    COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
 # ICOMMONS_API_TOKEN = env('ICOMMONS_API_TOKEN')
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('ICOMMONS_API_TOKEN')
