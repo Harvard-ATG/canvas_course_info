@@ -38,3 +38,4 @@ static_root
 
 dcei_venv
 bin/*
+secure.py

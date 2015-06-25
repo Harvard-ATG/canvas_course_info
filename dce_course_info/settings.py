@@ -13,6 +13,7 @@ import os
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 from getenv import env
+from .secure import SECURE_SETTINGS
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -86,11 +87,14 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
 
 # From: addr of the app error emails
-SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', 'root@localhost')
+# SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', 'root@localhost')
+SERVER_EMAIL = SECURE_SETTINGS.get('DJANGO_SERVER_EMAIL', 'root@localhost')
+
 
 # use mandrill to send app error emails
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-MANDRILL_API_KEY = env('MANDRILL_APIKEY')
+# MANDRILL_API_KEY = env('MANDRILL_APIKEY')
+MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
 
 # depends on DATABASE_URL being set in your env. See https://github.com/kennethreitz/dj-database-url
 # you can also set DJANGO_DATABASE_DEFAULT_ENGINE if you want to override the
@@ -98,16 +102,24 @@ MANDRILL_API_KEY = env('MANDRILL_APIKEY')
 # default engine, e.g., using https://github.com/kennethreitz/django-postgrespool/
 DATABASES = {
     'default': dj_database_url.config(
-        engine=env('DJANGO_DATABASE_DEFAULT_ENGINE', None))
+        # engine=env('DJANGO_DATABASE_DEFAULT_ENGINE', None))
+        engine = SECURE_SETTINGS.get('DJANGO_DATABASE_DEFAULT_ENGINE', None)
+    )
 }
 
-REDIS_URL = env('REDIS_URL')
+# REDIS_URL = env('REDIS_URL')
+# Check if we want to do it like this or with the host and port
+REDIS_URL = SECURE_SETTINGS.get('REDIS_URL')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
 LTI_OAUTH_CREDENTIALS = {
-    env('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY'): env(
-        'LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
+
+    SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY') :
+        SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
+
+    # env('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY'): env(
+    #     'LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
 }
 
 # if you want to test locally and aren't getting real course instance ids from LTI launch params.
@@ -115,9 +127,11 @@ COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
 if COURSE_INSTANCE_ID :
     COURSE_INSTANCE_ID=str(COURSE_INSTANCE_ID)
 
-ICOMMONS_API_TOKEN= env('ICOMMONS_API_TOKEN')
+# ICOMMONS_API_TOKEN = env('ICOMMONS_API_TOKEN')
+ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('ICOMMONS_API_TOKEN')
 
-ICOMMONS_BASE_URL= env('ICOMMONS_BASE_URL')
+# ICOMMONS_BASE_URL = env('ICOMMONS_BASE_URL')
+ICOMMONS_BASE_URL = SECURE_SETTINGS.get('ICOMMONS_BASE_URL')
 
 LOGGING = {
     'version': 1,
