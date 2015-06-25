@@ -86,9 +86,11 @@ def __course_context(request, course_instance_id, keys):
 def __mungeFields(fields, school_name):
     # Could possibly sneak in some more inline styles here
 
+    # if we want more info in the logger, could pass in the whole field dictionary and send the key in the log message
     def stern(value, default):
         # special ternary to simplify the logic below -deals with blank fields
         if value == u' ' or value == u'' or value == '' or value == ' ':
+            #TODO: log some error
             return default
         else:
             return value
@@ -102,7 +104,7 @@ def __mungeFields(fields, school_name):
             try:
                 course_number = field['value'].split()[-1] # get only the display number, not the school acronym
             except:
-                print("Registrar Code Atypical")
+                #TODO: log "Registrar Code Atypical/Not Provided"
                 course_number = "Course Number Unknown"
             field['value'] = school_name + ": " + course_number
 
@@ -154,8 +156,8 @@ def editor(request):
 
     course_context = __course_context(request, course_instance_id, keys)
 
-        # this is likely a remnant of the iFrame resize struggle
-    # course_context['line_guestimate'] =keys*2
+    # this is likely a remnant of the iFrame resize struggle
+    #course_context['line_guestimate'] =keys*2
 
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
     course_context['should_offer_text'] = settings.OFFER_TEXT

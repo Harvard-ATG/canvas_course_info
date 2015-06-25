@@ -82,7 +82,12 @@ LTI_APPS = {
 }
 
 # SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
-SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY') # not sure how to implement required functionality
+# Trying to copy the env(required=True) functionality
+SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY')
+if SECRET_KEY:
+    pass
+else:
+    raise KeyError
 
 # this tells django who to send app error emails to
 # ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
