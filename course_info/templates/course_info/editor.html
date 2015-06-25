@@ -6,31 +6,41 @@
 {% block extra_js %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
+
+            // Button functionality for "Insert as Widget" - updates the return-type to post to Canvas
             $('#iframe_submit').click(function() {
                 $('#return_type').val("iframe");
             });
 
+            // Button functionality for "Insert as Text"
             $('#oembed_submit').click(function() {
                 $('#return_type').val("oembed");
                 console.log("oembed submit?")
             });
 
+            // Give Canvas the right information on Submit
             $('#widget_edit_form').submit(function(event){
+
+                // set up the base url
                 var p = $(location).attr('protocol');
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?course_instance_id={{ course_instance_id }}';
 
+                // Only select once for efficiency's sake
+                var return_type_val = $("#return_type").val();
 
-                if ($("#return_type").val() ==  "oembed") {
-                    var endpoint_url = p + '//' + h + '/course_info/oembed';
-                    $('#oembed_url').val(endpoint_url);
-                }
-                else if ($("#return_type").val() ==  "iframe") {
+                // perform the relevant actions for the desired return type
+                if (return_type_val ==  "iframe") {
                     var widget_height = estimateHeight();
                     if (widget_height > 100 && widget_height < 1000) {
                         $("#widget_height").val(widget_height);
                     }
+                } else if (return_type_val ==  "oembed") {
+                    // ensure the correct configuration if indeed we're asking for some oEmbed
+                    var endpoint_url = p + '//' + h + '/course_info/oembed';
+                    $('#oembed_url').val(endpoint_url);
                 }
+
 
                 $('#widget_edit_form input:checkbox:checked').each(
                         function(){
