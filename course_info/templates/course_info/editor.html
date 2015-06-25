@@ -64,6 +64,7 @@
             // This value will be used to set the "height" attribute of the iFrame so that
             // the content fits.
             function estimateHeight() {
+                {% comment %}
                 var $checked = $("#widget_edit_form_container input:checked");
                 var $container = $('<div></div>');
                 var height;
@@ -73,13 +74,27 @@
                     $container.append($field);
                 });
 
-                h1 = $("#widget_edit_form_container").outerHeight();
+
 
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
+                {% endcomment %}
 
-                //return height * 1.50; //fudge factor, better to go a little over than under.
-                return h1 * 1.4;
+                // I'm not sure if I'm messing up something by replacing the code above,
+                // but this seems like a better way to calculate the height
+                var $container = $('<div></div>');
+
+                height = $("#widget_edit_form_container").outerHeight();
+                $("#widget_edit_form_container input:not(checked)").each(function(idx) {
+                    var $field = $(this).next().clone().wrap("<div></div>").parent();
+                    $container.append($field);
+                });
+
+{#                height = $container.hide().appendTo("body").height();#}
+{#                $container.remove();#}
+
+                neg_height = $container.height;
+                return (h1 * 1.4) - neg_height; //fudge factor, better to go a little over than under.
             }
         });
     </script>
