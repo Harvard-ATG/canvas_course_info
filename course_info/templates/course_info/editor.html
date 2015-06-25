@@ -64,7 +64,6 @@
             // This value will be used to set the "height" attribute of the iFrame so that
             // the content fits.
             function estimateHeight() {
-                {% comment %}
                 var $checked = $("#widget_edit_form_container input:checked");
                 var $container = $('<div></div>');
                 var height;
@@ -78,22 +77,6 @@
                 $container.remove();
 
                 return height * 1.4; //fudge factor, better to go a little over than under.
-                {% endcomment %}
-
-                // an alternative implementation for this is to get $("#widget_edit_form_container).outerheight
-                // and subtract from it for every unchecked checkbox of class course_info_checkbox,
-                // removing the height of the parent for every one. I can't help myself, i'm going in.
-                var original_height = $("#widget_edit_form_container").outerHeight * 1.5;
-
-                console.log(original_height);
-
-                var $unchecked_inputs = $(".course_info_checkbox input:not(checked)");
-
-                $unchecked_inputs.each(function(idx) {
-                   original_height -= $(this).parent().height;
-                });
-
-                return original_height;
             }
         });
     </script>
