@@ -74,10 +74,13 @@
     <div class="container-fluid">
         <h4>Please select the fields you wish to display from the list below.</h4>
 
-        <h5>Then, select either "Insert as Text" to place an editable table in the Canvas Editor, or
-            "Insert as Widget" to embed a live-updating widget to mirror your iSite</h5>
+        <h5>Then, select "Insert as Widget" to embed a live-updating widget to mirror your iSite
+            {% if should_offer_text %}
+                , or "Insert as Text" to place an editable table in the Canvas Editor
+            {% endif %}
+        </h5>
 
-        <p>The information in this widget is provided by the registrar's office.
+        <p>This information is provided by the registrar's office.
             If any of it is outdated or incorrect, please contact the catalog coordinator in your department.</p>
     </div>
     <br/>
@@ -85,6 +88,7 @@
 
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
+            {# could use this {{ var.example.strip|safe|removetags:"p img" }}#}
             {% for field in fields %}
                 <div>
                     <input type="checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
@@ -102,7 +106,11 @@
             <input type="hidden"                    name="id"           value="InfoFrame" />
             <br/>
             <input type="submit" class="btn btn-default" id="oembed_submit" name="oembed_submit" value="Insert as Text"/>
-            <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="Insert as Widget"/>
+
+            {% if should_offer_text %}
+                <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="Insert as Widget"/>
+            {% endif %}
+
         </form>
         <br/>
     {# the </div> tag originally wasn't in, not sure if it's supposed to be out. #}

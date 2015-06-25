@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from dce_lti_py.tool_config import ToolConfig
 from icommons import ICommonsApi
+from django.template.defaultfilters import striptags
 import json
 import urlparse
 
@@ -133,7 +134,6 @@ def widget(request):
     #context['fields'] = __mungeFields(context['fields'])
     return render(request, 'course_info/widget.html', context)
 
-
 def editor(request):
     if settings.COURSE_INSTANCE_ID:
         # course_instance_id = "312976"
@@ -145,16 +145,11 @@ def editor(request):
     course_context = __course_context(request, course_instance_id, keys)
     # course_context['line_guestimate'] =keys*2
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
-
-    # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
-    # TODO: make a permanent solution
-    def clean(t):
-        # This could be done more generically with some sort of matching to remove all tags,
-        #  but I don't want to risk removing something important.
-        return t.replace("<b>", "").replace("</b>","").replace("<h3>","").replace("</h3>","")
+    course_context['should_offer_text'] = settings.OFFER_TEXT
 
     for field in course_context['fields']:
-        field['value'] = clean(field['value'])
+        #abstracting out the 'clean' implementation
+        field['value'] = striptags(field['value'])
 
     return render(request, 'course_info/editor.html', course_context)
 

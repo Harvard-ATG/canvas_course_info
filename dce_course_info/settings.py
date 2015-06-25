@@ -125,6 +125,8 @@ LTI_OAUTH_CREDENTIALS = {
     #     'LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
 }
 
+OFFER_TEXT = SECURE_SETTINGS.get('OFFER_TEXT', True) # Offer to insert text by default
+
 # if you want to test locally and aren't getting real course instance ids from LTI launch params.
 # COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
 COURSE_INSTANCE_ID = SECURE_SETTINGS.get('COURSE_INSTANCE_ID')
@@ -188,4 +190,3 @@ LOGGING = {
         },
     }
 }
-
