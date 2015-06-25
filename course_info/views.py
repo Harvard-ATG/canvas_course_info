@@ -78,15 +78,14 @@ def __course_context(request, course_instance_id, keys):
             field['class'] = key2class[key]
         context['fields'].append(field)
 
-    school_info = ICommonsApi.from_request(request).get_school_info("hds")
+    school_info = ICommonsApi.from_request(request).get_school_info(course_info['course']['school_id'])
     context['fields'] = __mungeFields(context['fields'], school_info['title_long'])
     return context
 
 def __mungeFields(fields, school_name):
     # Could possibly sneak in some more inline styles here
     def stern(value, default):
-        # special ternary to simplify the logic below
-        # deals with blank fields
+        # special ternary to simplify the logic below -deals with blank fields
         if value == u' ' or value == u'' or value == '' or value == ' ':
             return default
         else:
@@ -96,13 +95,19 @@ def __mungeFields(fields, school_name):
         if field['key'] == 'title':
             field['value'] = '<h3>' + field['value'] + "</h3>"
         elif field['key'] == 'course.registrar_code_display':
-            #TODO: make sure this works alright with all courses and schools
-            course_number = stern(field['value'], "Unknown").split()[-1]
+            #TODO: TESTING - make sure this works alright with all courses and schools
+            #course_number = stern(field['value'], "Unknown Course Number").split()[-1]
+            try:
+                course_number = field['value'].split()[-1] # get only the display number, not the school acronym
+            except:
+                print("Registrar Code Atypical")
+                course_number = "Course Number Unknown"
             field['value'] = school_name + ": " + course_number
+
         elif field['key'] == 'term.display_name':
-            field['value'] = field['value'] #include this? '<b>Term:</b> '
+            field['value'] = stern(field['value'],"Display Name Unknown") #include this? '<b>Term:</b> '
         elif field['key'] == 'instructors_display':
-            field['value'] = field['value'] #include this? '<b>Course Instructor(s):</b> '
+            field['value'] = stern(field['value'], "Course Instructors Unknown") #include this? '<b>Course Instructor(s):</b> '
         elif field['key'] == 'location':
             field['value'] = '<b>Location:</b> ' + stern(field['value'], 'Unknown')
         elif field['key'] == 'meeting_time':
@@ -112,7 +117,7 @@ def __mungeFields(fields, school_name):
         elif field['key'] == 'description':
             field['value'] = '<b>Course Description:</b> ' + stern(field['value'], 'None')
         elif field['key'] == 'notes':
-            field['value'] = '<b>Note:</b> ' + field['value']
+            field['value'] = '<b>Note: </b> ' + field['value']
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
 
     return fields
@@ -144,6 +149,8 @@ def editor(request):
     # An ugly, temporary fix to the munge issue - for some reason I can't only munge in the widget view.
     # TODO: make a permanent solution
     def clean(t):
+        # This could be done more generically with some sort of matching to remove all tags,
+        #  but I don't want to risk removing something important.
         return t.replace("<b>", "").replace("</b>","").replace("<h3>","").replace("</h3>","")
 
     for field in course_context['fields']:

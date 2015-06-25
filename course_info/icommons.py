@@ -36,12 +36,6 @@ class ICommonsApi(drest.API):
                                         serialize=True,
                                         trailing_slash=False)
 
-    #TODO: send the school_id to https://icommons.harvard.edu/api/course/v2/schools/
-    #then get the title_long value
-
-
-
-
     def get_course_info(self, course_instance_id):
         course_info = {}
         # get the course_instance data
