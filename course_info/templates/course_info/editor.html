@@ -44,7 +44,7 @@
                 // modify the submission url to reflect the checked boxes
                 // does this have to be 'f' or can we change it?
                 // in this situation, I guess 'f' signifies "unchecked == false"
-                $(".course_info_checkbox").each(
+                $('#widget_edit_form input:checkbox:checked').each(
                         function(){
                             widget_url += '&amp;f=' + $(this).val();
                         }
@@ -53,11 +53,13 @@
                 $('#widget_url').val(widget_url);
             });
 
-            $("#widget_edit_form_container input").on("change", function(e) {
+            //Is this obsolete debug code? Can we take it out?
+            $(".course_info_checkbox").on("change", function(e) {
                 console.log("widget height estimate changed to:", estimateHeight());
             });
 
-            // See ReadMe for details on how to get resizing to work in Canvas.
+            // See README for details on how to get resizing to work in Canvas.
+            // This is a stand-in for a global js function that should be included in the Canvas site.
             // This function attempts to determine the content height for the checked fields.
             // This value will be used to set the "height" attribute of the iFrame so that
             // the content fits.
@@ -71,10 +73,13 @@
                     $container.append($field);
                 });
 
+                h1 = $("#widget_edit_form_container").outerHeight();
+
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
 
-                return height * 1.50; //fudge factor, better go a little over than under.
+                //return height * 1.50; //fudge factor, better to go a little over than under.
+                return h1;
             }
         });
     </script>
