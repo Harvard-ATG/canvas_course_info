@@ -196,12 +196,13 @@ def oembed_handler(request):  # TODO
     html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type = " "))
 
          # TODO: see if this can be improved
-    # unfortunately the content-type is going to display because of the way the render function works
-    # magic number 13 is the amount of characters in
-    # hacky workaround is to remove the first 13 characters from the html_string. Sorry
-    # html_string = html_string[13:]
+    # unfortunately the content-type is going to be included in html_string because of the way the render function works
+    # hacky workaround is to remove the first 14 characters from the html_string. Sorry.
+    # magic number 13 is the slice required to remove "Content-Type: ", which precedes the first <p> tag
+    html_string = html_string[13:]
 
-    # Returning just enough oEmbed to satisfy Canvas
+    # Return just enough oEmbed to satisfy Canvas
+    # More can be included if so desired (title, width, height, other metadata, etc)
     oEmbed_response = json.JSONEncoder().encode({
         "html": html_string,
         "type": "rich"

@@ -63,7 +63,7 @@
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
 
-                return height * 1.33; //fudge factor, better go a little over than under.
+                return height * 1.50; //fudge factor, better go a little over than under.
             }
         });
     </script>
@@ -74,10 +74,14 @@
     <div class="container-fluid">
         <h4>Please select the fields you wish to display from the list below.</h4>
 
-        <h5>Then, select "Insert as Widget" to embed a live-updating widget to mirror your iSite
+        <h5>
+
+            Then, select "Insert as Widget" to embed a live-updating widget to mirror your iSite
             {% if should_offer_text %}
-                , or "Insert as Text" to place an editable table in the Canvas Editor
+                {# TODO: Get the leading whitespace out of the django printer so this comma lines up #}
+                - or "Insert as Text" to place an editable table in the Canvas Editor
             {% endif %}
+
         </h5>
 
         <p>This information is provided by the registrar's office.
@@ -105,15 +109,13 @@
             <input type="hidden"                    name="title"        value="Course Info" />
             <input type="hidden"                    name="id"           value="InfoFrame" />
             <br/>
-            <input type="submit" class="btn btn-default" id="oembed_submit" name="oembed_submit" value="Insert as Text"/>
+            <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="Insert as Widget"/>
 
             {% if should_offer_text %}
-                <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="Insert as Widget"/>
+                <input type="submit" class="btn btn-default" id="oembed_submit" name="oembed_submit" value="Insert as Text"/>
             {% endif %}
 
         </form>
         <br/>
-    {# the </div> tag originally wasn't in, not sure if it's supposed to be out. #}
-    {# It gets closed in the browser but think that's automatic, not from somewhere in our code#}
     </div>
 {% endblock %}

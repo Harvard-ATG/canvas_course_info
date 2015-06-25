@@ -1,6 +1,26 @@
 from django.test import TestCase
 
 # TODO
+from django.test import TestCase
+
+class ApiRequestTestCase(TestCase):
+    def school_test(self):
+        #TODO
+        pass
+
+    def config_test(self):
+        #TODO
+        pass
+
+    def editor_test(self):
+        #TODO
+        pass
+
+    def widget_test(self):
+        #TODO
+        pass
+
+
 SCHOOLS = {
     "hsph":     "Harvard School of Public Health",
     "hds":      "Harvard Divinity School",
