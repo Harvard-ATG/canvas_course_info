@@ -20,6 +20,10 @@ class ApiRequestTestCase(TestCase):
         #TODO
         pass
 
+    def oembed_test(self):
+        #TODO
+        pass
+
 
 SCHOOLS = {
     "hsph":     "Harvard School of Public Health",
