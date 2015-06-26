@@ -65,7 +65,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 # Used by 'collectstatic' management command
-STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
+STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, '/http_static/'))
 
 # STATICFILES_DIRS = (
 #     os.path.normpath(os.path.join(BASE_DIR, 'http_static')),
@@ -93,10 +93,10 @@ LTI_APPS = {
 # SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 # Trying to copy the env(required=True) functionality
 SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY')
-if SECRET_KEY:
-    pass
-else:
-    raise KeyError
+# if SECRET_KEY:
+#     pass
+# else:
+#     raise KeyError
 
 # this tells django who to send app error emails to
 # ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
