@@ -87,14 +87,13 @@
     <div class="container-fluid">
         <h4>Please select the fields you wish to display from the list below.</h4>
 
+        {# Display instructional text - some conditional on whether we're offering to insert text to the editor #}
         <h5>
-
             Then, select "Insert as Widget" to embed a live-updating widget to mirror your iSite
             {% if should_offer_text %}
                 {# TODO: Get the leading whitespace out of the django printer so this comma lines up #}
                 - or "Insert as Text" to place an editable table in the Canvas Editor
             {% endif %}
-
         </h5>
 
         <p>This information is provided by the registrar's office.
@@ -105,7 +104,6 @@
 
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
-            {# could use this {{ var.example.strip|safe|removetags:"p img" }}#}
             {% for field in fields %}
                 <div>
                     <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
@@ -114,20 +112,21 @@
             {% endfor %}
 
             {# Many of these values are inserted dynamically by the JS above #}
-            <input type="hidden" id="return_type"   name="return_type"  value=""/>
-            <input type="hidden" id="oembed_url"    name="endpoint"     value=""/>
-            <input type="hidden" id="widget_url"    name="url"          value=""/>
-            <input type="hidden"                    name="width"        value="100%"        />
-            <input type="hidden" id="widget_height" name="height"       value=""            />
-            <input type="hidden"                    name="title"        value="Course Info" />
-            <input type="hidden"                    name="id"           value="InfoFrame" />
+            {# They are the indicators passed to Canvas to format/act upon the response html #}
+            {# https://canvas.instructure.com/doc/api/file.editor_button_tools.html #}
+            <input type="hidden" id="return_type"   name="return_type"   value="" />
+            <input type="hidden" id="oembed_url"    name="endpoint"      value="" />
+            <input type="hidden" id="widget_url"    name="url"           value="" />
+            <input type="hidden" id="widget_height" name="height"        value="" />
+            <input type="hidden"                    name="width"         value="100%" />
+            <input type="hidden"                    name="title"         value="Course Info" />
+            <input type="hidden"                    name="id"            value="InfoFrame" />
             <br/>
-            <input type="submit" class="btn btn-default" id="iframe_submit" name="iframe_submit" value="Insert as Widget"/>
+            <input type="submit" id="iframe_submit" name="iframe_submit" value="Insert as Widget" class="btn btn-default" />
 
             {% if should_offer_text %}
-                <input type="submit" class="btn btn-default" id="oembed_submit" name="oembed_submit" value="Insert as Text"/>
+                <input type="submit" id="oembed_submit" name="oembed_submit" value="Insert as Text" class="btn btn-default" />
             {% endif %}
-
         </form>
         <br/>
     </div>

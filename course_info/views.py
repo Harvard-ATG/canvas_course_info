@@ -163,6 +163,7 @@ def editor(request):
     course_context['should_offer_text'] = settings.OFFER_TEXT
 
     # scrub HTML tags (just for the editor view)
+    # this could also be done in the django template
     for field in course_context['fields']:
         field['value'] = striptags(field['value'])
 

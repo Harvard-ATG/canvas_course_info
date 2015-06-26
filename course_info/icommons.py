@@ -50,10 +50,15 @@ class ICommonsApi(drest.API):
         return course_info
 
 
-    def get_school_info(self, school):
+    def get_school_info(self, school_id):
+        '''
+            retrieves - from the iCommons API - the information
+            about the school passed in (by its school id),
+            or logs an error if there is no such school
+        '''
         school_info = {}
         try:
-            relative_url = '/schools/'+ school +'/?format=json'
+            relative_url = '/schools/'+ school_id +'/?format=json'
             response = self.make_request('GET', relative_url, headers=self.headers)
             school_info = response.data.copy()
         except drest.exc.dRestRequestError as e:
@@ -61,3 +66,7 @@ class ICommonsApi(drest.API):
         except Exception as e:
             log.error(e.message)
         return school_info
+        # This function could be made to return only the school name or an error, as that's the only thing we need it
+        # for right now (in views.py, to insert the school name before the display number).
+        # But just in case we want to use it for more than that in the future, and so that it mirrors 'get_course_info,'
+        # we're going to let it return the whole data set.
