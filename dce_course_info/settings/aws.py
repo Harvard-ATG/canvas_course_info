@@ -15,7 +15,8 @@ from django.core.exceptions import ImproperlyConfigured
 from getenv import env
 from .secure import SECURE_SETTINGS
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+# this is only used for static and template files
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -58,9 +59,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_ROOT = 'static_root'
+# STATIC_ROOT = 'static_root'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'course_info/static'), )
+# Used by 'collectstatic' management command
+STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
+
+# STATICFILES_DIRS = (
+#     os.path.normpath(os.path.join(BASE_DIR, 'http_static')),
+# )
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
@@ -108,12 +117,22 @@ MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
 # you can also set DJANGO_DATABASE_DEFAULT_ENGINE if you want to override the
 # default engine, e.g., using https://github.com/kennethreitz/django-postgrespool/
 # default engine, e.g., using https://github.com/kennethreitz/django-postgrespool/
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # engine=env('DJANGO_DATABASE_DEFAULT_ENGINE', None))
+#         engine = SECURE_SETTINGS.get('DJANGO_DATABASE_DEFAULT_ENGINE', None)
+#     )
+# }
+
 DATABASES = {
-    'default': dj_database_url.config(
-        # engine=env('DJANGO_DATABASE_DEFAULT_ENGINE', None))
-        engine = SECURE_SETTINGS.get('DJANGO_DATABASE_DEFAULT_ENGINE', None)
-    )
-}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db1'),
+        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'),
+        'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
+        'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
+        'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
+} }
 
 # REDIS_URL = env('REDIS_URL')
 # Check if we want to do it like this or with the host and port

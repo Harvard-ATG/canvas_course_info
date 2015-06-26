@@ -5,7 +5,9 @@ from drest.exc import dRestRequestError, dRestError
 from requests.utils import parse_header_links
 from django.http import QueryDict
 from getenv import env
-from dce_course_info import settings
+
+    #TODO is this the right way to do it?
+from dce_course_info.settings import aws as settings
 
 import logging
 log = logging.getLogger(__name__)

@@ -38,4 +38,5 @@ static_root
 
 dcei_venv
 bin/*
-secure.py
+dce_course_info/settings/secure.py
+http_static
