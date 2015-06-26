@@ -92,11 +92,11 @@ LTI_APPS = {
 
 # SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 # Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY')
-# if SECRET_KEY:
-#     pass
-# else:
-#     raise KeyError
+SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY', "NO! Take this out! TODO")
+if SECRET_KEY:
+    pass
+else:
+    raise KeyError
 
 # this tells django who to send app error emails to
 # ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
@@ -127,7 +127,7 @@ MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db1'),
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db'),
         'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
