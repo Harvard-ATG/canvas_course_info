@@ -202,7 +202,11 @@ def oembed_handler(request):  # TODO
     # unfortunately the content-type is going to be included in html_string because of the way the render function works
     # hacky workaround is to remove the first 14 characters from the html_string. Sorry.
     # magic number 13 is the slice required to remove "Content-Type: ", which precedes the first <p> tag
-    html_string = html_string[13:]
+    #html_string = html_string[13:]
+
+    import re
+    html_string = re.sub('<Content-Type: >', '', html_string)
+    print(html_string)
 
     # Return just enough oEmbed to satisfy Canvas
     # More can be included if so desired (title, width, height, other metadata, etc)
