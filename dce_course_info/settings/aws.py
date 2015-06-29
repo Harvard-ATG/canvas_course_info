@@ -65,12 +65,17 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # Used by 'collectstatic' management command
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static/'))
-
-print(BASE_DIR)
-
+# print("STATIC_ROOT: " +  str(STATIC_ROOT))
 STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'http_static/')),
+    os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
 )
+
+#TODO: move this out of prod
+# if you want to test locally and aren't getting real course instance ids from LTI launch params.
+# COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
+COURSE_INSTANCE_ID = SECURE_SETTINGS.get('COURSE_INSTANCE_ID')
+if COURSE_INSTANCE_ID :
+    COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
