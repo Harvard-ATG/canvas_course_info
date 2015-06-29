@@ -86,6 +86,7 @@ def __course_context(request, course_instance_id, keys):
     return context
 
 def __mungeFields(fields, school_name):
+    # This method takes in all the iCommons fields, and formats those that we'd like to display
     # Could possibly sneak in some more inline styles here
 
     # if we want more info in the logger, could pass in the whole field dictionary and send the key in the log message
@@ -100,19 +101,6 @@ def __mungeFields(fields, school_name):
     for field in fields:
         if field['key'] == 'title':
             field['value'] = '<h3>' + field['value'] + "</h3>"
-        elif field['key'] == 'course.registrar_code_display':
-            #TODO: TESTING - make sure this works alright with all courses and schools
-            try:
-                course_number = field['value'].split()[-1] # get only the display number, not the school acronym
-                #print("Course Number Try: " + course_number)
-            except:
-                course_number = stern(field['value'], "Course Number Unknown")
-                #TODO: log "Registrar Code Atypical/Not Provided"
-                #course_number = "Course Number Unknown"
-                print("Course Number Except: " + field['value'])
-
-            field['value'] = school_name + ": " + course_number
-
         elif field['key'] == 'term.display_name':
             field['value'] = stern(field['value'],"Display Name Unknown") #include this? '<b>Term:</b> '
         elif field['key'] == 'instructors_display':
@@ -127,6 +115,16 @@ def __mungeFields(fields, school_name):
             field['value'] = '<b>Course Description:</b> ' + stern(field['value'], 'None')
         elif field['key'] == 'notes':
             field['value'] = '<b>Note: </b> ' + field['value']
+        elif field['key'] == 'course.registrar_code_display':
+            #TODO: TESTING - make sure this works alright with all courses and schools
+            try:
+                #Extracts the course number (the last substring) from typical display codes
+                course_number = field['value'].split()[-1]
+            except:
+                #If the display code is atypical, show the whole thing. (Unless it's blank)
+                course_number = stern(field['value'], "Course Number Unknown")
+                #TODO: log "Registrar Code Atypical/Not Provided"
+            field['value'] = school_name + ": " + course_number
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
 
     return fields

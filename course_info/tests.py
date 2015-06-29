@@ -1,29 +1,23 @@
 from django.test import TestCase
+from icommons import ICommonsApi
+from django.test import Client
 
-# TODO
-from django.test import TestCase
+# TODO: Expand test coverage
+class testData(TestCase):
+    # Tip: first word in a test method must be "test" for Django to recognize it & run it.
+    def test_course_number(self):
+        # Make sure that the widget is displaying a correct course number for a given course ID
+        id = str(312976)
+        c = Client()
+        response = c.get('/course_info/widget.html?course_instance_id=' + id + '&f=course.registrar_code_display')
+        self.assertContains(response, "2901")
+        self.assertEqual("a", "a", "a == a")
 
-class ApiRequestTestCase(TestCase):
-    def school_test(self):
-        #TODO
-        pass
-
-    def config_test(self):
-        #TODO
-        pass
-
-    def editor_test(self):
-        #TODO
-        pass
-
-    def widget_test(self):
-        #TODO
-        pass
-
-    def oembed_test(self):
-        #TODO
-        pass
-
+    def test_school_name(self):
+        id = str(312976)
+        c = Client()
+        response = c.get('/course_info/widget.html?course_instance_id=' + id + '&f=course.registrar_code_display')
+        self.assertContains(response, "Harvard Divinity School")
 
 SCHOOLS = {
     "hsph":     "Harvard School of Public Health",
