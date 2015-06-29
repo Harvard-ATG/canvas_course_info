@@ -1,3 +1,6 @@
+# ./manage.py test
+
+
 from django.test import TestCase
 from icommons import ICommonsApi
 from django.test import Client

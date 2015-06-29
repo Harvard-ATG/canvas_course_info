@@ -1,3 +1,4 @@
+# ./manage.py test
 from .aws import *
 
 ENV_NAME = 'test'
