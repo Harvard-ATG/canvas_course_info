@@ -142,6 +142,7 @@ def editor(request):
     try:
         course_instance_id = settings.COURSE_INSTANCE_ID
     except:
+                                # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
 
     # if settings.COURSE_INSTANCE_ID:

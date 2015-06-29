@@ -64,7 +64,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 # Used by 'collectstatic' management command
-STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static/'))
+STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 # print("STATIC_ROOT: " +  str(STATIC_ROOT))
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
@@ -135,8 +135,8 @@ MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db'),
-        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'),
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db'), #TODO: mirror TLT
+        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'), #TODO: mirror TLT
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
