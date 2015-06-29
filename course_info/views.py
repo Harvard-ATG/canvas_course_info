@@ -205,7 +205,7 @@ def oembed_handler(request):  # TODO
     #html_string = html_string[13:]
 
     import re
-    html_string = re.sub('<Content-Type: >', '', html_string)
+    html_string = re.sub('Content-Type: ', '', html_string)
     print(html_string)
 
     # Return just enough oEmbed to satisfy Canvas
