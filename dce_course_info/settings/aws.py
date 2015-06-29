@@ -19,6 +19,7 @@ from .secure import SECURE_SETTINGS
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
+DEBUG = SECURE_SETTINGS.get('enable_debug', False)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = (
@@ -58,8 +59,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-# STATIC_ROOT = 'static_root'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -141,7 +140,6 @@ REDIS_URL = SECURE_SETTINGS.get('REDIS_URL')
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
 LTI_OAUTH_CREDENTIALS = {
-
     SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY') :
         SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
 
@@ -151,12 +149,6 @@ LTI_OAUTH_CREDENTIALS = {
 
 # Display the button to offer to insert text by default
 OFFER_TEXT = SECURE_SETTINGS.get('OFFER_TEXT', True)
-
-# if you want to test locally and aren't getting real course instance ids from LTI launch params.
-# COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
-COURSE_INSTANCE_ID = SECURE_SETTINGS.get('COURSE_INSTANCE_ID')
-if COURSE_INSTANCE_ID :
-    COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
 # ICOMMONS_API_TOKEN = env('ICOMMONS_API_TOKEN')
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('ICOMMONS_API_TOKEN')
