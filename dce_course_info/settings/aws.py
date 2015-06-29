@@ -66,8 +66,10 @@ STATIC_URL = '/static/'
 # Used by 'collectstatic' management command
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static/'))
 
+print(BASE_DIR)
+
 STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'http_static')),
+    os.path.normpath(os.path.join(BASE_DIR, 'http_static/')),
 )
 
 TEMPLATE_DIRS = (
