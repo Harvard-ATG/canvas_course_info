@@ -16,6 +16,7 @@ from getenv import env
 from .secure import SECURE_SETTINGS
 
 # this is only used for static and template files
+# TODO: does TLT want this in dce_course_info/dce_course_info?
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
@@ -65,7 +66,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # Used by 'collectstatic' management command
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
-# print("STATIC_ROOT: " +  str(STATIC_ROOT))
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
 )
