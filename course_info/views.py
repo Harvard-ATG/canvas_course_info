@@ -102,12 +102,15 @@ def __mungeFields(fields, school_name):
             field['value'] = '<h3>' + field['value'] + "</h3>"
         elif field['key'] == 'course.registrar_code_display':
             #TODO: TESTING - make sure this works alright with all courses and schools
-            #course_number = stern(field['value'], "Unknown Course Number").split()[-1]
             try:
                 course_number = field['value'].split()[-1] # get only the display number, not the school acronym
+                #print("Course Number Try: " + course_number)
             except:
+                course_number = stern(field['value'], "Course Number Unknown")
                 #TODO: log "Registrar Code Atypical/Not Provided"
-                course_number = "Course Number Unknown"
+                #course_number = "Course Number Unknown"
+                print("Course Number Except: " + field['value'])
+
             field['value'] = school_name + ": " + course_number
 
         elif field['key'] == 'term.display_name':
