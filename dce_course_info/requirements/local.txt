@@ -1,0 +1,5 @@
+# local environment requirements, including base requirements
+-r aws.txt
+django-debug-toolbar
+mock
+pep8 flake8
