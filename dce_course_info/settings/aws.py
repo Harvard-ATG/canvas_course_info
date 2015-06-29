@@ -73,11 +73,11 @@ STATICFILES_DIRS = (
 #TODO: move this out of prod
 # if you want to test locally and aren't getting real course instance ids from LTI launch params.
 # COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
-try:
-    COURSE_INSTANCE_ID = str(SECURE_SETTINGS.get('COURSE_INSTANCE_ID'))
-except:
-    #log something?
-    pass
+# try:
+#     COURSE_INSTANCE_ID = str(SECURE_SETTINGS.get('COURSE_INSTANCE_ID'))
+# except:
+#     #log something?
+#     pass
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
