@@ -1,1 +1,4 @@
 -r requirements/dce.txt
+#-r dce_course_info/aws.txt
+#-r dce_course_info/local.txt
+#-r dce_course_info/test.txt
