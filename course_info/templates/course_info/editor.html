@@ -76,6 +76,7 @@
                 height = $container.hide().appendTo("body").height();
                 $container.remove();
 
+                //TODO: set up global js (and put this back around 1.3 from dce?)
                 return height * 1.7; //fudge factor, better to go a little over than under.
             }
         });
