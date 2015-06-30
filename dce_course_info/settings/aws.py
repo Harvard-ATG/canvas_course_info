@@ -89,28 +89,25 @@ LTI_APPS = {
     }
 }
 
-# SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 # Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY')
+SECRET_KEY = SECURE_SETTINGS.get('django_secret_key')
 if SECRET_KEY:
     pass
 else:
     raise KeyError
 
 # this tells django who to send app error emails to
-# ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
-ADMINS = ((SECURE_SETTINGS.get('DJANGO_ADMIN_NAME'), SECURE_SETTINGS.get('DJANGO_ADMIN_EMAIL')))
+ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
 
 
 # From: addr of the app error emails
-# SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', 'root@localhost')
-SERVER_EMAIL = SECURE_SETTINGS.get('DJANGO_SERVER_EMAIL', 'root@localhost')
+SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
 
 
 # use mandrill to send app error emails
 EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
 # MANDRILL_API_KEY = env('MANDRILL_APIKEY')
-MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
+MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
 
 # depends on DATABASE_URL being set in your env. See https://github.com/kennethreitz/dj-database-url
 # you can also set DJANGO_DATABASE_DEFAULT_ENGINE if you want to override the
@@ -126,8 +123,8 @@ MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db'), #TODO: mirror TLT
-        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'), #TODO: mirror TLT
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'dce_course_info'), #TODO: mirror TLT
+        'USER': SECURE_SETTINGS.get('db_default_user', 'postgres'), #TODO: mirror TLT
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
@@ -135,26 +132,21 @@ DATABASES = {
 
 # REDIS_URL = env('REDIS_URL')
 # Check if we want to do it like this or with the host and port
-REDIS_URL = SECURE_SETTINGS.get('REDIS_URL')
+REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
 LTI_OAUTH_CREDENTIALS = {
-    SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY') :
-        SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
-
-    # env('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY'): env(
-    #     'LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
+    SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
+        SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
 }
 
 # Display the button to offer to insert text by default
-OFFER_TEXT = SECURE_SETTINGS.get('OFFER_TEXT', True)
+OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
 
-# ICOMMONS_API_TOKEN = env('ICOMMONS_API_TOKEN')
-ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('ICOMMONS_API_TOKEN')
+ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
-# ICOMMONS_BASE_URL = env('ICOMMONS_BASE_URL')
-ICOMMONS_BASE_URL = SECURE_SETTINGS.get('ICOMMONS_BASE_URL')
+ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 
 LOGGING = {
     'version': 1,
