@@ -36,6 +36,7 @@ tmp
 *.sqlite3
 static_root
 
+#ATG & TLT
 dcei_venv
 bin/*
 dce_course_info/settings/secure.py

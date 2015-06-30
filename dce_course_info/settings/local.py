@@ -1,6 +1,4 @@
 # ./manage.py runserver --settings=dce_course_info.settings.local
-
-
 from .aws import *
 
 ENV_NAME = 'local'

@@ -30,7 +30,8 @@ Type "help" for help.
 
 question: what the hell is template1?
 
-answer: "CREATE DATABASE actually works by copying an existing database. By default, it copies the standard system database named template1"
+answer: "CREATE DATABASE actually works by copying an existing database.
+By default, it copies the standard system database named template1"
 http://www.postgresql.org/docs/9.1/static/manage-ag-templatedbs.html
 
 template1=# create database dce_course_info
@@ -64,7 +65,7 @@ REDIS_URL=http://localhost:6379
 
 Do not stick your .env file in source control. This stuff is sensitive.
 
-7. run synchdb 
+7. run syncdb 
 
 python manage.py syncdb
 
@@ -95,7 +96,10 @@ Find canvas vagrant box here:
 
 https://github.com/harvard-dce/canvas_vagrant
 
-It will make your LTI developing life much easier.  
+It will make your LTI developing life much easier.
+
+9b. To run the server with local settings, add "--settings=dce_course_info.settings.local"
+    when your run "./manage.py" 
   
 10. Add LTI tool to canvas
  
@@ -104,5 +108,3 @@ It will make your LTI developing life much easier.
  http://192.168.50.1:8000/course_info/tool_config
  
  For secret and key see the .env file you created.
- 
-
