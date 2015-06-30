@@ -16,7 +16,7 @@ from getenv import env
 from .secure import SECURE_SETTINGS
 
 # this is only used for static and template files
-# TODO: does TLT want this in dce_course_info/dce_course_info?
+# TODO: does TLT want static files in project/dce_course_info or in project/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
@@ -69,15 +69,6 @@ STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 STATICFILES_DIRS = (
     os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
 )
-
-#TODO: move this out of prod
-# if you want to test locally and aren't getting real course instance ids from LTI launch params.
-# COURSE_INSTANCE_ID=env('COURSE_INSTANCE_ID')
-# try:
-#     COURSE_INSTANCE_ID = str(SECURE_SETTINGS.get('COURSE_INSTANCE_ID'))
-# except:
-#     #log something?
-#     pass
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
