@@ -54,7 +54,7 @@ class ICommonsApi(drest.API):
         '''
             retrieves - from the iCommons API - the information
             about the school passed in (by its school id),
-            or logs an error if there is no such school
+            or logs an error and returns an empty dict if there is no such school
         '''
         school_info = {}
         try:

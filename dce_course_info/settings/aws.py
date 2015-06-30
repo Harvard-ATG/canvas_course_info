@@ -9,13 +9,15 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+
 #import dj_database_url
 #from django.core.exceptions import ImproperlyConfigured
 #from getenv import env
+
+import os
 from .secure import SECURE_SETTINGS
 
-# TODO: does TLT want static files in project/dce_course_info or in project/
+# TODO: does TLT want static files in project/dce_course_info or in project/?
 # this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -59,7 +61,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-
 # Display the button to offer to insert text by default
 OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
 
@@ -99,17 +100,6 @@ if SECRET_KEY:
 else:
     raise KeyError
 
-# TODO: Can all this email stuff be taken out? Check with DCE.
-# # this tells django who to send app error emails to
-# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
-#
-# # From: addr of the app error emails
-# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
-#
-# # use mandrill to send app error emails
-# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -134,6 +124,17 @@ LTI_OAUTH_CREDENTIALS = {
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
+
+# TODO: Can all this email stuff be taken out? Check with DCE.
+# # this tells django who to send app error emails to
+# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
+#
+# # From: addr of the app error emails
+# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
+#
+# # use mandrill to send app error emails
+# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
 
 LOGGING = {
     'version': 1,

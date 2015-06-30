@@ -1,19 +1,17 @@
 import logging
-
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
-from django.core.urlresolvers import reverse
-from django.conf import settings
-from dce_lti_py.tool_config import ToolConfig
-from icommons import ICommonsApi
-from django.template.defaultfilters import striptags
 import json
 import urlparse
 import re
-
+from django.contrib.auth.decorators import login_required
+from django.http                    import HttpResponse
+from django.shortcuts               import render, redirect
+from django.views.decorators.csrf   import csrf_exempt
+from django.views.decorators.http   import require_GET, require_POST
+from django.core.urlresolvers       import reverse
+from django.conf                    import settings
+from dce_lti_py.tool_config         import ToolConfig
+from icommons                       import ICommonsApi
+from django.template.defaultfilters import striptags
 
 log = logging.getLogger(__name__)
 
@@ -138,17 +136,11 @@ def widget(request):
 
 def editor(request):
 
-    # #TODO: could/should this be adapted to react to the environment? (Like never do this in production)
-    # try:
-    #     course_instance_id = settings.COURSE_INSTANCE_ID
-    # except:
-    #                             # "lis" appears to be a deliberate misspelling
-    #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-
+    # Use an example course for development
     if settings.COURSE_INSTANCE_ID:
         course_instance_id = settings.COURSE_INSTANCE_ID
-        #pass
     else:
+        # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
 
     # The values we will want to display
@@ -187,7 +179,6 @@ def oembed_handler(request):  # TODO
         See the README for more information - how oEmbed works, terminology, etc.
         www.oembed.com
     '''
-
 
     # the url we need to act on is a parameter in Canvas' oEmbed request
     url = request.GET.get('url')
