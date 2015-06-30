@@ -1,12 +1,10 @@
-from urllib import urlencode
-from urlparse import urlparse
+#from urllib import urlencode
+#from urlparse import urlparse
+#from requests.utils import parse_header_links
+#from django.http import QueryDict
+#from getenv import env
 import drest
 from drest.exc import dRestRequestError, dRestError
-from requests.utils import parse_header_links
-from django.http import QueryDict
-from getenv import env
-
-    #TODO is this the right way to do it?
 from dce_course_info.settings import aws as settings
 
 import logging

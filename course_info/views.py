@@ -138,18 +138,18 @@ def widget(request):
 
 def editor(request):
 
-    #TODO: could/should this be adapted to react to the environment? (Like never do this in production)
-    try:
-        course_instance_id = settings.COURSE_INSTANCE_ID
-    except:
-                                # "lis" appears to be a deliberate misspelling
-        course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-
-    # if settings.COURSE_INSTANCE_ID:
-    #     #course_instance_id = settings.COURSE_INSTANCE_ID
-    #     pass
-    # else:
+    # #TODO: could/should this be adapted to react to the environment? (Like never do this in production)
+    # try:
+    #     course_instance_id = settings.COURSE_INSTANCE_ID
+    # except:
+    #                             # "lis" appears to be a deliberate misspelling
     #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
+    if settings.COURSE_INSTANCE_ID:
+        course_instance_id = settings.COURSE_INSTANCE_ID
+        #pass
+    else:
+        course_instance_id = request.POST.get('lis_course_offering_sourcedid')
 
     # The values we will want to display
     keys = [

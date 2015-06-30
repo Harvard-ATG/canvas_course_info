@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 #import dj_database_url
-from django.core.exceptions import ImproperlyConfigured
+#from django.core.exceptions import ImproperlyConfigured
 #from getenv import env
 from .secure import SECURE_SETTINGS
 

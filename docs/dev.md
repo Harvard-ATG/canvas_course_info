@@ -15,6 +15,9 @@ If you're not in the right virtualenv switch using workon
 3. install requirements with pip
 
 pip install -r requirements.txt
+(also, go to dce_course_info/dce_course_info/requirements, and 
+    pip install -r local.txt
+    if you're running this offline)
 
 4. make sure postgres is running
 
@@ -45,6 +48,7 @@ CREATE ROLE
 brew install redis
 
 6. create a .env file with the variables described in heroku.md
+TODO: this may need to be changed to align with secure.py changes
 
 Something like this:
 
@@ -100,6 +104,9 @@ It will make your LTI developing life much easier.
 
 9b. To run the server with local settings, add "--settings=dce_course_info.settings.local"
     when your run "./manage.py" 
+    
+    Also, make sure you've gone and run
+        pip install -r
   
 10. Add LTI tool to canvas
  
