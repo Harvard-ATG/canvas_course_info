@@ -15,8 +15,8 @@ from django.core.exceptions import ImproperlyConfigured
 #from getenv import env
 from .secure import SECURE_SETTINGS
 
-# this is only used for static and template files
 # TODO: does TLT want static files in project/dce_course_info or in project/
+# this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
@@ -56,10 +56,12 @@ AUTHENTICATION_BACKENDS = (
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
+
+# Display the button to offer to insert text by default
+OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
@@ -97,21 +99,22 @@ if SECRET_KEY:
 else:
     raise KeyError
 
-#TODO: Can all this email stuff be taken out? Check with DCE.
-# this tells django who to send app error emails to
-ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
-
-# From: addr of the app error emails
-SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
-
-# use mandrill to send app error emails
-EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
+# TODO: Can all this email stuff be taken out? Check with DCE.
+# # this tells django who to send app error emails to
+# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
+#
+# # From: addr of the app error emails
+# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
+#
+# # use mandrill to send app error emails
+# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': SECURE_SETTINGS.get('db_default_name', 'dce_course_info'),
+            #'postgres' is in the TLT aws wiki, but won't this give access to all databases?
         'USER': SECURE_SETTINGS.get('db_default_user', 'postgres'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
@@ -127,9 +130,6 @@ LTI_OAUTH_CREDENTIALS = {
     SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
         SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
 }
-
-# Display the button to offer to insert text by default
-OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
