@@ -111,6 +111,10 @@ DATABASES = {
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
 } }
 
+# unused right now
+GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
+GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
+
 # Check if we want to do it like this or with the host and port
 REDIS_URL = SECURE_SETTINGS.get('redis_url')
 

@@ -137,11 +137,18 @@ def widget(request):
 def editor(request):
 
     # Use an example course for development
-    if settings.COURSE_INSTANCE_ID:
+    # if settings.COURSE_INSTANCE_ID:
+    #     course_instance_id = settings.COURSE_INSTANCE_ID
+    # else:
+    #     # "lis" appears to be a deliberate misspelling
+    #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+    try:
         course_instance_id = settings.COURSE_INSTANCE_ID
-    else:
-        # "lis" appears to be a deliberate misspelling
+    except:
+                                # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
+
 
     # The values we will want to display
     keys = [
