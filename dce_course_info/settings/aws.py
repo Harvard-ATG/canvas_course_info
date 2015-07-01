@@ -9,14 +9,16 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+#import dj_database_url
+#from django.core.exceptions import ImproperlyConfigured
+#from getenv import env
+
 import os
-import dj_database_url
-from django.core.exceptions import ImproperlyConfigured
-from getenv import env
 from .secure import SECURE_SETTINGS
 
+# TODO: does TLT want static files in project/dce_course_info or in project/?
 # this is only used for static and template files
-# TODO: does TLT want static files in project/dce_course_info or in project/
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
@@ -56,14 +58,16 @@ AUTHENTICATION_BACKENDS = (
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
+# Display the button to offer to insert text by default
+OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
+
 # Used by 'collectstatic' management command
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 STATICFILES_DIRS = (
@@ -89,72 +93,52 @@ LTI_APPS = {
     }
 }
 
-# SECRET_KEY = env('DJANGO_SECRET_KEY', required=True)
 # Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS.get('DJANGO_SECRET_KEY')
+SECRET_KEY = SECURE_SETTINGS.get('django_secret_key')
 if SECRET_KEY:
     pass
 else:
     raise KeyError
 
-# this tells django who to send app error emails to
-# ADMINS = ((env('DJANGO_ADMIN_NAME'), env('DJANGO_ADMIN_EMAIL')),)
-ADMINS = ((SECURE_SETTINGS.get('DJANGO_ADMIN_NAME'), SECURE_SETTINGS.get('DJANGO_ADMIN_EMAIL')))
-
-
-# From: addr of the app error emails
-# SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', 'root@localhost')
-SERVER_EMAIL = SECURE_SETTINGS.get('DJANGO_SERVER_EMAIL', 'root@localhost')
-
-
-# use mandrill to send app error emails
-EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-# MANDRILL_API_KEY = env('MANDRILL_APIKEY')
-MANDRILL_API_KEY = SECURE_SETTINGS.get('MANDRILL_APIKEY')
-
-# depends on DATABASE_URL being set in your env. See https://github.com/kennethreitz/dj-database-url
-# you can also set DJANGO_DATABASE_DEFAULT_ENGINE if you want to override the
-# default engine, e.g., using https://github.com/kennethreitz/django-postgrespool/
-# default engine, e.g., using https://github.com/kennethreitz/django-postgrespool/
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         # engine=env('DJANGO_DATABASE_DEFAULT_ENGINE', None))
-#         engine = SECURE_SETTINGS.get('DJANGO_DATABASE_DEFAULT_ENGINE', None)
-#     )
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': SECURE_SETTINGS.get('db_default_name', 'dcei_db'), #TODO: mirror TLT
-        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'), #TODO: mirror TLT
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'dce_course_info'),
+            #'postgres' is in the TLT aws wiki, but won't this give access to all databases?
+        'USER': SECURE_SETTINGS.get('db_default_user', 'postgres'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
 } }
 
-# REDIS_URL = env('REDIS_URL')
+# unused right now
+GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
+GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
+
 # Check if we want to do it like this or with the host and port
-REDIS_URL = SECURE_SETTINGS.get('REDIS_URL')
+REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
 LTI_OAUTH_CREDENTIALS = {
-    SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY') :
-        SECURE_SETTINGS.get('LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
-
-    # env('LTI_OAUTH_COURSE_INFO_CONSUMER_KEY'): env(
-    #     'LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET')
+    SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
+        SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
 }
 
-# Display the button to offer to insert text by default
-OFFER_TEXT = SECURE_SETTINGS.get('OFFER_TEXT', True)
+ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
-# ICOMMONS_API_TOKEN = env('ICOMMONS_API_TOKEN')
-ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('ICOMMONS_API_TOKEN')
+ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 
-# ICOMMONS_BASE_URL = env('ICOMMONS_BASE_URL')
-ICOMMONS_BASE_URL = SECURE_SETTINGS.get('ICOMMONS_BASE_URL')
+# TODO: Can all this email stuff be taken out? Check with DCE.
+# # this tells django who to send app error emails to
+# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
+#
+# # From: addr of the app error emails
+# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
+#
+# # use mandrill to send app error emails
+# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
+# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
 
 LOGGING = {
     'version': 1,

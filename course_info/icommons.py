@@ -1,12 +1,10 @@
-from urllib import urlencode
-from urlparse import urlparse
+#from urllib import urlencode
+#from urlparse import urlparse
+#from requests.utils import parse_header_links
+#from django.http import QueryDict
+#from getenv import env
 import drest
 from drest.exc import dRestRequestError, dRestError
-from requests.utils import parse_header_links
-from django.http import QueryDict
-from getenv import env
-
-    #TODO is this the right way to do it?
 from dce_course_info.settings import aws as settings
 
 import logging
@@ -56,7 +54,7 @@ class ICommonsApi(drest.API):
         '''
             retrieves - from the iCommons API - the information
             about the school passed in (by its school id),
-            or logs an error if there is no such school
+            or logs an error and returns an empty dict if there is no such school
         '''
         school_info = {}
         try:

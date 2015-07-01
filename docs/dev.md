@@ -1,5 +1,6 @@
 
 # How to get this thing to run on a mac
+####TODO: documentation for ATG changes
 
 1. clone the project into ~/dev/ (or whatever)
 
@@ -15,6 +16,9 @@ If you're not in the right virtualenv switch using workon
 3. install requirements with pip
 
 pip install -r requirements.txt
+(also, go to dce_course_info/dce_course_info/requirements, and 
+    pip install -r local.txt
+    if you're running this offline)
 
 4. make sure postgres is running
 
@@ -30,7 +34,8 @@ Type "help" for help.
 
 question: what the hell is template1?
 
-answer: "CREATE DATABASE actually works by copying an existing database. By default, it copies the standard system database named template1"
+answer: "CREATE DATABASE actually works by copying an existing database.
+By default, it copies the standard system database named template1"
 http://www.postgresql.org/docs/9.1/static/manage-ag-templatedbs.html
 
 template1=# create database dce_course_info
@@ -44,6 +49,7 @@ CREATE ROLE
 brew install redis
 
 6. create a .env file with the variables described in heroku.md
+TODO: this may need to be changed to align with secure.py changes
 
 Something like this:
 
@@ -64,7 +70,7 @@ REDIS_URL=http://localhost:6379
 
 Do not stick your .env file in source control. This stuff is sensitive.
 
-7. run synchdb 
+7. run syncdb 
 
 python manage.py syncdb
 
@@ -95,7 +101,13 @@ Find canvas vagrant box here:
 
 https://github.com/harvard-dce/canvas_vagrant
 
-It will make your LTI developing life much easier.  
+It will make your LTI developing life much easier.
+
+9b. To run the server with local settings, add "--settings=dce_course_info.settings.local"
+    when your run "./manage.py" 
+    
+    Also, make sure you've gone and run
+        pip install -r
   
 10. Add LTI tool to canvas
  
@@ -104,5 +116,3 @@ It will make your LTI developing life much easier.
  http://192.168.50.1:8000/course_info/tool_config
  
  For secret and key see the .env file you created.
- 
-

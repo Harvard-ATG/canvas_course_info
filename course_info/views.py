@@ -1,19 +1,17 @@
 import logging
-
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
-from django.core.urlresolvers import reverse
-from django.conf import settings
-from dce_lti_py.tool_config import ToolConfig
-from icommons import ICommonsApi
-from django.template.defaultfilters import striptags
 import json
 import urlparse
 import re
-
+from django.contrib.auth.decorators import login_required
+from django.http                    import HttpResponse
+from django.shortcuts               import render, redirect
+from django.views.decorators.csrf   import csrf_exempt
+from django.views.decorators.http   import require_GET, require_POST
+from django.core.urlresolvers       import reverse
+from django.conf                    import settings
+from dce_lti_py.tool_config         import ToolConfig
+from icommons                       import ICommonsApi
+from django.template.defaultfilters import striptags
 
 log = logging.getLogger(__name__)
 
@@ -93,7 +91,7 @@ def __mungeFields(fields, school_name):
     def stern(value, default):
         # special ternary to simplify the logic below -deals with blank fields
         if value == u' ' or value == u'' or value == '' or value == ' ':
-            #TODO: log some error
+            #May want to log some error
             return default
         else:
             return value
@@ -116,14 +114,13 @@ def __mungeFields(fields, school_name):
         elif field['key'] == 'notes':
             field['value'] = '<b>Note: </b> ' + field['value']
         elif field['key'] == 'course.registrar_code_display':
-            #TODO: TESTING - make sure this works alright with all courses and schools
             try:
                 #Extracts the course number (the last substring) from typical display codes
                 course_number = field['value'].split()[-1]
             except:
                 #If the display code is atypical, show the whole thing. (Unless it's blank)
                 course_number = stern(field['value'], "Course Number Unknown")
-                #TODO: log "Registrar Code Atypical/Not Provided"
+                #May want to log "Registrar Code Atypical/Not Provided"
             field['value'] = school_name + ": " + course_number
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
 
@@ -138,18 +135,19 @@ def widget(request):
 
 def editor(request):
 
-    #TODO: could/should this be adapted to react to the environment? (Like never do this in production)
+    # Use an example course for development
+    # if settings.COURSE_INSTANCE_ID:
+    #     course_instance_id = settings.COURSE_INSTANCE_ID
+    # else:
+    #     # "lis" appears to be a deliberate misspelling
+    #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
     try:
         course_instance_id = settings.COURSE_INSTANCE_ID
     except:
                                 # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
 
-    # if settings.COURSE_INSTANCE_ID:
-    #     #course_instance_id = settings.COURSE_INSTANCE_ID
-    #     pass
-    # else:
-    #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
 
     # The values we will want to display
     keys = [
@@ -180,14 +178,13 @@ def editor(request):
     return render(request, 'course_info/editor.html', course_context)
 
 
-def oembed_handler(request):  # TODO
+def oembed_handler(request):
     '''
         This view handles the huge url Canvas throws at us, reconciles it with iCommons,
         and returns oEmbed JSON for the Canvas Rich Text Editor
         See the README for more information - how oEmbed works, terminology, etc.
         www.oembed.com
     '''
-
 
     # the url we need to act on is a parameter in Canvas' oEmbed request
     url = request.GET.get('url')
@@ -208,8 +205,7 @@ def oembed_handler(request):  # TODO
     # the content_type = " " is included so there will be a fixed amount of characters to delete later (13)
     html_string = str(render(request, 'course_info/widget.html', course_info_context, content_type = " "))
 
-         # TODO: see if this can be improved
-    # unfortunately the content-type is going to be included in html_string because of the way
+    # unfortunately 'Content-Type: ' is going to be included in html_string because of the way
     # the "render" function works. Workaround is to remove it with the regex substitution function
     # Further down the line, this method could also be used to insert styles or other dynamic content
     html_string = re.sub('Content-Type: ', '', html_string)
