@@ -121,8 +121,7 @@ REDIS_URL = SECURE_SETTINGS.get('redis_url')
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
 LTI_OAUTH_CREDENTIALS = {
-    SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
-        SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
+    SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') : SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
 }
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
