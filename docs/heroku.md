@@ -1,5 +1,8 @@
 # Heroku Deployment
 
+####TODO: documentation for ATG changes?
+    - We never used heroku with this...
+
 ### From scratch
 
 1. Create a new Heroku app. For the purposes of these instructions we'll call it "dce-course-info", but it could really be anything.
