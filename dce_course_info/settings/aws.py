@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 #import dj_database_url
 #from django.core.exceptions import ImproperlyConfigured
-#from getenv import env
+#from getenv import env 
 
 import os
 from .secure import SECURE_SETTINGS
 
-# TODO: does TLT want static files in project/dce_course_info or in project/?
+# TODO: does TLT want the static files in project/dce_course_info or in project/? 
 # this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -100,6 +100,7 @@ if SECRET_KEY:
 else:
     raise KeyError
 
+#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -111,11 +112,11 @@ DATABASES = {
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
 } }
 
-# unused right now
+# unused right now 
 GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
 GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
 
-# Check if we want to do it like this or with the host and port
+# Check if we want to do it like this or with the host and port 
 REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
@@ -129,9 +130,9 @@ ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 
-# TODO: Can all this email stuff be taken out? Check with DCE.
+# TODO: Can all this email stuff be taken out? Check with DCE. 
 # # this tells django who to send app error emails to
-# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email')))
+# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email'))) 
 #
 # # From: addr of the app error emails
 # SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
