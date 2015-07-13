@@ -14,6 +14,7 @@ class LTIRequestValidator(RequestValidator):
 
     enforce_ssl = False
 
+    #TODO: Find out if this is used...
     dummy_secret = 'secret'
     dummy_client = (u'dummy_'
         '2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae')
