@@ -105,8 +105,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': SECURE_SETTINGS.get('db_default_name', 'dce_course_info'),
-            #'postgres' is in the TLT aws wiki, but won't this give access to all databases?
-        'USER': SECURE_SETTINGS.get('db_default_user', 'postgres'),
+        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
