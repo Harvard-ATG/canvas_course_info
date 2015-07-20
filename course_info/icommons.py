@@ -5,7 +5,7 @@
 #from getenv import env
 import drest
 from drest.exc import dRestRequestError, dRestError
-from dce_course_info.settings import aws as settings
+from canvas_course_info.settings import aws as settings
 
 import logging
 log = logging.getLogger(__name__)

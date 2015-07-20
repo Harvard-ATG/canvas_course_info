@@ -1,5 +1,5 @@
 """
-Django settings for dce_course_info project.
+Django settings for canvas_course_info project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -17,7 +17,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 from .secure import SECURE_SETTINGS
 
-# TODO: does TLT want the static files in project/dce_course_info or in project/? 
+# TODO: does TLT want the static files in project/canvas_course_info or in project/? 
 # this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -46,9 +46,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'dce_course_info.urls'
+ROOT_URLCONF = 'canvas_course_info.urls'
 
-WSGI_APPLICATION = 'dce_course_info.wsgi.application'
+WSGI_APPLICATION = 'canvas_course_info.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
     'django_auth_lti.backends.LTIAuthBackend',
@@ -104,8 +104,8 @@ else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': SECURE_SETTINGS.get('db_default_name', 'dce_course_info'),
-        'USER': SECURE_SETTINGS.get('db_default_user', 'dce_course_info'),
+        'NAME': SECURE_SETTINGS.get('db_default_name', 'canvas_course_info'),
+        'USER': SECURE_SETTINGS.get('db_default_user', 'canvas_course_info'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),

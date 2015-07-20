@@ -1,4 +1,4 @@
-# to activate these settings, execute ./manage.py runserver --settings=dce_course_info.settings.local
+# to activate these settings, execute ./manage.py runserver --settings=canvas_course_info.settings.local
 
 from .aws import *
 

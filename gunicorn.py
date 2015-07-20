@@ -1,7 +1,7 @@
 # from getenv import env
 # import dotenv
 # dotenv.read_dotenv()
-# from dce_course_info.settings import aws as settings
+# from canvas_course_info.settings import aws as settings
 
 #TODO: can we just delete this file from TLT's server? - they aren't going to use Gunicorn. 
 # settings.GUNICORN_WORKERS and settings.GUNICORN_TIMEOUT seem to not work here because

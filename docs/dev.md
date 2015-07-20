@@ -6,17 +6,17 @@
 
 2. create a new virtual env for project using python 2.7
 
-mkvirtualenv -p/usr/local/bin/python2.7 dce_course_info
+mkvirtualenv -p/usr/local/bin/python2.7 canvas_course_info
 
 If you're not in the right virtualenv switch using workon
 
-(dumdum)Reinhards-MacBook-Pro:dce_course_info reinhard$ workon dce_course_info
-(dce_course_info)Reinhards-MacBook-Pro:dce_course_info reinhard$ 
+(dumdum)Reinhards-MacBook-Pro:canvas_course_info reinhard$ workon canvas_course_info
+(canvas_course_info)Reinhards-MacBook-Pro:canvas_course_info reinhard$ 
 
 3. install requirements with pip
 
 pip install -r requirements.txt
-(also, go to dce_course_info/dce_course_info/requirements, and 
+(also, go to canvas_course_info/canvas_course_info/requirements, and 
     pip install -r local.txt
     if you're running this offline)
 
@@ -28,7 +28,7 @@ lunchy start postgres
 
 5. create postgres database and user
 
-Reinhards-MacBook-Pro:dce_course_info reinhard$ psql -d template1
+Reinhards-MacBook-Pro:canvas_course_info reinhard$ psql -d template1
 psql (9.3.5)
 Type "help" for help.
 
@@ -38,10 +38,10 @@ answer: "CREATE DATABASE actually works by copying an existing database.
 By default, it copies the standard system database named template1"
 http://www.postgresql.org/docs/9.1/static/manage-ag-templatedbs.html
 
-template1=# create database dce_course_info
+template1=# create database canvas_course_info
 template1-# ;
 CREATE DATABASE
-template1=# create user dce_course_info with password 'yabadabadoo';
+template1=# create user canvas_course_info with password 'yabadabadoo';
 CREATE ROLE
 
 
@@ -53,11 +53,11 @@ TODO: this may need to be changed to align with secure.py changes
 
 Something like this:
 
-DJANGO_SETTINGS_MODULE=dce_course_info.settings
+DJANGO_SETTINGS_MODULE=canvas_course_info.settings
 DJANGO_SECRET_KEY=make_something_actually_secret
 LTI_OAUTH_COURSE_INFO_CONSUMER_KEY=your_key
 LTI_OAUTH_COURSE_INFO_CONSUMER_SECRET=your_secret
-DATABASE_URL=postgres://dce_course_info:password@127.0.0.1:5432/dce_course_info
+DATABASE_URL=postgres://canvas_course_info:password@127.0.0.1:5432/canvas_course_info
 DJANGO_ADMIN_NAME=somebody
 DJANGO_ADMIN_EMAIL=somebody@harvard.edu
 DJANGO_SERVER_EMAIL=somebody@harvard.edu
@@ -103,7 +103,7 @@ https://github.com/harvard-dce/canvas_vagrant
 
 It will make your LTI developing life much easier.
 
-9b. To run the server with local settings, add "--settings=dce_course_info.settings.local"
+9b. To run the server with local settings, add "--settings=canvas_course_info.settings.local"
     when your run "./manage.py" 
     
     Also, make sure you've gone and run

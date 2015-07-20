@@ -18,8 +18,8 @@
 6. setup a postgres database
         $ sudo su - postgres
             postgres:~$ psql
-                postgres=# create database dce_course_info;
-                postgres=# create user dce_course_info with password '[PRIVATE]';
+                postgres=# create database canvas_course_info;
+                postgres=# create user canvas_course_info with password '[PRIVATE]';
             
 7. create a secure.py(ATG/TLT structure) or .env (DCE structure) file
     and fill it with the information needed to run the app. Gitignore it.
@@ -44,7 +44,7 @@
         ./manage.py syncdb
     
 9. Run your server in the foreground (case-by case, but gunicorn works well)
-        gunicorn -c [GUNICORN_FILE.PY] dce_course_info.wsgi --bind [AWS_INSTANCE].compute.amazonaws.com --log-file -
+        gunicorn -c [GUNICORN_FILE.PY] canvas_course_info.wsgi --bind [AWS_INSTANCE].compute.amazonaws.com --log-file -
     
 10. Install on your canvas page: Settings -> Apps -> Add App -> Add by URL
         The key and secret are in your secure.py file

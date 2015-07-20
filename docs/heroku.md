@@ -7,7 +7,7 @@
 
 1. Create a new Heroku app. For the purposes of these instructions we'll call it "dce-course-info", but it could really be anything.
 2. Install the [heroku-toolbelt](https://toolbelt.heroku.com/).
-3. Clone the [dce_course_info](https://github.com/harvard-dce/dce_course_info repo).
+3. Clone the [canvas_course_info](https://github.com/harvard-dce/canvas_course_info repo).
 4. Run `heroku git:remote -a dce-course-info`
 5. Add the required heroku add-ons: 
     * [Heroku Postgres](https://addons.heroku.com/heroku-postgresql) 

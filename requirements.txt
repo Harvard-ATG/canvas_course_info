@@ -1,1 +1,1 @@
--r dce_course_info/requirements/aws.txt
+-r canvas_course_info/requirements/aws.txt
