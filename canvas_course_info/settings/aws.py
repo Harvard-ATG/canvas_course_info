@@ -70,9 +70,9 @@ STATIC_URL = '/static/'
 
 # Used by 'collectstatic' management command
 STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
-STATICFILES_DIRS = (
-    os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
-)
+# STATICFILES_DIRS = (
+#     os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
+# )
 
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'templates'),
@@ -94,11 +94,11 @@ LTI_APPS = {
 }
 
 # Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS.get('django_secret_key')
-if SECRET_KEY:
-    pass
-else:
-    raise KeyError
+SECRET_KEY = SECURE_SETTINGS['django_secret_key']
+# if SECRET_KEY:
+#     pass
+# else:
+#     raise KeyError
 
 #
 DATABASES = {
