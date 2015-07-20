@@ -116,14 +116,15 @@ GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
 GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
 
 # Check if we want to do it like this or with the host and port 
-REDIS_URL = SECURE_SETTINGS.get('redis_url')
+#REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
-LTI_OAUTH_CREDENTIALS = {
-    SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
-        SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
-}
+LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oath_credentials')
+# {
+#     SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
+#         SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
+# }
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 

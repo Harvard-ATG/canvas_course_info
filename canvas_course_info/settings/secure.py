@@ -10,10 +10,11 @@ SECURE_SETTINGS = {
     'db_default_host': '127.0.0.1',
     'db_default_port': 5432,
 
-    'redis_url': '127.0.0.1:6379',
+    #'redis_url': '127.0.0.1:6379',
 
-    'lti_oauth_course_info_consumer_key': 'your_key',
-    'lti_oauth_course_info_consumer_secret': 'your_secret',
+    #'lti_oauth_course_info_consumer_key': 'your_key',
+    #'lti_oauth_course_info_consumer_secret': 'your_secret',
+    'lti_oath_credentials': {'consumer_key': 'your_key', 'consumer_secret': 'your_secret'},
 
     'icommons_api_token': 'c308548ffe204cab945a077cca94cc3f21f1dee8',
     'icommons_base_url': 'https://icommons.harvard.edu',
