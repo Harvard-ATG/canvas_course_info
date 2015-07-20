@@ -38,5 +38,5 @@ static_root
 
 #ATG & TLT
 venv
-dce_course_info/settings/secure.py
+secure.py
 http_static
