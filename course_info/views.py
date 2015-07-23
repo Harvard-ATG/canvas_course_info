@@ -50,7 +50,7 @@ def tool_config(request):
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
 
 
-@login_required
+#@login_required
 @require_POST
 @csrf_exempt
 def lti_launch(request):
