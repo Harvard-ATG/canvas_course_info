@@ -57,7 +57,7 @@ def lti_launch(request):
     return editor(request)
 
 
-def __course_context(request, keys, **kwargs):
+def __course_context(request, keys, show_empty_field=False, **kwargs):
     key2class = {
         'title': 'list-group-item-info'
     }
@@ -93,48 +93,60 @@ def __course_context(request, keys, **kwargs):
     except KeyError:
         school_title = ''
 
-    context['fields'] = __mungeFields(context['fields'], school_title)
+    context['fields'] = __mungeFields(context['fields'], school_title, show_empty_field)
     return context
 
 
-def __mungeFields(fields, school_name):
+def __mungeFields(fields, school_name, show_empty_field=False, **kwargs):
     # This method takes in all the iCommons fields, and formats those that we'd like to display
     # Could possibly sneak in some more inline styles here
 
-    # if we want more info in the logger, could pass in the whole field dictionary and send the key in the log message
-    def stern(value, default, label=None):
-        # special ternary to simplify the logic below -deals with blank fields
-        if value and value.strip():
+    def field_value_display(value, label, show_empty_field=False, show_label_if_not_empty=True):
+        """
+        Takes a course info field value, optional label and other options and returns a formatted
+        version of the value for display in the UI
+
+        :param value: The value to be displayed
+        :param label: A field label for the value
+        :param show_empty_field: If True, display the field label and a generic message, otherwise return ''
+        :param show_label_if_not_empty: If True, always show the given label, otherwise only show the label
+               if the value is empty
+        :return: The formatted field value
+        """
+        if value:
+            if label and show_label_if_not_empty:
+                value = label + value
+        elif show_empty_field:
+            value = 'Field not populated by registrar'
             if label:
                 value = label + value
-            return value
 
-        return default
+        return value
 
     for field in fields:
         if field['key'] == 'title':
-            field['value'] = "<h4>%s</h4>" % stern(field['value'], "Course Title Unknown")
+            field['value'] = "<h4>%s</h4>" % field_value_display(field['value'], "Course Title: ", True, False)
         elif field['key'] == 'term.display_name':
-            field['value'] = stern(field['value'], "")
+            field['value'] = field_value_display(field['value'], "<b>Term:</b> ", show_empty_field, False)
         elif field['key'] == 'instructors_display':
-            field['value'] = stern(field['value'], "")
+            field['value'] = field_value_display(field['value'], "<b>Instructors:</b> ", show_empty_field, False)
         elif field['key'] == 'location':
-            field['value'] = stern(field['value'], "", "<b>Location:</b> ")
+            field['value'] = field_value_display(field['value'], "<b>Location:</b> ", show_empty_field)
         elif field['key'] == 'meeting_time':
-            field['value'] = stern(field['value'], "", "<b>Meeting Time:</b> ")
+            field['value'] = field_value_display(field['value'], "<b>Meeting Time:</b> ", show_empty_field)
         elif field['key'] == 'exam_group':
-            field['value'] = stern(field['value'], "", "<b>Exam Group:</b> ")
+            field['value'] = field_value_display(field['value'], "<b>Exam Group:</b> ", show_empty_field)
         elif field['key'] == 'description':
-            field['value'] = stern(field['value'], "", "<b>Course Description:</b> ")
+            field['value'] = field_value_display(field['value'], "<b>Course Description:</b> ", show_empty_field)
         elif field['key'] == 'notes':
-            field['value'] = stern(field['value'], "", "<b>Notes:</b> ")
+            field['value'] = field_value_display(field['value'], "<b>Notes:</b> ", show_empty_field)
         elif field['key'] == 'course.registrar_code_display':
             try:
                 # Extracts the course number (the last substring) from typical display codes
-                field['value'] = stern(field['value'].split()[-1], "", school_name + ": ")
+                field['value'] = field_value_display(field['value'].split()[-1], school_name + ": ", show_empty_field)
             except IndexError:
                 # If the display code is atypical, show the whole thing
-                field['value'] = stern(field['value'], "", school_name + ": ")
+                field['value'] = field_value_display(field['value'], school_name + ": ", show_empty_field)
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
 
     return fields
@@ -171,7 +183,7 @@ def editor(request):
         'notes'
     ]
 
-    course_context = __course_context(request, keys, course_instance_id=course_instance_id)
+    course_context = __course_context(request, keys, True, course_instance_id=course_instance_id)
 
     # this is likely a remnant of the iFrame resize struggle
     #course_context['line_guestimate'] =keys*2
