@@ -39,6 +39,10 @@ def tool_config(request):
         }
     }
 
+    custom_fields = {
+        'include_text_option': 'false'
+    }
+
     lti_tool_config = ToolConfig(
         title=app_config['name'],
         launch_url=launch_url,
@@ -46,6 +50,7 @@ def tool_config(request):
         extensions=extensions,
         description=app_config['description']
     )
+    lti_tool_config.set_ext_param('canvas.instructure.com', 'custom_fields', custom_fields)
 
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
 
@@ -189,7 +194,7 @@ def editor(request):
     #course_context['line_guestimate'] =keys*2
 
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
-    course_context['should_offer_text'] = settings.OFFER_TEXT
+    course_context['should_offer_text'] = request.POST.get('custom_include_text_option', 'false') in ['true']
 
     # scrub HTML tags (just for the editor view)
     # this could also be done in the django template

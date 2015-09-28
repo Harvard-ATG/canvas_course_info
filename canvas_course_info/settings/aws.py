@@ -61,9 +61,6 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# Display the button to offer to insert text by default
-OFFER_TEXT = SECURE_SETTINGS.get('offer_text', True)
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
