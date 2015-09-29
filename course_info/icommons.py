@@ -40,15 +40,25 @@ class ICommonsApi(drest.API):
         course_info = {}
         # get the course_instance data
         try:
-            relative_url = '/course_instances/'+ course_instance_id+'/?format=json'
-            response = self.make_request('GET',relative_url,headers=self.headers)
+            relative_url = '/course_instances/%s/?format=json' % course_instance_id
+            response = self.make_request('GET', relative_url, headers=self.headers)
             course_info = response.data.copy()
-        except drest.exc.dRestRequestError as e:
-            log.error(e.message)
         except Exception as e:
-            log.error(e.message)
+            log.exception(e.message)
         return course_info
 
+    def get_course_info_by_canvas_course_id(self, canvas_course_id):
+        course_info = {}
+        # get the course_instance data
+        try:
+            relative_url = '/course_instances/?format=json&canvas_course_id=%s' % canvas_course_id
+            response = self.make_request('GET', relative_url, headers=self.headers)
+            results = response.data.get('results', [])
+            if len(results):
+                course_info = self.get_course_info(results[0]['course_instance_id'])
+        except Exception as e:
+            log.exception(e.message)
+        return course_info
 
     def get_school_info(self, school_id):
         '''

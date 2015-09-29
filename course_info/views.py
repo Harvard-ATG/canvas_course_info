@@ -39,6 +39,10 @@ def tool_config(request):
         }
     }
 
+    custom_fields = {
+        'include_text_option': 'false'
+    }
+
     lti_tool_config = ToolConfig(
         title=app_config['name'],
         launch_url=launch_url,
@@ -46,6 +50,7 @@ def tool_config(request):
         extensions=extensions,
         description=app_config['description']
     )
+    lti_tool_config.set_ext_param('canvas.instructure.com', 'custom_fields', custom_fields)
 
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
 
@@ -57,71 +62,96 @@ def lti_launch(request):
     return editor(request)
 
 
-def __course_context(request, course_instance_id, keys):
+def __course_context(request, keys, show_empty_field=False, **kwargs):
     key2class = {
-        'title': 'course_info_textHeader1',
-        'course.registrar_code_display': 'course_info_textHeader2',
-        'term.display_name': 'course_info_textHeader2',
-        'instructors_display': 'course_info_textHeader2',
-        'location': 'course_info_textHeader2',
-        'meeting_time': 'course_info_textHeader2'
+        'title': 'list-group-item-info'
     }
-    course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
-    context = {'fields': [], 'course_instance_id': course_instance_id}
+    course_instance_id = kwargs.get('course_instance_id')
+    canvas_course_id = kwargs.get('canvas_course_id')
+    course_info = {}
+    if course_instance_id:
+        course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
+    elif canvas_course_id:
+        course_info = ICommonsApi.from_request(request).get_course_info_by_canvas_course_id(canvas_course_id)
+    context = {
+        'fields': [],
+        'course_instance_id': course_info.get('course_instance_id'),
+        'canvas_course_id': course_info.get('canvas_course_id')
+    }
     for key in keys:
-        if '.' in key:
-            keyparts = key.split('.')
-            field = {'key': key, 'value': course_info[keyparts[0]][keyparts[1]]}
-        else:
-            field = {'key': key, 'value': course_info[key]}
-        field['class'] = ''
+        try:
+            if '.' in key:
+                keyparts = key.split('.')
+                value = course_info[keyparts[0]][keyparts[1]]
+            else:
+                value = course_info[key]
+        except KeyError:
+            value = ''
+        field = {'key': key, 'value': value, 'class': ''}
         if key in key2class:
             field['class'] = key2class[key]
         context['fields'].append(field)
 
-    school_info = ICommonsApi.from_request(request).get_school_info(course_info['course']['school_id'])
-    context['fields'] = __mungeFields(context['fields'], school_info['title_long'])
+    try:
+        school_info = ICommonsApi.from_request(request).get_school_info(course_info['course']['school_id'])
+        school_title = school_info['title_long']
+    except KeyError:
+        school_title = ''
+
+    context['fields'] = __mungeFields(context['fields'], school_title, show_empty_field)
     return context
 
-def __mungeFields(fields, school_name):
+
+def __mungeFields(fields, school_name, show_empty_field=False, **kwargs):
     # This method takes in all the iCommons fields, and formats those that we'd like to display
     # Could possibly sneak in some more inline styles here
 
-    # if we want more info in the logger, could pass in the whole field dictionary and send the key in the log message
-    def stern(value, default):
-        # special ternary to simplify the logic below -deals with blank fields
-        if value == u' ' or value == u'' or value == '' or value == ' ':
-            #May want to log some error
-            return default
-        else:
-            return value
+    def field_value_display(value, label, show_empty_field=False, show_label_if_not_empty=True):
+        """
+        Takes a course info field value, optional label and other options and returns a formatted
+        version of the value for display in the UI
+
+        :param value: The value to be displayed
+        :param label: A field label for the value
+        :param show_empty_field: If True, display the field label and a generic message, otherwise return ''
+        :param show_label_if_not_empty: If True, always show the given label, otherwise only show the label
+               if the value is empty
+        :return: The formatted field value
+        """
+        if value:
+            if label and show_label_if_not_empty:
+                value = label + value
+        elif show_empty_field:
+            value = 'Field not populated by registrar'
+            if label:
+                value = label + value
+
+        return value
 
     for field in fields:
         if field['key'] == 'title':
-            field['value'] = '<h3>' + field['value'] + "</h3>"
+            field['value'] = "<h4>%s</h4>" % field_value_display(field['value'], "Course Title: ", True, False)
         elif field['key'] == 'term.display_name':
-            field['value'] = stern(field['value'],"Display Name Unknown") #include this? '<b>Term:</b> '
+            field['value'] = field_value_display(field['value'], "<b>Term:</b> ", show_empty_field, False)
         elif field['key'] == 'instructors_display':
-            field['value'] = stern(field['value'], "Course Instructors Unknown") #include this? '<b>Course Instructor(s):</b> '
+            field['value'] = field_value_display(field['value'], "<b>Instructors:</b> ", show_empty_field, False)
         elif field['key'] == 'location':
-            field['value'] = '<b>Location:</b> ' + stern(field['value'], 'Unknown')
+            field['value'] = field_value_display(field['value'], "<b>Location:</b> ", show_empty_field)
         elif field['key'] == 'meeting_time':
-            field['value'] = '<b>Meeting Time:</b> ' + stern(field['value'], 'Unknown')
+            field['value'] = field_value_display(field['value'], "<b>Meeting Time:</b> ", show_empty_field)
         elif field['key'] == 'exam_group':
-            field['value'] = '<b>Exam Group: </b> ' + stern(field['value'], 'Unknown')
+            field['value'] = field_value_display(field['value'], "<b>Exam Group:</b> ", show_empty_field)
         elif field['key'] == 'description':
-            field['value'] = '<b>Course Description:</b> ' + stern(field['value'], 'None')
+            field['value'] = field_value_display(field['value'], "<b>Course Description:</b> ", show_empty_field)
         elif field['key'] == 'notes':
-            field['value'] = '<b>Note: </b> ' + field['value']
+            field['value'] = field_value_display(field['value'], "<b>Notes:</b> ", show_empty_field)
         elif field['key'] == 'course.registrar_code_display':
             try:
-                #Extracts the course number (the last substring) from typical display codes
-                course_number = field['value'].split()[-1]
-            except:
-                #If the display code is atypical, show the whole thing. (Unless it's blank)
-                course_number = stern(field['value'], "Course Number Unknown")
-                #May want to log "Registrar Code Atypical/Not Provided"
-            field['value'] = school_name + ": " + course_number
+                # Extracts the course number (the last substring) from typical display codes
+                field['value'] = field_value_display(field['value'].split()[-1], school_name + ": ", show_empty_field)
+            except IndexError:
+                # If the display code is atypical, show the whole thing
+                field['value'] = field_value_display(field['value'], school_name + ": ", show_empty_field)
         field['value'] = field['value'].replace('<br /> <br />', '<br />')
 
     return fields
@@ -129,25 +159,21 @@ def __mungeFields(fields, school_name):
 
 @require_GET
 def widget(request):
-    course_instance_id = request.GET.get('course_instance_id')
-    context = __course_context(request, course_instance_id, request.GET.getlist('f'))
+    referer = request.META.get('HTTP_REFERER', '')
+    try:
+        canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
+    except AttributeError:
+        canvas_course_id = None
+    context = __course_context(request, request.GET.getlist('f'), canvas_course_id=canvas_course_id)
     return render(request, 'course_info/widget.html', context)
 
+
 def editor(request):
-
-    # Use an example course for development
-    # if settings.COURSE_INSTANCE_ID:
-    #     course_instance_id = settings.COURSE_INSTANCE_ID
-    # else:
-    #     # "lis" appears to be a deliberate misspelling
-    #     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-    try:
-        course_instance_id = settings.COURSE_INSTANCE_ID
-    except:
-                                # "lis" appears to be a deliberate misspelling
+    # Use an example course for development if one is configured in settings
+    course_instance_id = getattr(settings, 'COURSE_INSTANCE_ID', None)
+    if not course_instance_id:
+        # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-
-
 
     # The values we will want to display
     keys = [
@@ -162,13 +188,13 @@ def editor(request):
         'notes'
     ]
 
-    course_context = __course_context(request, course_instance_id, keys)
+    course_context = __course_context(request, keys, True, course_instance_id=course_instance_id)
 
     # this is likely a remnant of the iFrame resize struggle
     #course_context['line_guestimate'] =keys*2
 
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
-    course_context['should_offer_text'] = settings.OFFER_TEXT
+    course_context['should_offer_text'] = request.POST.get('custom_include_text_option', 'false') in ['true']
 
     # scrub HTML tags (just for the editor view)
     # this could also be done in the django template
@@ -197,9 +223,13 @@ def oembed_handler(request):
 
     # get the selected checkboxes and course id
     requested_info = parsed_qs['f']
-    course_instance_id = parsed_qs['course_instance_id'][0]
+    referer = request.META.get('HTTP_REFERER', '')
+    try:
+        canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
+    except AttributeError:
+        canvas_course_id = None
 
-    course_info_context = __course_context(request, course_instance_id, requested_info)
+    course_info_context = __course_context(request, requested_info, canvas_course_id=canvas_course_id)
 
     # put the rendered html in a string, so that it can be returned in the oEmbed JSON
     # the content_type = " " is included so there will be a fixed amount of characters to delete later (13)

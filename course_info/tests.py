@@ -18,13 +18,19 @@ class testData(TestCase):
     # Tip: first word in a test method must be "test" for Django to recognize it & run it.
     def test_course_number(self):
         # Make sure that the widget is displaying a correct course number for a given course ID
-        c = Client()
-        response = c.get('/course_info/widget.html?course_instance_id=' + TESTDATA["example_course1"]["id"] + '&f=course.registrar_code_display')
+        canvas_course_id = TESTDATA["example_course1"]["canvas_course_id"]
+        c = Client(
+            HTTP_REFERER="https://canvas.icommons.harvard.edu/courses/%s" % canvas_course_id
+        )
+        response = c.get('/course_info/widget.html?f=course.registrar_code_display')
         self.assertContains(response, TESTDATA["example_course1"]["number_display"])
 
     def test_school_name(self):
-        c = Client()
-        response = c.get('/course_info/widget.html?course_instance_id=' + TESTDATA["example_course1"]["id"] + '&f=course.registrar_code_display')
+        canvas_course_id = TESTDATA["example_course1"]["canvas_course_id"]
+        c = Client(
+            HTTP_REFERER="https://canvas.icommons.harvard.edu/courses/%s" % canvas_course_id
+        )
+        response = c.get('/course_info/widget.html?f=course.registrar_code_display')
         self.assertContains(response, TESTDATA["example_course1"]["school_display"])
 
 
@@ -41,6 +47,7 @@ class testEditor(TestCase):
 TESTDATA = {
     "example_course1" : {
         "id" : "312976",
+        "canvas_course_id": "10000",
         "number_display" : "2901",
         "school_display" : "Harvard Divinity School"
     }

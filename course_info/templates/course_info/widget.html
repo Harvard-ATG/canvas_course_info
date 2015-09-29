@@ -34,19 +34,14 @@
 {% endcomment %}
 
 {% block content %}
-
     <div id="course_info_container" class="container-fluid">
-
-        <table border="0" cellpadding="0" cellspacing="5">
-            <tbody>
-            {% for field in fields  %}
-                <tr><td class="{{ field.class }}">{% autoescape off %}{{ field.value }}{% endautoescape %}</td></tr>
+        <ul class="list-group" style="width: 50%;">
+            {% for field in fields %}
+            {% if field.value %}
+            <li class="list-group-item {{ field.class }}">{{ field.value|safe }}</li>
+            {% endif %}
             {% endfor %}
-            </tbody>
-        </table>
-
+        </ul>
+        <span class="text-info">Additional information will be shown if available from the Registrar.</span>
     </div>
-
 {% endblock %}
-
-

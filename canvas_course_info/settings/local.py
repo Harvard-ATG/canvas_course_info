@@ -3,7 +3,7 @@
 from .aws import *
 
 ENV_NAME = 'local'
-INSTALLED_APPS += ('debug_toolbar',)
+INSTALLED_APPS += ('debug_toolbar', 'sslserver', 'icommons_common',)
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 
 # For Django Debug Toolbar:
@@ -15,5 +15,5 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # Example ID for local dev: won't be getting a real course instance id from LTI launch params.
 COURSE_INSTANCE_ID = SECURE_SETTINGS.get('course_instance_id')
-if COURSE_INSTANCE_ID :
+if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
