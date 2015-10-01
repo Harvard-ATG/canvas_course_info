@@ -164,7 +164,12 @@ def widget(request):
         canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
     except AttributeError:
         canvas_course_id = None
-    context = __course_context(request, request.GET.getlist('f'), canvas_course_id=canvas_course_id)
+
+    field_names = request.GET.getlist('f')
+    context = __course_context(request, field_names, canvas_course_id=canvas_course_id)
+    populated_fields = [f for f in context['fields'] if f['value']]
+    context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
+
     return render(request, 'course_info/widget.html', context)
 
 
