@@ -1,49 +1,50 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block extra_css %}
-{% endblock %}
 {% block extra_head %}
     <base target="_blank">
 {% endblock %}
 
-{# it appears canvas strips all style and script elements#}
-{# unfortunately this means we can't really format anything server-side #}
-{% comment %}
-{% block extra_js %}
-    <script src="{% static 'js/iframeResizer.contentWindow.js' %}"></script>
-
-    <script type="text/javascript" charset="utf8">
-        // The code below attempts to send a message to the parent window to resize the iFrame to fit the content,
-        // which appears to be supported in the Instructure codebase here:
-        //
-        // https://github.com/instructure/canvas-lms/blob/master/public/javascripts/tool_inline.js
-        //
-        // However, for one reason or another, this doesn't seem to be working, so commenting out (for now).
-        /*
-         $(document).ready(function() {
-         window.postMessage(JSON.stringify({
-         subject: 'lti.frameResize',
-         height: $(document).height()
-         }), '*');
-         });
-         // Note: we figured out the reason: tool_inline.js isn't loaded on pages where there's no LTI launch.
-         // https://github.com/instructure/canvas-lms/issues/541
-         */
-    </script>
-{% endblock %}
-{% endcomment %}
+{# todo: remove resizer js from project #}
 
 {% block content %}
     <div id="course_info_container" class="container-fluid">
-        <ul class="list-group" style="width: 50%;">
-            {% for field in fields %}
-            {% if field.value %}
-            <li class="list-group-item {{ field.class }}">{{ field.value|safe }}</li>
+        <ul class="list-group course-info-widget-field-list">
+
+          {% for field in fields %}
+
+            {% if field.key == 'title' %}
+              <li class="list-group-item list-group-item-info panel-title">
+                <strong>{{ field.value }}</strong>
+              </li>
+
+            {% elif field.key == 'course.registrar_code_display' %}
+              <li class="list-group-item">
+                {% if field.value and school_title %}
+                  <strong>{{ school_title }}:</strong> {{ field.value }}
+                {% else %}
+                  <strong>{{ field.label }}:</strong> Field not populated by registrar
+                {% endif %}
+
+            {% else %}
+              <li class="list-group-item">
+                <strong>{{ field.label }}:</strong>
+                {% if field.value %}
+                  {{ field.value }}
+                {% else %}
+                  Field not populated by registrar
+                {% endif %}
+              </li>
+
             {% endif %}
-            {% endfor %}
+
+          {% endfor %}
+
         </ul>
+
         {% if show_registrar_fields_message %}
-        <span class="text-info">Additional information will be shown if available from the Registrar.</span>
+          <span class="text-info">Additional information will be shown if available from the Registrar.</span>
         {% endif %}
+
     </div>
+
 {% endblock %}

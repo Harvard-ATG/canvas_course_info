@@ -5,5 +5,4 @@ urlpatterns = patterns('course_info.views',
     url(r'^lti_launch$',  'lti_launch',     name = 'lti_launch'),
     url(r'^widget',       'widget',         name = 'widget'),
     url(r'^editor',       'editor',         name = 'editor'),
-    url(r'^oembed',       'oembed_handler', name = 'oembed')
 )
