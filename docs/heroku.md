@@ -1,6 +1,9 @@
 # Heroku Deployment
 
-####TODO: documentation for ATG changes?
+_This documentation may be out-of-date!_
+
+####TODO: documentation for ATG/TLT changes?
+
     - We never used heroku with this...
 
 ### From scratch

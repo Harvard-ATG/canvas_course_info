@@ -1,5 +1,8 @@
 
 # How to get this thing to run on a mac
+
+_This documentation may be out-of-date!_
+
 ####TODO: documentation for ATG changes
 
 1. clone the project into ~/dev/ (or whatever)
