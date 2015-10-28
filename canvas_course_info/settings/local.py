@@ -3,7 +3,7 @@
 from .aws import *
 
 ENV_NAME = 'local'
-INSTALLED_APPS += ('debug_toolbar', 'sslserver', 'icommons_common',)
+INSTALLED_APPS += ('debug_toolbar', 'sslserver',)
 MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 
 # For Django Debug Toolbar:
