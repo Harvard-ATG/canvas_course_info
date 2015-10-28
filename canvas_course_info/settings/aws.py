@@ -117,28 +117,11 @@ REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 
-LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oath_credentials')
-
-# LTI_OAUTH_CREDENTIALS = {
-#      SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
-#          SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
-# }
-
+LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
-
-# TODO: Can all this email stuff be taken out? Check with DCE. 
-# # this tells django who to send app error emails to
-# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email'))) 
-#
-# # From: addr of the app error emails
-# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
-#
-# # use mandrill to send app error emails
-# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
 
 LOGGING = {
     'version': 1,

@@ -1,6 +1,5 @@
 SECURE_SETTINGS = {
     'enable_debug' : False,
-    'offer_text': True,
 
     'django_secret_key': 'some_secret_key123',
 
@@ -12,7 +11,7 @@ SECURE_SETTINGS = {
 
     'redis_url': '127.0.0.1:6379',
     
-    'lti_oath_credentials': {'your_key' : 'your_secret'},
+    'lti_oauth_credentials': {'your_key' : 'your_secret'},
 
     'icommons_api_token': '123token456',
     'icommons_base_url': 'https://icommons.harvard.edu',
