@@ -16,3 +16,10 @@ DATABASES = {
         'NAME': 'canvas_course_info',
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache'
+    },
+}
+

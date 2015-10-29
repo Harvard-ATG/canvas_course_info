@@ -10,12 +10,12 @@ SECURE_SETTINGS = {
     'db_default_port': 5432,
 
     'redis_url': '127.0.0.1:6379',
-    
+
     'lti_oauth_credentials': {'your_key' : 'your_secret'},
 
     'icommons_api_token': '123token456',
     'icommons_base_url': 'https://icommons.harvard.edu',
-	
+
 	#For debug purposes, you can force it to return course info for a particular course
     #'course_instance_id': '312976'
 }

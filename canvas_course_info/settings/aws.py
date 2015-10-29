@@ -111,16 +111,32 @@ DATABASES = {
 # GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
 # GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
 
-# Check if we want to do it like this or with the host and port 
+# Cache
+# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES
+
+# Check if we want to do it like this or with the host and port
 REDIS_URL = SECURE_SETTINGS.get('redis_url')
 
-LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': "redis://%s/0" % (REDIS_URL),
+        'OPTIONS': {
+            'PARSER_CLASS': 'redis.connection.HiredisParser'
+        },
+        'KEY_PREFIX': 'canvas_course_info',  # Provide a unique value for intra-app cache
+        # See following for default timeout (5 minutes as of 1.7):
+        # https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES-TIMEOUT
+        'TIMEOUT': SECURE_SETTINGS.get('default_cache_timeout_secs', 300),
+    }
+}
 
+LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
-
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
+ICOMMONS_API_PATH = '/api/course/v2/'
 
 LOGGING = {
     'version': 1,

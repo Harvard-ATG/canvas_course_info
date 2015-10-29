@@ -99,7 +99,6 @@ def __course_context(request, keys, show_empty_fields=False, **kwargs):
     course_instance_id = kwargs.get('course_instance_id')
     canvas_course_id = kwargs.get('canvas_course_id')
     course_info = {}
-    # todo: cache?
     if course_instance_id:
         course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
     elif canvas_course_id:
