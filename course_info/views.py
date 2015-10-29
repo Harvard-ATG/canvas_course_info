@@ -1,5 +1,6 @@
 import logging
 import re
+from django.contrib.auth.decorators import login_required
 from django.http                    import HttpResponse
 from django.shortcuts               import render
 from django.views.decorators.csrf   import csrf_exempt
@@ -63,6 +64,7 @@ def tool_config(request):
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
 
 
+@login_required
 @require_POST
 @csrf_exempt
 def lti_launch(request):
