@@ -129,6 +129,13 @@ def __course_context(request, keys, show_empty_fields=False, **kwargs):
 
 @require_GET
 def widget(request):
+    """
+    Returns course information (the results of an iCommons API query), called
+    from an embedded iframe in Canvas. Note that this is NOT a secure endpoint,
+    and spoofing HTTP_REFERER makes this information available for any course,
+    so if anything is added of a sensitive nature then this may need a different
+    implementation.
+    """
     referer = request.META.get('HTTP_REFERER', '')
     try:
         canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
