@@ -3,7 +3,6 @@ import json
 import logging
 
 from django.core.cache import cache
-from drest.exc import dRestRequestError, dRestError
 from canvas_course_info.settings import aws as settings
 
 log = logging.getLogger(__name__)
@@ -11,10 +10,6 @@ log = logging.getLogger(__name__)
 CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
-
-
-class CourseUpdateError(dRestRequestError):
-    pass
 
 
 class ICommonsApi(drest.API):
@@ -92,8 +87,6 @@ class ICommonsApi(drest.API):
                 log_msg = "Caching school info for school_id {}: {}"
                 log.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)
-            except drest.exc.dRestRequestError as e:
-                log.error(e.message)
             except Exception as e:
                 log.error(e.message)
         return school_info
