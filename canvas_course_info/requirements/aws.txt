@@ -7,4 +7,3 @@ git+https://github.com/brainheart/dce_lti_py.git
 redis==2.10.3
 git+https://github.com/harvard-dce/django-auth-lti.git@dce-lti-py
 django-toolbelt==0.0.1
-djrill==1.3.0
