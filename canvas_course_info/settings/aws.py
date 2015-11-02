@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 #from django.core.exceptions import ImproperlyConfigured
 #from getenv import env 
 
+import logging
 import os
 from .secure import SECURE_SETTINGS
 
@@ -140,54 +141,81 @@ ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 ICOMMONS_API_PATH = '/api/course/v2/'
 
+# Logging
+
+_DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', 'DEBUG')
+_LOG_ROOT = SECURE_SETTINGS.get('log_root', '')  # Default to current directory
+
+# Turn off default Django logging
+# https://docs.djangoproject.com/en/1.8/topics/logging/#disabling-logging-configuration
+LOGGING_CONFIG = None
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',
+            'datefmt': '%Y-%m-%dT%H:%M:%S'
         },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue'
+        'simple': {
+            'format': '%(levelname)s\t%(name)s:%(lineno)s\t%(message)s',
         }
     },
-    'formatters': {
-        'main_formatter': {
-            'format': '%(levelname)s:%(name)s: %(message)s '
-                      '(%(asctime)s; %(filename)s:%(lineno)d)',
-            'datefmt': "%Y-%m-%d %H:%M:%S",
+    # Borrowing some default filters for app loggers
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
         },
+    },
+    # This is the default logger for any apps or libraries that use the logger
+    # package, but are not represented in the `loggers` dict below.  A level
+    # must be set and handlers defined.  Setting this logger is equivalent to
+    # setting and empty string logger in the loggers dict below, but the separation
+    # here is a bit more explicit.  See link for more details:
+    # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
+    'root': {
+        'level': logging.WARNING,
+        'handlers': ['console', 'app_logfile'],
     },
     'handlers': {
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler'
+        # Log to a text file that can be rotated by logrotate
+        'app_logfile': {
+            'level': _DEFAULT_LOG_LEVEL,
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': os.path.join(_LOG_ROOT, 'django-canvas_course_info.log'),
+            'formatter': 'verbose',
         },
         'console': {
-            'level': 'DEBUG',
+            'level': logging.DEBUG,
             'class': 'logging.StreamHandler',
-            'formatter': 'main_formatter',
+            'formatter': 'simple',
+            'filters': ['require_debug_true'],
         },
-        'null': {
-            "class": 'django.utils.log.NullHandler',
-        }
     },
     'loggers': {
+        # TODO: remove this catch-all handler in favor of app-specific handlers
+        '': {
+            'handlers': ['console', 'app_logfile'],
+            'level': _DEFAULT_LOG_LEVEL,
+        },
         'django.request': {
-            'handlers': ['mail_admins', 'console'],
+            'handlers': ['console', 'app_logfile'],
             'level': 'ERROR',
-            'propagate': True,
+            'propagate': False,
         },
         'django': {
-            'handlers': ['null', ],
+            'handlers': ['console'],
+            'propagate': False,
         },
         'py.warnings': {
-            'handlers': ['null', ],
-        },
-        '': {
             'handlers': ['console'],
-            'level': "DEBUG",
+            'propagate': False,
         },
+        'course_info': {
+            'level': _DEFAULT_LOG_LEVEL,
+            'handlers': ['console', 'app_logfile'],
+            'propagate': False,
+        }
     }
 }
