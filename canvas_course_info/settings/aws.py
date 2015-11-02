@@ -114,13 +114,13 @@ DATABASES = {
 # Cache
 # https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES
 
-# Check if we want to do it like this or with the host and port
-REDIS_URL = SECURE_SETTINGS.get('redis_url')
+REDIS_HOST = SECURE_SETTINGS.get('redis_host', '127.0.0.1')
+REDIS_PORT = SECURE_SETTINGS.get('redis_port', '6379')
 
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': "redis://%s/0" % (REDIS_URL),
+        'LOCATION': "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT),
         'OPTIONS': {
             'PARSER_CLASS': 'redis.connection.HiredisParser'
         },
