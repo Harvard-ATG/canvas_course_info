@@ -17,6 +17,9 @@
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?';
 
+                // always include course title in widget data
+                widget_url += 'f=title';
+
                 // modify the submission url to reflect the checked boxes
                 // does this have to be 'f' or can we change it?
                 // in this situation, I guess 'f' signifies "unchecked == false"
@@ -49,6 +52,8 @@
 
           <ul class="list-group">
             {% for field in fields %}
+              {# Show all fields except for course title, which is always included via JS #}
+              {% if field.key != 'title' %}
                 <li class="list-group-item checkbox">
 
                   {% if field.key == 'course.registrar_code_display' %}
@@ -81,6 +86,7 @@
 
                   {% endif %}
                 </li>
+              {% endif %}
             {% endfor %}
           </ul>
 
