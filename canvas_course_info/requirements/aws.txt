@@ -1,10 +1,10 @@
 Django==1.7.1
 dj-static==0.0.6
 django-braces==1.3.1
-requests==2.5.0
-drest==0.9.12
-git+https://github.com/brainheart/dce_lti_py.git
-redis==2.10.3
-git+https://github.com/harvard-dce/django-auth-lti.git@dce-lti-py
 django-toolbelt==0.0.1
 djrill==1.3.0
+drest==0.9.12
+git+https://github.com/harvard-dce/dce_lti_py.git@v0.7.4#egg=dce-lti-py==0.7.4
+git+https://github.com/harvard-dce/django-auth-lti.git@dce-lti-py#egg=django-auth-lti==1.0
+redis==2.10.3
+requests==2.5.0
