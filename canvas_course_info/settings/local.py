@@ -18,6 +18,8 @@ COURSE_INSTANCE_ID = SECURE_SETTINGS.get('course_instance_id')
 if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
+CANVAS_URL = SECURE_SETTINGS.get('canvas_url', 'https://canvas.harvard.edu')
+
 SELENIUM_CONFIG = {
     'canvas_base_url': CANVAS_URL,
     'main_page_url': '/courses/5958/pages/canvas-course-info-selenium-test-page',

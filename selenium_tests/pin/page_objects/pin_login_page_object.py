@@ -1,17 +1,17 @@
-import abc
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from selenium_tests.pin.page_objects.pin_base_page_object import PinBasePageObject
 
+from selenium_tests.course_info.page_objects.editor_page import EditorPage
 
 class PinPageLocators(object):
     # List of WebElements found on PIN Login Page
     USERNAME = (By.ID, "username")
     PASSWORD = (By.ID, "password")
     SUBMIT_BUTTON = (By.ID,"submitLogin")
-    LoginType = (By.XPATH, "//div[@id='XID']")
+    LoginType = (By.ID, "XID")
 
 
 class PinLoginPageObject(PinBasePageObject):
@@ -19,7 +19,6 @@ class PinLoginPageObject(PinBasePageObject):
     Page Object of the Pin Login Page
 
     """
-    __metaclass__ = abc.ABCMeta
 
     def is_loaded(self):
         """ determine if the page loaded by looking for a specific element on the page """
@@ -62,3 +61,4 @@ class PinLoginPageObject(PinBasePageObject):
         self.set_password(password)
         self.click_submit()
         print 'Logging in user: %s' % username
+        return EditorPage(self._driver)
