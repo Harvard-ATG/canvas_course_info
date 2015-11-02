@@ -1,3 +1,10 @@
 td { border-width: thin; border-style: solid; border-color: #dbdbdb ; padding: 5px; }
 .course_info_textHeader1  {font-weight: bold; font-size: 16px;}
 .course_info_textHeader2  {font-weight: bold; font-size: 13px; font-color: red; }
+.course-info-widget-field-list {
+    width: 50%;
+}
+/* Fixes Save button .pull-right removing bottom margin of editor main div */
+.course-info-edit-form {
+    margin-bottom: 1em;
+}

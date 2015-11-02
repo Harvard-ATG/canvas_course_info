@@ -23,22 +23,7 @@
             
 7. create a secure.py(ATG/TLT structure) or .env (DCE structure) file
     and fill it with the information needed to run the app. Gitignore it.
-    If you want the "insert as text" functionality, leave that "offer_text" line.
-        SECURE_SETTINGS = {
-            'enable_debug' : False,
-            'offer_text': True,
-            'django_secret_key': '[PRIVATE]',
-            'db_default_name': '[DB_NAME]',
-            'db_default_user': '[USER_NAME]',
-            'db_default_password': '[PRIVATE]',
-            'db_default_host': '127.0.0.1',
-            'db_default_port': 5432,
-            'redis_url': '127.0.0.1:6379',
-            'lti_oauth_course_info_consumer_key': '[PRIVATE_KEY]',
-            'lti_oath_course_info_consumer_secret': '[PRIVATE_SECRET]',
-            'icommons_api_token': '[PRIVATE]',
-            'icommons_base_url': 'https://icommons.harvard.edu',
-        }
+    (see canvas_course_info/settings/secure.py.example for the list of keys) 
 
 8. Sync the Database
         ./manage.py syncdb

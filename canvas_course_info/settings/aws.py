@@ -32,7 +32,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djrill',
     'course_info'
 )
 
@@ -112,33 +111,34 @@ DATABASES = {
 # GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
 # GUNICORN_TIMEOUT = SECURE_SETTINGS.get('gunicorn_timeout', 60)
 
-# Check if we want to do it like this or with the host and port 
-REDIS_URL = SECURE_SETTINGS.get('redis_url')
+# Cache
+# https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES
+
+REDIS_HOST = SECURE_SETTINGS.get('redis_host', '127.0.0.1')
+REDIS_PORT = SECURE_SETTINGS.get('redis_port', '6379')
+# used by LTIRequestValidator
+REDIS_URL = '{}:{}'.format(REDIS_HOST, REDIS_PORT)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': "redis://{}/0".format(REDIS_URL),
+        'OPTIONS': {
+            'PARSER_CLASS': 'redis.connection.HiredisParser'
+        },
+        'KEY_PREFIX': 'canvas_course_info',  # Provide a unique value for intra-app cache
+        # See following for default timeout (5 minutes as of 1.7):
+        # https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES-TIMEOUT
+        'TIMEOUT': SECURE_SETTINGS.get('default_cache_timeout_secs', 300),
+    }
+}
 
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
-
-LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oath_credentials')
-
-# LTI_OAUTH_CREDENTIALS = {
-#      SECURE_SETTINGS.get('lti_oauth_course_info_consumer_key') :
-#          SECURE_SETTINGS.get('lti_oauth_course_info_consumer_secret')
-# }
-
+LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
-
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
-
-# TODO: Can all this email stuff be taken out? Check with DCE. 
-# # this tells django who to send app error emails to
-# ADMINS = ((SECURE_SETTINGS.get('django_admin_name'), SECURE_SETTINGS.get('django_admin_email'))) 
-#
-# # From: addr of the app error emails
-# SERVER_EMAIL = SECURE_SETTINGS.get('django_server_email', 'root@localhost')
-#
-# # use mandrill to send app error emails
-# EMAIL_BACKEND = "djrill.mail.backends.djrill.DjrillBackend"
-# MANDRILL_API_KEY = SECURE_SETTINGS.get('mandrill_api_key')
+ICOMMONS_API_PATH = '/api/course/v2/'
 
 LOGGING = {
     'version': 1,

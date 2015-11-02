@@ -7,18 +7,9 @@
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
 
-            // Button functionality for "Insert as Widget" - updates the return-type to post to Canvas
-            $('#iframe_submit').click(function() {
-                $('#return_type').val("iframe");
-            });
-
-            // Button functionality for "Insert as Text"
-            $('#oembed_submit').click(function() {
-                $('#return_type').val("oembed");
-                console.log("oembed submit?")
-            });
-
             // Give Canvas the right information on Submit
+            // (builds the query string used by the tool to determine which
+            // fields to display in the on-page embedded widget iframe)
             $('#widget_edit_form').submit(function(event){
 
                 // set up the base url
@@ -26,59 +17,21 @@
                 var h = $(location).attr('host');
                 var widget_url = p + '//' + h + '/course_info/widget.html?';
 
-                // Only select once for efficiency's sake
-                var return_type_val = $("#return_type").val();
-
-                // perform the relevant actions for the desired return type
-                if (return_type_val ==  "iframe") {
-                    var widget_height = estimateHeight();
-                    if (widget_height > 100 && widget_height < 1000) {
-                        $("#widget_height").val(widget_height);
-                    }
-                } else if (return_type_val ==  "oembed") {
-                    // ensure the correct configuration if indeed we're asking for some oEmbed
-                    var endpoint_url = p + '//' + h + '/course_info/oembed';
-                    $('#oembed_url').val(endpoint_url);
-                }
+                // always include course title in widget data
+                widget_url += 'f=title';
 
                 // modify the submission url to reflect the checked boxes
                 // does this have to be 'f' or can we change it?
                 // in this situation, I guess 'f' signifies "unchecked == false"
                 $('#widget_edit_form input:checkbox:checked').each(
                         function(){
-                            widget_url += '&amp;f=' + $(this).val();
+                            widget_url += '&f=' + $(this).val();
                         }
                 );
 
-                $('#widget_url').val(widget_url);
+              $('#widget_url').val(widget_url);
             });
 
-            //Is this obsolete debug code? Can we take it out?
-            $(".course_info_checkbox").on("change", function(e) {
-                console.log("widget height estimate changed to:", estimateHeight());
-            });
-
-            // See README for details on how to get resizing to work in Canvas.
-            // This is a stand-in for a global js function that should be included in the Canvas site.
-            // This function attempts to determine the content height for the checked fields.
-            // This value will be used to set the "height" attribute of the iFrame so that
-            // the content fits.
-            function estimateHeight() {
-                var $checked = $("#widget_edit_form_container input:checked");
-                var $container = $('<div></div>');
-                var height;
-
-                $checked.each(function(idx) {
-                    var $field = $(this).next().clone().wrap("<div></div>").parent();
-                    $container.append($field);
-                });
-
-                height = $container.hide().appendTo("body").height();
-                $container.remove();
-
-                //TODO: set up global js (and put this back around 1.3 from dce?)
-                return height * 1.7; //fudge factor, better to go a little over than under.
-            }
         });
     </script>
 {% endblock %}
@@ -86,47 +39,67 @@
 {% block content %}
 
     <div class="container-fluid">
-        <h4>Please select the fields you wish to display from the list below.</h4>
-
-        {# Display instructional text - some conditional on whether we're offering to insert text to the editor #}
-        <h5>
-            Then, select "Insert as Widget" to embed a live-updating widget to mirror your iSite
-            {% if should_offer_text %}
-                - or "Insert as Text" to place an editable table in the Canvas Editor
-            {% endif %}
-        </h5>
-
-        <p>This information is provided by the registrar's office.
-            If any of it is outdated or incorrect, please contact the catalog coordinator in your department.</p>
+      <p>
+        The course details you select below will be displayed on the page,
+        and will always reflect the most up-to-date information available
+        from the Registrar’s office.
+      </p>
     </div>
-    <br/>
-    <div id="widget_edit_form_container" class="container-fluid">
+
+    <div id="widget_edit_form_container" class="container-fluid course-info-edit-form">
 
         <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
 
+          <ul class="list-group">
             {% for field in fields %}
-                <div>
-                    <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
-                    <span>{{ field.value }}</span>
-                </div>
-            {% endfor %}
+              {# Show all fields except for course title, which is always included via JS #}
+              {% if field.key != 'title' %}
+                <li class="list-group-item checkbox">
 
-            {# Many of these values are inserted dynamically by the JS above #}
+                  {% if field.key == 'course.registrar_code_display' %}
+                    <label>
+                      <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
+                      {% if field.value and school_title %}
+                          <strong>{{ school_title }}:</strong>
+                        </label>
+                        {{ field.value }}
+                      {% else %}
+                          <strong>{{ field.label }}:</strong>
+                          Field not populated by registrar
+                        </label>
+                      {% endif %}
+
+                  {% else %}
+                    <label>
+                      <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
+                      <strong>{{ field.label }}:</strong>
+                    </label>
+                    {% if field.value %}
+                      {% if field.key in textarea_fields %}
+                        <textarea class="form-control" rows="1" disabled>{{ field.value }}</textarea>
+                      {% else %}
+                        {{ field.value }}
+                      {% endif %}
+                    {% else %}
+                      Field not populated by registrar
+                    {% endif %}
+
+                  {% endif %}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+
+            {# widget_url is inserted dynamically by the JS above #}
             {# They are the indicators passed to Canvas to format/act upon the response html #}
             {# https://canvas.instructure.com/doc/api/file.editor_button_tools.html #}
-            <input type="hidden" id="return_type"   name="return_type"   value="" />
-            <input type="hidden" id="oembed_url"    name="endpoint"      value="" />
+            <input type="hidden" id="return_type"   name="return_type"   value="iframe" />
             <input type="hidden" id="widget_url"    name="url"           value="" />
-            <input type="hidden" id="widget_height" name="height"        value="" />
+            <input type="hidden" id="widget_height" name="height"        value="43em" />
             <input type="hidden"                    name="width"         value="100%" />
             <input type="hidden"                    name="title"         value="Course Info" />
             <input type="hidden"                    name="id"            value="InfoFrame" />
-            <br/>
-            <input type="submit" id="iframe_submit" name="iframe_submit" value="Insert as Widget" class="btn btn-default" />
-
-            {% if should_offer_text %}
-                <input type="submit" id="oembed_submit" name="oembed_submit" value="Insert as Text" class="btn btn-default" />
-            {% endif %}
+            <input type="submit" id="iframe_submit" name="iframe_submit" value="Save" class="btn btn-primary pull-right" />
         </form>
         <br/>
     </div>
