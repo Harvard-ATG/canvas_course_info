@@ -59,8 +59,9 @@ class ICommonsApi(drest.API):
                                              headers=self.headers)
                 results = response.data.get('results', [])
                 if len(results):
-                    course_info = self.get_course_info(
-                        results[0]['course_instance_id'])
+                    primary_cid = self._get_primary_course_instance_id(results)
+                    if primary_cid:
+                        course_info = self.get_course_info(primary_cid)
                 log_msg = "Caching course info for canvas_course_id {}: {}"
                 log.debug(log_msg.format(canvas_course_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
@@ -93,3 +94,14 @@ class ICommonsApi(drest.API):
         # for right now (in views.py, to insert the school name before the display number).
         # But just in case we want to use it for more than that in the future, and so that it mirrors 'get_course_info,'
         # we're going to let it return the whole data set.
+
+    def _get_primary_course_instance_id(self, course_instances):
+        primary_cids = [c['course_instance_id'] for c in course_instances if not c['primary_xlist_instances']]
+        if len(primary_cids) == 1:
+            return primary_cids[0]
+        elif len(primary_cids) == 0:
+            error_msg = 'No primary course instance found'
+        else:
+            error_msg = 'Multiple possible primary courses found, cannot determine primary'
+        log.error('{}: {}'.format(error_msg, course_instances))
+        return None
