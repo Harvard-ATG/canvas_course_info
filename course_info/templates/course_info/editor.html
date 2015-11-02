@@ -52,19 +52,17 @@
                 <li class="list-group-item checkbox">
 
                   {% if field.key == 'course.registrar_code_display' %}
-                    {% if field.value and school_title %}
-                      <label>
-                        <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
-                        <strong>{{ school_title }}:</strong>
-                      </label>
-                      {{ field.value }}
-                    {% else %}
-                      <label>
-                        <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
-                        <strong>{{ field.label }}:</strong>
-                        Field not populated by registrar
-                      </label>
-                    {% endif %}
+                    <label>
+                      <input type="checkbox" class="course_info_checkbox" id="{{ field.key }}" value="{{ field.key }}" checked/>
+                      {% if field.value and school_title %}
+                          <strong>{{ school_title }}:</strong>
+                        </label>
+                        {{ field.value }}
+                      {% else %}
+                          <strong>{{ field.label }}:</strong>
+                          Field not populated by registrar
+                        </label>
+                      {% endif %}
 
                   {% else %}
                     <label>

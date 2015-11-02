@@ -20,11 +20,10 @@ class ICommonsApi(drest.API):
         return cls(icommons_base_url, access_token)
 
     def __init__(self, icommons_base_url, access_token):
-        self.icommons_base_url = icommons_base_url
         self.headers = {'Authorization': "Token %s" % access_token,
                         'Content-Type': 'application/json'}
-        API_PATH = settings.ICOMMONS_API_PATH
-        super(ICommonsApi, self).__init__(icommons_base_url + API_PATH,
+        api_path = settings.ICOMMONS_API_PATH
+        super(ICommonsApi, self).__init__(icommons_base_url + api_path,
                                           extra_headers=self.headers,
                                           timeout=60,
                                           serialize=True,
@@ -40,7 +39,7 @@ class ICommonsApi(drest.API):
                 relative_url = '/course_instances/%s/?format=json' % course_instance_id
                 response = self.make_request('GET', relative_url,
                                              headers=self.headers)
-                course_info = response.data.copy()
+                course_info = response.data
                 log_msg = "Caching course info for course_instance_id {}: {}"
                 log.debug(log_msg.format(course_instance_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
@@ -83,7 +82,7 @@ class ICommonsApi(drest.API):
                 relative_url = '/schools/%s/?format=json' % school_id
                 response = self.make_request('GET', relative_url,
                                              headers=self.headers)
-                school_info = response.data.copy()
+                school_info = response.data
                 log_msg = "Caching school info for school_id {}: {}"
                 log.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)
