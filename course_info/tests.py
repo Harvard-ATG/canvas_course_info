@@ -108,13 +108,14 @@ class DisplayTests(TestCase):
         request = self.factory.post('/', post_body)
         response = editor(request)
         self.assertEqual(response.status_code, 200)
-        # should have a checkbox for every configured field (unlike in widget)
-        self.assertContains(response, 'course_info_checkbox', count=9)
+        # should have a checkbox for every configured field except for title,
+        # which is automatically included, thus 8/9 fields
+        self.assertContains(response, 'course_info_checkbox', count=len(mock_course_info.keys())-1)
         # fields with empty API return values should have a friendly message
         self.assertContains(response, 'Field not populated by registrar', count=2)
 
 
-class TestDataIntegration(TestCase):
+class IntegrationTests(TestCase):
     """
     These tests will ensure that the widget (and by extension, the iCommons API)
     is running as expected. Changes in the iCommons api structure will be caught.
