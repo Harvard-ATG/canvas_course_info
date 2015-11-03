@@ -20,3 +20,15 @@ DEBUG_TOOLBAR_CONFIG = {
 COURSE_INSTANCE_ID = SECURE_SETTINGS.get('course_instance_id')
 if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
+
+CANVAS_URL = SECURE_SETTINGS.get('canvas_url', 'https://canvas.harvard.edu')
+
+SELENIUM_CONFIG = {
+    'canvas_base_url': CANVAS_URL,
+    'main_page_url': '/courses/5958/pages/canvas-course-info-selenium-test-page',
+    'widget_url': '',
+    'run_locally': False,
+    'selenium_grid_url': SECURE_SETTINGS.get('selenium_grid_url'),
+    'selenium_password': SECURE_SETTINGS.get('selenium_password'),
+    'selenium_username': SECURE_SETTINGS.get('selenium_user'),
+}
