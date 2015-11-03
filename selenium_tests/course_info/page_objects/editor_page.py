@@ -7,7 +7,7 @@ class EditorPageLocators(object):
     # locators for main editor page
     NEW_PAGE_SUBMIT = (By.ID, 'new_page_submit')
     TOOL_BUTTON = (By.CSS_SELECTOR,
-                   'div[aria-label="Import Course Info - dev (root account)"] button')
+                   'div[aria-label="Import Course Info qa"] button')
 
     #locators for course info tool iframe
     DESCRIPTION_CHECKBOX = (By.ID, 'description')
@@ -21,6 +21,7 @@ class EditorPageLocators(object):
     TITLE_CHECKBOX = (By.ID, 'title')
     TOOL_SUBMIT_BUTTON = (By.ID, 'iframe_submit')
     EXTERNAL_TOOL_BUTTON_DIALOG = (By.ID, 'external_tool_button_dialog')
+    EXTERNAL_TOOL_BUTTON_FRAME = (By.ID, 'external_tool_button_frame')
     EDIT_PAGE_SUBMIT = (By.XPATH, "//div[@id='content']/form/div[2]/div/button")
 
 
@@ -66,9 +67,9 @@ class EditorPage(BasePage):
         course_reg_code_checkbox = self.find_element(*EditorPageLocators.REGISTRAR_CODE_CHECKBOX)
         course_reg_code_checkbox.click()
 
-    def is_course_reg_code_selected(self):
+    def is_course_reg_code_displayed(self):
         course_reg_code_checkbox = self.find_element(*EditorPageLocators.REGISTRAR_CODE_CHECKBOX)
-        return course_reg_code_checkbox.is_selected()
+        return course_reg_code_checkbox.is_displayed()
 
     def click_iframe_submit(self):
         tool_submit_button = self.find_element(*EditorPageLocators.TOOL_SUBMIT_BUTTON)
