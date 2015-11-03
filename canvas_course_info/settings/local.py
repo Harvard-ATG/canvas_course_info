@@ -1,6 +1,6 @@
 # to activate these settings, execute ./manage.py runserver --settings=canvas_course_info.settings.local
 
-from .aws import *
+from .base import *
 from logging.config import dictConfig
 
 dictConfig(LOGGING)
