@@ -1,5 +1,6 @@
 import logging
 import re
+from django.contrib.auth.decorators import login_required
 from django.http                    import HttpResponse
 from django.shortcuts               import render
 from django.views.decorators.csrf   import csrf_exempt
@@ -12,16 +13,20 @@ from icommons                       import ICommonsApi
 log = logging.getLogger(__name__)
 
 _FIELD_LABEL_MAP = {
-    'title': 'Course Title',
-    'term.display_name': 'Term',
-    'instructors_display': 'Course Instructors',
-    'location': 'Location',
-    'meeting_time': 'Meeting Time',
-    'exam_group': 'Exam Group',
-    'description': 'Course Description',
-    'notes': 'Notes',
-    'course.registrar_code_display': 'Course Code'
+    'title': {'label': 'Course Title', 'order': 1},
+    'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
+    'term.display_name': {'label': 'Term', 'order': 3},
+    'instructors_display': {'label': 'Course Instructors', 'order': 4},
+    'location': {'label': 'Location', 'order': 5},
+    'meeting_time': {'label': 'Meeting Time', 'order': 6},
+    'exam_group': {'label': 'Exam Group', 'order': 7},
+    'description': {'label': 'Course Description', 'order': 8},
+    'notes': {'label': 'Notes', 'order': 9},
 }
+
+_ORDERED_FIELD_NAMES = [
+    f[0] for f in sorted(_FIELD_LABEL_MAP.iteritems(), key=lambda f: f[1]['order'])
+]
 
 
 @require_GET
@@ -63,6 +68,7 @@ def tool_config(request):
     return HttpResponse(lti_tool_config.to_xml(), content_type='text/xml')
 
 
+@login_required
 @require_POST
 @csrf_exempt
 def lti_launch(request):
@@ -93,11 +99,10 @@ def _get_field_value_for_key(key, course_info):
     return value
 
 
-def __course_context(request, keys, show_empty_fields=False, **kwargs):
+def _course_context(request, requested_keys, show_empty_fields=False, **kwargs):
     course_instance_id = kwargs.get('course_instance_id')
     canvas_course_id = kwargs.get('canvas_course_id')
     course_info = {}
-    # todo: cache?
     if course_instance_id:
         course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
     elif canvas_course_id:
@@ -109,10 +114,11 @@ def __course_context(request, keys, show_empty_fields=False, **kwargs):
         'canvas_course_id': course_info.get('canvas_course_id')
     }
 
-    for key in keys:
+    # add field to context in order of its preferred display on the template
+    for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
         if value or show_empty_fields:
-            field = {'key': key, 'label': _FIELD_LABEL_MAP[key], 'value': value}
+            field = {'key': key, 'label': _FIELD_LABEL_MAP[key]['label'], 'value': value}
             context['fields'].append(field)
 
     try:
@@ -128,6 +134,13 @@ def __course_context(request, keys, show_empty_fields=False, **kwargs):
 
 @require_GET
 def widget(request):
+    """
+    Returns course information (the results of an iCommons API query), called
+    from an embedded iframe in Canvas. Note that this is NOT a secure endpoint,
+    and spoofing HTTP_REFERER makes this information available for any course,
+    so if anything is added of a sensitive nature then this may need a different
+    implementation.
+    """
     referer = request.META.get('HTTP_REFERER', '')
     try:
         canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
@@ -135,8 +148,8 @@ def widget(request):
         canvas_course_id = None
 
     # field names are sent as URL params f=field_name when widget is 'launched'
-    field_names = request.GET.getlist('f')
-    course_context = __course_context(request, field_names, canvas_course_id=canvas_course_id)
+    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_LABEL_MAP.keys()]
+    course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
@@ -151,20 +164,7 @@ def editor(request):
         # "lis" appears to be a deliberate misspelling
         course_instance_id = request.POST.get('lis_course_offering_sourcedid')
 
-    # The values we will want to display, in the order we wish them to appear
-    field_names = [
-        'title',
-        'course.registrar_code_display',
-        'term.display_name',
-        'instructors_display',
-        'location',
-        'meeting_time',
-        'exam_group',
-        'description',
-        'notes'
-    ]
-
-    course_context = __course_context(request, field_names, True, course_instance_id=course_instance_id)
+    course_context = _course_context(request, _ORDERED_FIELD_NAMES, True, course_instance_id=course_instance_id)
 
     course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
     course_context['textarea_fields'] = ['description', 'notes']
