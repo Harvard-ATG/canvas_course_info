@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 
 from selenium_tests.pin.page_objects.pin_base_page_object import PinBasePageObject
 
-from selenium_tests.course_info.page_objects.editor_page import EditorPage
 
 class PinPageLocators(object):
     # List of WebElements found on PIN Login Page
@@ -50,15 +49,16 @@ class PinLoginPageObject(PinBasePageObject):
         submit_button = self.find_element(*PinPageLocators.SUBMIT_BUTTON)
         submit_button.click()
 
-    def login(self, username, password):
+    def login(self, url, username, password):
         """
         the abstract method can be overridden for individual projects to allow
         the login to return the appropriate page object for the test. If you do override
         you will need to call super to invoke the login
         """
+        self.get(url)
         self.set_login_type_xid()
         self.set_username(username)
         self.set_password(password)
         self.click_submit()
         print 'Logging in user: %s' % username
-        return EditorPage(self._driver)
+
