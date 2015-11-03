@@ -28,6 +28,7 @@ SELENIUM_CONFIG = {
     'main_page_url': '/courses/5958/pages/canvas-course-info-selenium-test-page',
     'widget_url': '',
     'run_locally': False,
+    'use_htmlrunner': SECURE_SETTINGS.get('selenium_use_htmlrunner', True),
     'selenium_grid_url': SECURE_SETTINGS.get('selenium_grid_url'),
     'selenium_password': SECURE_SETTINGS.get('selenium_password'),
     'selenium_username': SECURE_SETTINGS.get('selenium_user'),
