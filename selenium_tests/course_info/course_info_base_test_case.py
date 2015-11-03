@@ -15,7 +15,7 @@ class CourseInfoBaseTestCase(BaseSeleniumTestCase):
         super(CourseInfoBaseTestCase, cls).setUpClass()
         cls.USERNAME = settings.SELENIUM_CONFIG.get('selenium_username')
         cls.PASSWORD = settings.SELENIUM_CONFIG.get('selenium_password')
-        cls.BASE_URL = '%s/courses/5949/pages/front-page/edit' % settings.SELENIUM_CONFIG.get('canvas_base_url')
+        cls.BASE_URL = '%s/courses/7162/pages/course-information/edit' % settings.SELENIUM_CONFIG.get('canvas_base_url')
 
     @classmethod
     def tearDownClass(cls):

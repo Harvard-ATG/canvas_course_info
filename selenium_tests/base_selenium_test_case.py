@@ -26,6 +26,7 @@ class BaseSeleniumTestCase(unittest.TestCase):
             cls.display = Display(visible=0, size=(1480, 1024)).start()
             # create a new local browser session
             cls.driver = webdriver.Firefox()
+
         else:
             # Run selenium tests from the Selenium Grid server
             selenium_grid_url = settings.SELENIUM_CONFIG.get('selenium_grid_url', None)
@@ -36,7 +37,7 @@ class BaseSeleniumTestCase(unittest.TestCase):
                 )
 
         # shared defaults
-        cls.driver.implicitly_wait(10)
+        cls.driver.implicitly_wait(30)
         cls.driver.maximize_window()
 
     @classmethod
