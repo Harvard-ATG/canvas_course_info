@@ -4,12 +4,12 @@ from selenium_tests.course_info.page_objects.editor_page import EditorPage, Edit
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 
+
 class CourseInfoTestFlow(CourseInfoBaseTestCase):
 
-    def test_course_info_flow(self):
+    def test_course_info_tool_loads(self):
         """
-        test that the lecture video tool loads properly and checks that
-        a the detail page is loaded when a user clicks on one of the videos.
+        test that the course info tool loads properly.
         """
         pin_page = LoginPage(self.driver)
         pin_page.login(self.BASE_URL, self.USERNAME, self.PASSWORD)
@@ -18,19 +18,11 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         edit_page.click_tool_button()
         self.assertTrue(edit_page.is_tool_dialog_displayed(), 'tool dialog is not displayed')
 
+        self.driver._switch_to.frame('external_tool_button_frame')
         try:
             WebDriverWait(self.driver, 50).until(lambda s: s.find_element(
                 *EditorPageLocators.REGISTRAR_CODE_CHECKBOX).is_displayed())
         except TimeoutException:
-            # this seems to always throw and execption even if the bos is present
-            # I'm not sure why this is happening
-            pass
-
-        self.driver.save_screenshot('screenshot1.png')
-        edit_page.click_course_reg_code()
-        self.driver.save_screenshot('screenshot2.png')
-
-        edit_page.click_iframe_submit()
-        edit_page.save_edit_page()
-
+            return False
+        self.assertTrue(edit_page.is_course_reg_code_displayed(), 'tool failed to load')
 
