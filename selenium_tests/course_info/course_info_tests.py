@@ -23,12 +23,12 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
                 *EditorPageLocators.REGISTRAR_CODE_CHECKBOX).is_displayed())
         except TimeoutException:
             # this seems to always throw and execption even if the bos is present
-            # I'm not sure why this is happening 
+            # I'm not sure why this is happening
             pass
 
         self.driver.save_screenshot('screenshot1.png')
         edit_page.click_course_reg_code()
-        self.driver.save_screenshot('screenshot1.png')
+        self.driver.save_screenshot('screenshot2.png')
 
         edit_page.click_iframe_submit()
         edit_page.save_edit_page()
