@@ -118,12 +118,12 @@ DATABASES = {
 REDIS_HOST = SECURE_SETTINGS.get('redis_host', '127.0.0.1')
 REDIS_PORT = SECURE_SETTINGS.get('redis_port', '6379')
 # used by LTIRequestValidator
-REDIS_URL = '{}:{}'.format(REDIS_HOST, REDIS_PORT)
+REDIS_URL = "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT)
 
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': "redis://{}/0".format(REDIS_URL),
+        'LOCATION': REDIS_URL,
         'OPTIONS': {
             'PARSER_CLASS': 'redis.connection.HiredisParser'
         },
