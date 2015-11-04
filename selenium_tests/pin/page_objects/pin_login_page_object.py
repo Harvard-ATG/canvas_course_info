@@ -50,15 +50,9 @@ class PinLoginPageObject(PinBasePageObject):
         submit_button.click()
 
     def login(self, url, username, password):
-        """
-        the abstract method can be overridden for individual projects to allow
-        the login to return the appropriate page object for the test. If you do override
-        you will need to call super to invoke the login
-        """
         self.get(url)
         self.set_login_type_xid()
         self.set_username(username)
         self.set_password(password)
         self.click_submit()
         print 'Logging in user: %s' % username
-

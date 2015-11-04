@@ -1,3 +1,4 @@
+from functools import partial
 from selenium.common.exceptions import (
     NoSuchElementException,
     InvalidSwitchToTargetException
@@ -28,8 +29,8 @@ class BasePageMeta(type):
     def __new__(class_, name, bases, dict_):
         type_ = super(BasePageMeta, class_).__new__(class_, name, bases, dict_)
         if hasattr(type_, 'locator_class'):
-            for attr in getattr(type_, 'located_properties', []):
-                def fn(self):
+            for attribute in getattr(type_, 'located_properties', []):
+                def fn(self, attr):
                     locator = getattr(type_.locator_class, attr.upper())
                     if not locator:
                         raise RuntimeError(
@@ -41,7 +42,7 @@ class BasePageMeta(type):
                     except NoSuchElementException:
                         raise RuntimeError('Unable to find {} on {}'.format(
                                                attr, name))
-                setattr(type_, attr, property(fn))
+                setattr(type_, attribute, property(partial(fn, attr=attribute)))
         return type_
 
 

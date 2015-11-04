@@ -6,15 +6,14 @@ To run these tests from the command line in a local VM, you'll need to set up th
 > python selenium_tests/regression_tests.py
 """
 
-import unittest
 import time
 
-import HTMLTestRunner
 from django.conf import settings
 from selenium_tests.course_info.course_info_tests import CourseInfoTestFlow
 
 
 if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
+    import HTMLTestRunner
     dateTimeStamp = time.strftime('%Y%m%d_%H_%M_%S')
     buf = file("TestReport" + "_" + dateTimeStamp + ".html", 'wb')
     runner = HTMLTestRunner.HTMLTestRunner(
@@ -23,6 +22,7 @@ if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
         description='Result of tests'
     )
 else:
+    import unittest
     runner = unittest.TextTestRunner()
 
 course_info_flow_test = unittest.TestLoader().loadTestsFromTestCase(CourseInfoTestFlow)
@@ -30,4 +30,3 @@ smoke_tests = unittest.TestSuite([course_info_flow_test])
 
 # run the suite
 runner.run(smoke_tests)
-

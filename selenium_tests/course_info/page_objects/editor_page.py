@@ -1,15 +1,14 @@
 from selenium.webdriver.common.by import By
 from selenium_tests.base_page import BasePage
-from selenium.common.exceptions import NoSuchElementException
 
 
 class EditorPageLocators(object):
     # locators for main editor page
-    NEW_PAGE_SUBMIT = (By.ID, 'new_page_submit')
+    EDITOR_TABS = (By.ID, 'editor_tabs')
     TOOL_BUTTON = (By.CSS_SELECTOR,
                    'div[aria-label="Import Course Info qa"] button')
 
-    #locators for course info tool iframe
+    # locators for course info tool iframe
     DESCRIPTION_CHECKBOX = (By.ID, 'description')
     EXAM_GROUP_CHECKBOX = (By.ID, 'exam_group')
     INSTRUCTORS_CHECKBOX = (By.ID, 'instructors_display')
@@ -29,8 +28,8 @@ class EditorPage(BasePage):
     locator_class = EditorPageLocators
     located_properties = [
         'description_checkbox',
+        'editor_tabs',
         'exam_group_checkbox',
-        'new_page_submit',
         'instructors_checkbox',
         'location_checkbox',
         'meeting_time_checkbox',
@@ -48,12 +47,7 @@ class EditorPage(BasePage):
         self.focus_on_tool_frame()
 
     def is_loaded(self):
-        """ determine if the page loaded by looking for a specific element on the page """
-        try:
-            self.find_element(*EditorPageLocators.TOOL_BUTTON)
-        except NoSuchElementException:
-            return False
-        return True
+        return bool(self.editor_tabs)
 
     def click_tool_button(self):
         tool_button = self.find_element(*EditorPageLocators.TOOL_BUTTON)
