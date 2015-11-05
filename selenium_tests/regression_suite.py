@@ -22,6 +22,7 @@ if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
         description='Result of tests'
     )
 else:
+    import logging; logging.basicConfig(level=logging.DEBUG)
     import unittest
     runner = unittest.TextTestRunner()
 

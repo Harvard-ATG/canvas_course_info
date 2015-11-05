@@ -1,8 +1,13 @@
+import logging
 from functools import partial
+
 from selenium.common.exceptions import (
     NoSuchElementException,
     InvalidSwitchToTargetException
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class BasePageMeta(type):
@@ -105,11 +110,12 @@ class BasePage(object):
 
     def focus_on_tool_frame(self):
         """
-        The pages we are testing are in an iframe, make sure we have the correct focus
+        The pages we are testing are in an iframe, make sure we have the
+        correct focus
         :return:
         """
         try:
             self._driver.switch_to.frame(self.tool_frame_name)
         except InvalidSwitchToTargetException:
-            pass
-
+            logger.warning('Unable to switch to tool frame %s',
+                           self.tool_frame_name)
