@@ -1,8 +1,10 @@
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium_tests.course_info.course_info_base_test_case import CourseInfoBaseTestCase
 from selenium_tests.course_info.page_objects.editor_page import EditorPage
 from selenium_tests.pin.page_objects.pin_login_page_object import PinLoginPageObject
+
 
 class CourseInfoTestFlow(CourseInfoBaseTestCase):
     def test_course_info_tool_loads(self):
@@ -15,6 +17,7 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         pin_page.login(self.BASE_URL, self.USERNAME, self.PASSWORD)
         edit_page = EditorPage(self.driver)
         self.assertTrue(edit_page.is_loaded(), 'edit page not loaded')
+        edit_page.focus_on_default_content()
 
         # click on our tool's button in the editor, verify the tool's field
         # selection page comes up in the "modal" iframe
@@ -30,3 +33,37 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         for checkbox in checkbox_properties:
             self.assertTrue(getattr(edit_page, checkbox).is_displayed(),
                             '{} is not displayed'.format(checkbox))
+
+
+    def test_insert_widget_all_fields(self):
+        """
+        Tests inserting the widget into a page, leaving all fields selected.
+        """
+        # deal with the login
+        pin_page = PinLoginPageObject(self.driver)
+        pin_page.login(self.BASE_URL, self.USERNAME, self.PASSWORD)
+        edit_page = EditorPage(self.driver)
+        edit_page.focus_on_default_content()
+
+        # check to make sure our widget isn't already in the page
+        # TODO: just nuke them?
+        edit_page.focus_on_editor_frame()
+        self.assertEqual(edit_page.get_inserted_widgets(), [],
+                         'Found unexpected instances of widget already in the page')
+        edit_page.focus_on_default_content()
+
+        # launch the tool, click save
+        edit_page.tool_button.click()
+        edit_page.focus_on_tool_frame()
+        edit_page.tool_submit_button.click()
+        edit_page.focus_on_default_content()
+
+        # verify the iframe is gone
+        with self.assertRaises(TimeoutException):
+            WebDriverWait(self.driver, 10).until(
+                lambda d: d.find_element(*edit_page.locator_class.REGISTRAR_CODE_CHECKBOX).is_visible())
+
+        # now make sure the widget is in our editor frame
+        edit_page.focus_on_editor_frame()
+        widgets = edit_page.get_inserted_widgets()
+        self.assertEqual(len(widgets), 1)

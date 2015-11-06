@@ -119,3 +119,9 @@ class BasePage(object):
         except InvalidSwitchToTargetException:
             logger.warning('Unable to switch to tool frame %s',
                            self.tool_frame_name)
+
+    def focus_on_default_content(self):
+        try:
+            self._driver.switch_to.default_content()
+        except InvalidSwitchToTargetException:
+            logger.warning('Unable to switch to whole window')

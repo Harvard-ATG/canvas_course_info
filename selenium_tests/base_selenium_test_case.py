@@ -11,8 +11,7 @@ class BaseSeleniumTestCase(unittest.TestCase):
     driver = None  # make selenium driver available to any part of the test case
     display = None  # a reference to the virtual display (for running tests locally)
 
-    @classmethod
-    def setUpClass(cls):
+    def setUp(self):
         """
         Sets up the test case, including the selenium browser driver to use
         """
@@ -23,25 +22,24 @@ class BaseSeleniumTestCase(unittest.TestCase):
             # Run selenium tests from a headless browser within the VM
             print "\nSetting up selenium testing locally..."
             # set up virtual display
-            cls.display = Display(visible=0, size=(1480, 1024)).start()
+            self.display = Display(visible=0, size=(1480, 1024)).start()
             # create a new local browser session
-            cls.driver = webdriver.Firefox()
+            self.driver = webdriver.Firefox()
 
         else:
             # Run selenium tests from the Selenium Grid server
             selenium_grid_url = settings.SELENIUM_CONFIG.get('selenium_grid_url', None)
             if selenium_grid_url:
-                cls.driver = webdriver.Remote(
+                self.driver = webdriver.Remote(
                     command_executor=selenium_grid_url,
                     desired_capabilities=DesiredCapabilities.FIREFOX
                 )
 
         # shared defaults
-        cls.driver.implicitly_wait(30)
-        cls.driver.maximize_window()
+        self.driver.implicitly_wait(30)
+        self.driver.maximize_window()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-        if cls.display:
-            cls.display.stop()
+    def tearDown(self):
+        self.driver.quit()
+        if self.display:
+            self.display.stop()
