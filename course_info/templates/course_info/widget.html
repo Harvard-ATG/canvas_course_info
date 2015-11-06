@@ -3,6 +3,30 @@
 {% block extra_head %}
     <base target="_blank">
 {% endblock %}
+{% block extra_js %}
+  <script type="text/javascript" charset="utf8">
+    function getOffsetHeightWithMargins() {
+      var
+        docStyle = document.defaultView.getComputedStyle(document.body, null),
+        docMarginTop = parseInt(docStyle['marginTop'], 10),
+        docMarginBottom = parseInt(docStyle['marginBottom'], 10);
+      return document.body.offsetHeight + docMarginTop + docMarginBottom;
+    }
+
+    function resizeIframe() {
+      window.parent.postMessage(
+        {
+          request: 'changeHeight',
+          href: document.location.href,
+          height: getOffsetHeightWithMargins() + 'px'
+        },
+        '*'  // needs to match multiple canvas domains
+      );
+    }
+
+    setTimeout(resizeIframe, 0);
+  </script>
+{% endblock %}
 
 {% block content %}
     <div id="course_info_container" class="container-fluid">
