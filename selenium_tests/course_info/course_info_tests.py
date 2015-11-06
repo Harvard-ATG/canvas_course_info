@@ -1,3 +1,4 @@
+import urlparse
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -67,3 +68,18 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         edit_page.focus_on_editor_frame()
         widgets = edit_page.get_inserted_widgets()
         self.assertEqual(len(widgets), 1)
+
+        # figure out which f values we should be expecting
+        expected_f_values = {
+            getattr(edit_page.locator_class, c)[1]
+                for c in dir(edit_page.locator_class)
+                if c.endswith('_CHECKBOX')
+        }
+        expected_f_values.add('title') # title is always included
+
+        # verify they're all in the widget url
+        widget_url = widgets[0].get_attribute('data-mce-p-src')
+        parts = urlparse.urlparse(widget_url)
+        params = urlparse.parse_qs(parts.query)
+        self.assertEqual(set(params['f']), expected_f_values,
+                         'Not all expected fields in the widget url')

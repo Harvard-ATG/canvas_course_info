@@ -8,7 +8,6 @@ from selenium_tests.base_page import BasePage
 class EditorPageLocators(object):
     # locators for main editor page
     EDITOR_TABS = (By.ID, 'editor_tabs')
-    LOGOUT_BUTTON = (By.CSS_SELECTOR, 'a[href="/logout"]')
     TOOL_BUTTON = (By.CSS_SELECTOR,
                    'div[aria-label="Import Course Info - dev (root account)"] button')
 
@@ -38,7 +37,6 @@ class EditorPage(BasePage):
         'exam_group_checkbox',
         'instructors_checkbox',
         'location_checkbox',
-        'logout_button',
         'meeting_time_checkbox',
         'notes_checkbox',
         'registrar_code_checkbox',
