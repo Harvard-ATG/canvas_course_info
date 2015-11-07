@@ -1,9 +1,12 @@
 import urlparse
+
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium_tests.course_info.course_info_base_test_case import CourseInfoBaseTestCase
 from selenium_tests.course_info.page_objects.editor_page import EditorPage
+from selenium_tests.course_info.page_objects.main_page import MainPage
 from selenium_tests.pin.page_objects.pin_login_page_object import PinLoginPageObject
 
 
@@ -44,22 +47,28 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         pin_page = PinLoginPageObject(self.driver)
         pin_page.login(self.BASE_URL, self.USERNAME, self.PASSWORD)
         edit_page = EditorPage(self.driver)
-        edit_page.focus_on_default_content()
 
-        # check to make sure our widget isn't already in the page
-        # TODO: just nuke them?
+        # delete any instances of the widget already in the page
+        edit_page.focus_on_default_content()
+        edit_page.focus_on_editor_frame()
+        for widget in edit_page.get_inserted_widgets():
+            widget.click()
+            edit_page.editor_body.send_keys(Keys.DELETE)
+
+        # now squawk if any are left
+        edit_page.focus_on_default_content()
         edit_page.focus_on_editor_frame()
         self.assertEqual(edit_page.get_inserted_widgets(), [],
                          'Found unexpected instances of widget already in the page')
-        edit_page.focus_on_default_content()
 
-        # launch the tool, click save
+        # launch the tool, click save in the tool iframe
+        edit_page.focus_on_default_content()
         edit_page.tool_button.click()
         edit_page.focus_on_tool_frame()
         edit_page.tool_submit_button.click()
-        edit_page.focus_on_default_content()
 
         # verify the iframe is gone
+        edit_page.focus_on_default_content()
         with self.assertRaises(TimeoutException):
             WebDriverWait(self.driver, 10).until(
                 lambda d: d.find_element(*edit_page.locator_class.REGISTRAR_CODE_CHECKBOX).is_visible())
@@ -83,3 +92,15 @@ class CourseInfoTestFlow(CourseInfoBaseTestCase):
         params = urlparse.parse_qs(parts.query)
         self.assertEqual(set(params['f']), expected_f_values,
                          'Not all expected fields in the widget url')
+
+        # save the page
+        edit_page.focus_on_default_content()
+        edit_page.save_button.click()
+
+        # sanity check the result
+        main_page = MainPage(self.driver)
+        main_page.focus_on_default_content()
+        self.assertTrue(main_page.is_loaded(),
+                        'Unable to confirm main page is loaded')
+        self.assertEqual(len(main_page.get_widgets()), 1,
+                         'Unexpected number of widgets found on main page')

@@ -7,7 +7,9 @@ from selenium_tests.base_page import BasePage
 
 class EditorPageLocators(object):
     # locators for main editor page
+    EDITOR_BODY = (By.ID, 'tinymce')
     EDITOR_TABS = (By.ID, 'editor_tabs')
+    SAVE_BUTTON = (By.CSS_SELECTOR, 'div.form-actions div button.submit')
     TOOL_BUTTON = (By.CSS_SELECTOR,
                    'div[aria-label="Import Course Info - dev (root account)"] button')
 
@@ -33,6 +35,7 @@ class EditorPage(BasePage):
     locator_class = EditorPageLocators
     located_properties = [
         'description_checkbox',
+        'editor_body',
         'editor_tabs',
         'exam_group_checkbox',
         'instructors_checkbox',
@@ -40,6 +43,7 @@ class EditorPage(BasePage):
         'meeting_time_checkbox',
         'notes_checkbox',
         'registrar_code_checkbox',
+        'save_button',
         'term_checkbox',
         'tool_button',
         'tool_submit_button',
