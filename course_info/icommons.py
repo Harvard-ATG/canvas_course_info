@@ -38,6 +38,7 @@ class ICommonsApi(object):
             response.raise_for_status()
         except Exception as e:
             logger.exception(u'Error getting {}: {}'.format(url, response.text))
+            raise
         return response.json()
 
     def _get_course_instances(self, course_instance_id=None, **kwargs):
