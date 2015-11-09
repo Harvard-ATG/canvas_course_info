@@ -1,33 +1,50 @@
-import drest
 import json
 import logging
+import urlparse
 
+import requests
 from django.core.cache import cache
 from canvas_course_info.settings import aws as settings
 
-log = logging.getLogger(__name__)
+
+logger = logging.getLogger(__name__)
 
 CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
 
 
-class ICommonsApi(drest.API):
-    @classmethod
-    def from_request(cls, request):
-        icommons_base_url = settings.ICOMMONS_BASE_URL
-        access_token = settings.ICOMMONS_API_TOKEN
-        return cls(icommons_base_url, access_token)
-
-    def __init__(self, icommons_base_url, access_token):
-        self.headers = {'Authorization': "Token %s" % access_token,
-                        'Content-Type': 'application/json'}
+class ICommonsApi(object):
+    def __init__(self, icommons_base_url=None, access_token=None):
+        if not icommons_base_url:
+            icommons_base_url = settings.ICOMMONS_BASE_URL
+        if not access_token:
+            access_token = settings.ICOMMONS_API_TOKEN
         api_path = settings.ICOMMONS_API_PATH
-        super(ICommonsApi, self).__init__(icommons_base_url + api_path,
-                                          extra_headers=self.headers,
-                                          timeout=60,
-                                          serialize=True,
-                                          trailing_slash=False)
+
+        self.base_url = '/'.join((icommons_base_url.rstrip('/'),
+                                  api_path.strip('/'))) + '/'
+        self.session = requests.Session()
+        self.session.headers = {'Authorization': 'Token %s' % access_token}
+        self.session.params = {'format': 'json'}
+
+    def _get_objects(self, type_, id_, **kwargs):
+        path = '{}/'.format(type_)
+        if id_:
+            path += '{}/'.format(id_)
+        url = urlparse.urljoin(self.base_url, path)
+        response = self.session.get(url, params=kwargs)
+        try:
+            response.raise_for_status()
+        except Exception as e:
+            logger.exception(u'Error getting {}: {}'.format(url, response.text))
+        return response.json()
+
+    def _get_course_instances(self, course_instance_id=None, **kwargs):
+        return self._get_objects('course_instances', course_instance_id, **kwargs)
+
+    def _get_schools(self, school_id=None, **kwargs):
+        return self._get_objects('schools', school_id, **kwargs)
 
     def get_course_info(self, course_instance_id):
         cache_key = CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
@@ -36,15 +53,12 @@ class ICommonsApi(drest.API):
             course_info = {}
             # get the course_instance data
             try:
-                relative_url = '/course_instances/%s/?format=json' % course_instance_id
-                response = self.make_request('GET', relative_url,
-                                             headers=self.headers)
-                course_info = response.data
-                log_msg = "Caching course info for course_instance_id {}: {}"
-                log.debug(log_msg.format(course_instance_id, json.dumps(course_info)))
+                course_info = self._get_course_instances(course_instance_id)
+                log_msg = u'Caching course info for course_instance_id {}: {}'
+                logger.debug(log_msg.format(course_instance_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
-                log.exception(e.message)
+                logger.exception(e.message)
         return course_info
 
     def get_course_info_by_canvas_course_id(self, canvas_course_id):
@@ -54,19 +68,17 @@ class ICommonsApi(drest.API):
             course_info = {}
             # get the course_instance data
             try:
-                relative_url = '/course_instances/?format=json&canvas_course_id=%s' % canvas_course_id
-                response = self.make_request('GET', relative_url,
-                                             headers=self.headers)
-                results = response.data.get('results', [])
-                if len(results):
-                    course_instance_id = self._get_course_instance_id(results)
+                course_instances = self._get_course_instances(
+                                       canvas_course_id=canvas_course_id)['results']
+                if len(course_instances):
+                    course_instance_id = self._get_course_instance_id(course_instances)
                     if course_instance_id:
                         course_info = self.get_course_info(course_instance_id)
-                log_msg = "Caching course info for canvas_course_id {}: {}"
-                log.debug(log_msg.format(canvas_course_id, json.dumps(course_info)))
+                log_msg = u'Caching course info for canvas_course_id {}: {}'
+                logger.debug(log_msg.format(canvas_course_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
-                log.exception(e.message)
+                logger.exception(e.message)
         return course_info
 
     def get_school_info(self, school_id):
@@ -80,15 +92,12 @@ class ICommonsApi(drest.API):
         if school_info is None:
             school_info = {}
             try:
-                relative_url = '/schools/%s/?format=json' % school_id
-                response = self.make_request('GET', relative_url,
-                                             headers=self.headers)
-                school_info = response.data
-                log_msg = "Caching school info for school_id {}: {}"
-                log.debug(log_msg.format(school_id, json.dumps(school_info)))
+                school_info = self._get_schools(school_id = school_id)
+                log_msg = u'Caching school info for school_id {}: {}'
+                logger.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)
             except Exception as e:
-                log.error(e.message)
+                logger.error(e.message)
         return school_info
         # This function could be made to return only the school name or an error, as that's the only thing we need it
         # for right now (in views.py, to insert the school name before the display number).
@@ -112,5 +121,5 @@ class ICommonsApi(drest.API):
             error_msg = 'No primary course instance found'
         else:
             error_msg = 'Multiple possible primary courses found, cannot determine primary'
-        log.error('{}: {}'.format(error_msg, course_instances))
+        logger.error(u'{}: {}'.format(error_msg, course_instances))
         return None

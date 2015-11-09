@@ -1,17 +1,20 @@
 import logging
 import re
+
+from dce_lti_py.tool_config import ToolConfig
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http                    import HttpResponse
-from django.shortcuts               import render
-from django.views.decorators.csrf   import csrf_exempt
-from django.views.decorators.http   import require_GET, require_POST
-from django.core.urlresolvers       import reverse
-from django.conf                    import settings
-from dce_lti_py.tool_config         import ToolConfig
-from icommons                       import ICommonsApi
+from django.core.urlresolvers import reverse
+from django.http import HttpResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
 
-log = logging.getLogger(__name__)
+from icommons import ICommonsApi
 
+
+_api = ICommonsApi()
+_logger = logging.getLogger(__name__)
 _FIELD_LABEL_MAP = {
     'title': {'label': 'Course Title', 'order': 1},
     'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
@@ -23,10 +26,10 @@ _FIELD_LABEL_MAP = {
     'description': {'label': 'Course Description', 'order': 8},
     'notes': {'label': 'Notes', 'order': 9},
 }
-
 _ORDERED_FIELD_NAMES = [
     f[0] for f in sorted(_FIELD_LABEL_MAP.iteritems(), key=lambda f: f[1]['order'])
 ]
+_REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
 
 @require_GET
@@ -99,14 +102,13 @@ def _get_field_value_for_key(key, course_info):
     return value
 
 
-def _course_context(request, requested_keys, show_empty_fields=False, **kwargs):
-    course_instance_id = kwargs.get('course_instance_id')
-    canvas_course_id = kwargs.get('canvas_course_id')
+def _course_context(request, requested_keys, show_empty_fields=False,
+                    course_instance_id=None, canvas_course_id=None):
     course_info = {}
     if course_instance_id:
-        course_info = ICommonsApi.from_request(request).get_course_info(course_instance_id)
+        course_info = _api.get_course_info(course_instance_id)
     elif canvas_course_id:
-        course_info = ICommonsApi.from_request(request).get_course_info_by_canvas_course_id(canvas_course_id)
+        course_info = _api.get_course_info_by_canvas_course_id(canvas_course_id)
 
     context = {
         'fields': [],
@@ -122,7 +124,7 @@ def _course_context(request, requested_keys, show_empty_fields=False, **kwargs):
             context['fields'].append(field)
 
     try:
-        school_info = ICommonsApi.from_request(request).get_school_info(course_info['course']['school_id'])
+        school_info = _api.get_school_info(course_info['course']['school_id'])
         school_title = school_info['title_long']
     except KeyError:
         school_title = ''
@@ -143,7 +145,7 @@ def widget(request):
     """
     referer = request.META.get('HTTP_REFERER', '')
     try:
-        canvas_course_id = re.match('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)', referer).group('canvas_course_id')
+        canvas_course_id = _REFERER_COURSE_ID_RE.match(referer).group('canvas_course_id')
     except AttributeError:
         canvas_course_id = None
 
@@ -158,15 +160,15 @@ def widget(request):
 
 
 def editor(request):
-    # Use an example course for development if one is configured in settings
-    course_instance_id = getattr(settings, 'COURSE_INSTANCE_ID', None)
+    course_instance_id = request.POST.get('lis_course_offering_sourcedid')
     if not course_instance_id:
-        # "lis" appears to be a deliberate misspelling
-        course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+        # Use an example course for development if one is configured in settings
+        course_instance_id = getattr(settings, 'COURSE_INSTANCE_ID', None)
 
-    course_context = _course_context(request, _ORDERED_FIELD_NAMES, True, course_instance_id=course_instance_id)
-
-    course_context['launch_presentation_return_url'] = request.POST.get('launch_presentation_return_url')
+    course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
+                                     course_instance_id=course_instance_id)
+    course_context['launch_presentation_return_url'] = \
+            request.POST.get('launch_presentation_return_url')
     course_context['textarea_fields'] = ['description', 'notes']
 
     return render(request, 'course_info/editor.html', course_context)
