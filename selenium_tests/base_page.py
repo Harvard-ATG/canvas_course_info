@@ -60,6 +60,7 @@ class BasePage(object):
 
     def __init__(self, driver):
         self._driver = driver
+        self.focus_on_default_content()
 
     # These methods locate a specific element or elements.
     def find_element(self, *loc):
@@ -114,6 +115,7 @@ class BasePage(object):
         correct focus
         :return:
         """
+        self.focus_on_default_content()
         try:
             self._driver.switch_to.frame(self.tool_frame_name)
         except InvalidSwitchToTargetException:

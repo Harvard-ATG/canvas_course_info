@@ -1,6 +1,7 @@
 from django.conf import settings
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 from selenium_tests.base_page import BasePage
 
@@ -52,15 +53,44 @@ class EditorPage(BasePage):
     editor_frame_name = 'editor_box_unique_id_1_ifr'
 
     def focus_on_editor_frame(self):
+        self.focus_on_default_content()
         self._driver.switch_to.frame(self.editor_frame_name)
 
     def get_inserted_widgets(self):
         """Returns any widget elements already inserted into the page.  If none
         are found, returns []."""
+        self.focus_on_editor_frame()
         try:
             return self.find_elements(*self.locator_class.WIDGET)
         except NoSuchElementException:
             return []
 
+    def get_all_f_values(self):
+        """Returns the set of all f values which might be used as url params
+        by the widget."""
+        values = {getattr(self.locator_class, c)[1]
+                      for c in dir(self.locator_class)
+                      if c.endswith('_CHECKBOX')}
+        values.add('title')
+        return values
+
     def is_loaded(self):
+        self.focus_on_default_content()
         return bool(self.editor_tabs)
+
+    def open_widget_editor(self):
+        self.focus_on_default_content()
+        self.tool_button.click()
+
+    def remove_existing_widgets(self):
+        for widget in self.get_inserted_widgets():
+            widget.click()
+            self.editor_body.send_keys(Keys.DELETE)
+
+    def save_widget(self):
+        self.focus_on_tool_frame()
+        self.tool_submit_button.click()
+
+    def save_page(self):
+        self.focus_on_default_content()
+        self.save_button.click()

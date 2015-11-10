@@ -1,17 +1,22 @@
 """
-To run these tests from the command line in a local VM, you'll need to set up the environment:
-> export PYTHONPATH=~/tlt/canvas_course_info
-> export DJANGO_SETTINGS_MODULE=canvas_course_info.settings.local
-> sudo apt-get install xvfb
-> python selenium_tests/regression_tests.py
+To run these tests from the command line in a local VM, you'll need to:
+> python selenium_tests/regression_suite.py
 """
 
+import os
+import sys
 import time
+import unittest
 
 from django.conf import settings
-from selenium_tests.course_info.course_info_tests import CourseInfoTestFlow
 
 
+# set up PYTHONPATH and DJANGO_SETTINGS_MODULE.  icky, but necessary
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+if not os.getenv('DJANGO_SETTINGS_MODULE'):
+    os.setenv('DJANGO_SETTINGS_MODULE', 'canvas_course_info.settings.local')
+
+# developing test cases is easier with text test runner, lets us drop into pdb
 if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
     import HTMLTestRunner
     dateTimeStamp = time.strftime('%Y%m%d_%H_%M_%S')
@@ -23,11 +28,16 @@ if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
     )
 else:
     import logging; logging.basicConfig(level=logging.DEBUG)
-    import unittest
     runner = unittest.TextTestRunner()
 
-course_info_flow_test = unittest.TestLoader().loadTestsFromTestCase(CourseInfoTestFlow)
-smoke_tests = unittest.TestSuite([course_info_flow_test])
+# load in all unittest.TestCase objects from *_tests.py files.  start in PWD,
+# with top_level_dir set to PWD/..
+suite = unittest.defaultTestLoader.discover(
+            os.path.abspath(os.path.dirname(__file__)),
+            pattern='*_tests.py',
+            top_level_dir=os.path.abspath(
+                             os.path.join(os.path.dirname(__file__), '..'))
+)
 
 # run the suite
-runner.run(smoke_tests)
+runner.run(suite)

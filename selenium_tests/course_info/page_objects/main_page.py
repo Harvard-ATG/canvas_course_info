@@ -22,10 +22,12 @@ class MainPage(BasePage):
     def get_widgets(self):
         """Returns any widget iframes present in the pagel  If none are found,
         returns []."""
+        self.focus_on_default_content()
         try:
             return self.find_elements(*self.locator_class.WIDGET)
         except NoSuchElementException:
             return []
 
     def is_loaded(self):
+        self.focus_on_default_content()
         return self.title.text == 'Course Information'
