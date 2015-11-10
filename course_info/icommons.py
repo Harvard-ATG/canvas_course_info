@@ -28,11 +28,7 @@ class ICommonsApi(object):
         self.session.headers = {'Authorization': 'Token %s' % access_token}
         self.session.params = {'format': 'json'}
 
-    def _get_objects(self, type_, id_, **kwargs):
-        path = '{}/'.format(type_)
-        if id_:
-            path += '{}/'.format(id_)
-        url = urlparse.urljoin(self.base_url, path)
+    def _get_objects_by_url(self, url, **kwargs):
         response = self.session.get(url, params=kwargs)
         try:
             response.raise_for_status()
@@ -41,11 +37,21 @@ class ICommonsApi(object):
             raise
         return response.json()
 
+    def _get_objects(self, type_, id_, **kwargs):
+        path = '{}/'.format(type_)
+        if id_:
+            path += '{}/'.format(id_)
+        url = urlparse.urljoin(self.base_url, path)
+        return self._get_objects_by_url(url, **kwargs)
+
     def _get_course_instances(self, course_instance_id=None, **kwargs):
         return self._get_objects('course_instances', course_instance_id, **kwargs)
 
     def _get_schools(self, school_id=None, **kwargs):
         return self._get_objects('schools', school_id, **kwargs)
+
+    def _parse_type_and_id_from_url(self, url):
+        return url.replace(self.base_url, '').split('/')[:2]
 
     def get_course_info(self, course_instance_id):
         cache_key = CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
@@ -100,24 +106,47 @@ class ICommonsApi(object):
             except Exception as e:
                 logger.error(e.message)
         return school_info
-        # This function could be made to return only the school name or an error, as that's the only thing we need it
-        # for right now (in views.py, to insert the school name before the display number).
-        # But just in case we want to use it for more than that in the future, and so that it mirrors 'get_course_info,'
-        # we're going to let it return the whole data set.
 
     def _get_course_instance_id(self, course_instances):
         if not course_instances:
             return None
-        if len(course_instances) == 1:
-            # Only one course found with the requested canvas course id;
-            # we'll use its course instance ID for the course info lookup
-            return course_instances[0]['course_instance_id']
 
-        # we have multiple courses with the requested canvas course id, use
-        # the primary to look up the course information
-        primary_cids = [c['course_instance_id'] for c in course_instances if not c['primary_xlist_instances']]
+        if len(course_instances) == 1:
+            course_instance = course_instances[0]
+            if course_instance['primary_xlist_instances']:
+                logger.debug(
+                    u'iCommons api returned a single, secondary instance for '
+                    u'canvas course id %s', course_instance['course_instance_id'])
+                primary_urls = course_instance['primary_xlist_instances']
+                # it should never be the case that there are multiple primaries
+                # for a secondary
+                if len(primary_urls) > 1:
+                    logger.warning(
+                        u'iCommons api returned multiple primary instances %s '
+                        u'for course instance %s',
+                        primary_urls, course_instance)
+                    return None
+                course_instance = self._get_objects_by_url(primary_urls[0])
+            return course_instance['course_instance_id']
+
+        # we have multiple courses with the requested canvas course id, let's
+        # see if they agree on which one is primary
+        primary_cids = set()
+        for ci in course_instances:
+            if ci['primary_xlist_instances']:
+                if len(ci['primary_xlist_instances']) > 1:
+                    logger.warning(
+                        u'iCommons api returned multiple primary instances %s '
+                        u'for course instance %s',
+                        ci['primary_xlist_instances'], ci)
+                    return None
+                _, id_ = self._parse_type_and_id_from_url(
+                             ci['primary_xlist_instances'][0])
+                primary_cids.add(id_)
+            else:
+                primary_cids.add(ci['course_instance_id'])
         if len(primary_cids) == 1:
-            return primary_cids[0]
+            return primary_cids.pop()
         elif len(primary_cids) == 0:
             error_msg = 'No primary course instance found'
         else:
