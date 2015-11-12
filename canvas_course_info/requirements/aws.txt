@@ -7,3 +7,4 @@ git+https://github.com/harvard-dce/django-auth-lti.git@dce-lti-py#egg=django-aut
 hiredis==0.2.0
 redis==2.10.3
 requests==2.8.1
+voluptuous==0.8.7

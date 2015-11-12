@@ -105,10 +105,16 @@ def _get_field_value_for_key(key, course_info):
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
     course_info = {}
-    if course_instance_id:
-        course_info = _api.get_course_info(course_instance_id)
-    elif canvas_course_id:
-        course_info = _api.get_course_info_by_canvas_course_id(canvas_course_id)
+    try:
+        if course_instance_id:
+            course_info = _api.get_course_info(course_instance_id)
+        elif canvas_course_id:
+            course_info = _api.get_course_info_by_canvas_course_id(
+                              canvas_course_id)
+    except ICommonsApiValidationError:
+        # this is logged in the icommons library, and course_info is already
+        # set to {}
+        pass
 
     context = {
         'fields': [],
@@ -126,7 +132,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
     try:
         school_info = _api.get_school_info(course_info['course']['school_id'])
         school_title = school_info['title_long']
-    except KeyError:
+    except (ICommonsApiValidationError, KeyError):
         school_title = ''
 
     context['school_title'] = school_title
@@ -161,14 +167,9 @@ def widget(request):
 
 def editor(request):
     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
-    if not course_instance_id:
-        # Use an example course for development if one is configured in settings
-        course_instance_id = getattr(settings, 'COURSE_INSTANCE_ID', None)
-
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
             request.POST.get('launch_presentation_return_url')
     course_context['textarea_fields'] = ['description', 'notes']
-
     return render(request, 'course_info/editor.html', course_context)
