@@ -186,9 +186,10 @@ class ICommonsApi(object):
                     return None
                 _, id_ = self._parse_type_and_id_from_url(
                              ci['primary_xlist_instances'][0])
-                primary_cids.add(id_)
+                primary_cids.add(id_)  # unicode string
             else:
-                primary_cids.add(ci['course_instance_id'])
+                # must also be unicode string to match any dupes found above
+                primary_cids.add(u'{}'.format(ci['course_instance_id']))
         if len(primary_cids) == 1:
             return primary_cids.pop()
         elif len(primary_cids) == 0:
