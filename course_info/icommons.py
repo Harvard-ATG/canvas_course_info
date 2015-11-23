@@ -22,7 +22,6 @@ def url(value):
 
 course_instance_schema = Schema({
     Required('course_instance_id'): All(int, Range(min=1)),
-    Required('primary_xlist_instances'): [All(basestring, url)],
 }, extra=ALLOW_EXTRA)
 
 school_schema = Schema({
@@ -157,7 +156,7 @@ class ICommonsApi(object):
 
         if len(course_instances) == 1:
             course_instance = course_instances[0]
-            if course_instance['primary_xlist_instances']:
+            if course_instance.get('primary_xlist_instances'):
                 logger.debug(
                     u'iCommons api returned a single, secondary instance for '
                     u'canvas course id %s', course_instance['course_instance_id'])
@@ -177,7 +176,7 @@ class ICommonsApi(object):
         # see if they agree on which one is primary
         primary_cids = set()
         for ci in course_instances:
-            if ci['primary_xlist_instances']:
+            if ci.get('primary_xlist_instances'):
                 if len(ci['primary_xlist_instances']) > 1:
                     logger.warning(
                         u'iCommons api returned multiple primary instances %s '
