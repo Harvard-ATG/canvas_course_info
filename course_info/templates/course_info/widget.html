@@ -3,6 +3,9 @@
 {% block extra_head %}
     <base target="_blank">
 {% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/iframeResizer.contentWindow.min.js' %}"></script>
+{% endblock %}
 
 {% block content %}
     <div id="course_info_container" class="container-fluid">

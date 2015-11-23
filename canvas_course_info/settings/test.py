@@ -1,5 +1,5 @@
 # ./manage.py test
-from .aws import *
+from .base import *
 
 ENV_NAME = 'test'
 DEBUG = SECURE_SETTINGS.get('enable_debug', True)
@@ -22,4 +22,3 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache'
     },
 }
-

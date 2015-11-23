@@ -95,7 +95,9 @@
             {# https://canvas.instructure.com/doc/api/file.editor_button_tools.html #}
             <input type="hidden" id="return_type"   name="return_type"   value="iframe" />
             <input type="hidden" id="widget_url"    name="url"           value="" />
-            <input type="hidden" id="widget_height" name="height"        value="43em" />
+            {# this height is for the embedded 'media' placeholder in the rich #}
+            {# text editor view; will be resized later via javascript #}
+            <input type="hidden" id="widget_height" name="height"        value="200px" />
             <input type="hidden"                    name="width"         value="100%" />
             <input type="hidden"                    name="title"         value="Course Info" />
             <input type="hidden"                    name="id"            value="InfoFrame" />

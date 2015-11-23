@@ -32,7 +32,7 @@ integration_test_course_info = {
 }
 
 
-@patch('course_info.views.ICommonsApi.from_request')
+@patch('course_info.views._api')
 class DisplayTests(TestCase):
     """
     Widget and editor should display correct values in the returned HTML
@@ -50,8 +50,8 @@ class DisplayTests(TestCase):
         Backend code should fetch info from the course and school
         helpers of the API wrapper
         """
-        api_mock.return_value.get_course_info_by_canvas_course_id = self.api_course_mock
-        api_mock.return_value.get_school_info = self.api_school_mock
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock
+        api_mock.get_school_info = self.api_school_mock
         mock_school_id = mock_course_info['course']['school_id']
 
         client = Client(HTTP_REFERER=self.referer_string)
@@ -65,8 +65,8 @@ class DisplayTests(TestCase):
         Should show full school name and the course code (without the
         leading school short code, if present in registrar_code_display field)
         """
-        api_mock.return_value.get_course_info_by_canvas_course_id = self.api_course_mock
-        api_mock.return_value.get_school_info = self.api_school_mock
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock
+        api_mock.get_school_info = self.api_school_mock
 
         client = Client(HTTP_REFERER=self.referer_string)
         response = client.get('/course_info/widget.html?f=course.registrar_code_display')
@@ -84,7 +84,7 @@ class DisplayTests(TestCase):
 
     def test_widget_multiple_fields(self, api_mock):
         """ Widget should display only the fields requested """
-        api_mock.return_value.get_course_info_by_canvas_course_id = self.api_course_mock
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock
         query = 'f=title&f=term.display_name'
         client = Client(HTTP_REFERER=self.referer_string)
         response = client.get('/course_info/widget.html?{}'.format(query))
@@ -94,7 +94,7 @@ class DisplayTests(TestCase):
 
     def test_widget_partial_fields(self, api_mock):
         """ Widget should display only the fields with registrar data """
-        api_mock.return_value.get_course_info_by_canvas_course_id = self.api_course_mock
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock
         query = 'f=exam_group&f=term.display_name'
         client = Client(HTTP_REFERER=self.referer_string)
         response = client.get('/course_info/widget.html?{}'.format(query))
@@ -103,7 +103,7 @@ class DisplayTests(TestCase):
 
     def test_editor_partial_field_data(self, api_mock):
         """ Editor should display all fields and note those without data """
-        api_mock.return_value.get_course_info = self.api_course_mock
+        api_mock.get_course_info = self.api_course_mock
         post_body = {'lis_course_offering_sourcedid': '0000'}
         request = self.factory.post('/', post_body)
         response = editor(request)
