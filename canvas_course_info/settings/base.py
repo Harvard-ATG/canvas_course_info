@@ -77,15 +77,15 @@ TEMPLATE_DIRS = (
 )
 
 LTI_APPS = {
-    'course_info': {# <- Cannot be changed without causing issues
-        'id': 'course_info_import', # Changed from "course_info"
-        'name': 'Import Course Info', # Changed from "Course Info"
-        'menu_title': 'Import Course Info', # Changed from 'Course Info'
+    'course_info': {
+        'id': 'course_info_import',
+        'name': 'Import Course Info',
+        'menu_title': 'Course Info',
         'extensions_provider': 'canvas.instructure.com',
         'description': "A button to insert course info into canvas pages.",
         'privacy_level': 'public',
         'selection_height': '400px',
-        'selection_width':'400px',
+        'selection_width': '400px',
         'icon_url': STATIC_URL + 'images/course-info.png'
     }
 }
