@@ -31,6 +31,7 @@ _ORDERED_FIELD_NAMES = [
 ]
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
+_INSTRUCTORS_DISPLAY_FIELD_NAME = "instructors_display"
 
 @require_GET
 def tool_config(request):
@@ -122,6 +123,19 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         'canvas_course_id': course_info.get('canvas_course_id')
     }
 
+    if (_INSTRUCTORS_DISPLAY_FIELD_NAME in requested_keys) and \
+            not course_info.get(_INSTRUCTORS_DISPLAY_FIELD_NAME):
+        try:
+            if not course_instance_id:
+                course_instance_id = course_info.get('course_instance_id')
+            course_instructor_list = _api.get_course_info_instructor_list(course_instance_id)
+            if course_instructor_list:
+                instructor_display = sort_and_format_instructor_display(course_instructor_list)
+                course_info[_INSTRUCTORS_DISPLAY_FIELD_NAME] = instructor_display
+        except (ICommonsApiValidationError, KeyError):
+            # do nothing, instructor_display is set to ''
+            pass
+
     # add field to context in order of its preferred display on the template
     for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
@@ -173,3 +187,33 @@ def editor(request):
             request.POST.get('launch_presentation_return_url')
     course_context['textarea_fields'] = ['description', 'notes']
     return render(request, 'course_info/editor.html', course_context)
+
+
+def sort_and_format_instructor_display(course_instructor_list):
+    """
+    Returns a sorted  string  sorted by  the instructors by role_id, seniority sort, last name
+    and then format it such that it appears as a comma delimited String with an 'and' before that last user.
+    # Eg: User1, User2 and User3.
+    """
+    instructor_display= ''
+
+    # Note:  when seniority_sort is null, it was getting precedence over 1(null, 1, 2).  so in such a case,
+    #  it is being set to a large number ( picked 100) so it is lower in the sorting order.
+    course_instructor_list.sort(key=lambda x: (x.get('role')['role_id'],
+                                               100 if x.get('seniority_sort') is None else x.get('seniority_sort'),
+                                               x.get('profile')['name_last']))
+
+    for person in course_instructor_list:
+        instructor_display += person.get('profile')['name_first']+' '+person.get('profile')['name_last']+', '
+
+    # Replace the last ',' with a period and the one before with an and
+    instructor_display = replace_right(instructor_display, ',', '.', 1)
+    instructor_display = replace_right(instructor_display, ',', ' and ', 1)
+    print("formatted:", instructor_display)
+
+    return instructor_display
+
+
+def replace_right(source, target, replacement, replacements=None):
+    return replacement.join(source.rsplit(target, replacements))
+

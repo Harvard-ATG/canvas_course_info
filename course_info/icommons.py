@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
+CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
+INSTRUCTOR_ROLE_IDS = [1, 2, 9]
 
 # this isn't a full description of the resources, just what we're going to
 # expect to be in them within this library
@@ -26,6 +28,10 @@ course_instance_schema = Schema({
 
 school_schema = Schema({
     Required('title_long'): basestring,
+}, extra=ALLOW_EXTRA)
+
+course_person_schema = Schema({
+   Required('user_id'): basestring,
 }, extra=ALLOW_EXTRA)
 
 
@@ -47,7 +53,10 @@ class ICommonsApi(object):
         self.session.params = {'format': 'json'}
 
     def _get_resource_by_url(self, url, **kwargs):
-        response = self.session.get(url, params=kwargs)
+        # Since session.get doesn't grab the value of 'verify' if it is passed as a kwarg, need to pass it in explicitly
+        verify_value = True if not settings.ICOMMONS_REST_API_SKIP_CERT_VERIFICATION else False
+
+        response = self.session.get(url, params=kwargs, verify=verify_value)
         try:
             response.raise_for_status()
         except Exception:
@@ -59,6 +68,10 @@ class ICommonsApi(object):
         path = '{}/'.format(type_)
         if id_:
             path += '{}/'.format(id_)
+
+        if kwargs.get("append_to_path"):
+            path += '{}/'.format(kwargs.get("append_to_path"))
+
         url = urlparse.urljoin(self.base_url, path)
         return self._get_resource_by_url(url, **kwargs)
 
@@ -91,6 +104,31 @@ class ICommonsApi(object):
                 u'api.', rv)
             raise ICommonsApiValidationError(str(e))
         return rv
+
+    def _course_info_instructor_list(self, course_instance_id=None, **kwargs):
+
+        # append 'people' to  this resource url to get course people
+        kwargs['append_to_path'] = 'people'
+        instructors = []
+
+        rv = self._get_resource('course_instances', course_instance_id, **kwargs)
+
+        try:
+            if 'results' in rv:
+                for instance in rv['results']:
+                    course_person_schema(instance)
+                    if instance.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
+                        instructors.append(instance)
+            else:
+                course_person_schema(rv)
+
+        except Invalid as e:
+            print e
+            logger.exception(
+                u'Unable to validate course instance(s) %s returned from '
+                u'the icommons api.', rv)
+            raise ICommonsApiValidationError(str(e))
+        return instructors
 
     def _parse_type_and_id_from_url(self, url):
         return url.replace(self.base_url, '').split('/')[:2]
@@ -149,6 +187,26 @@ class ICommonsApi(object):
             except Exception as e:
                 logger.error(e.message)
         return school_info
+
+    def get_course_info_instructor_list(self, course_instance_id=None):
+        """
+            retrieves course instructors information from the iCommons API
+            or returns an empty dict if there are no instructors
+        """
+        cache_key = CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
+        course_staff_info = cache.get(cache_key)
+        # course_staff_info = None
+        if course_staff_info is None:
+            course_staff_info = {}
+            try:
+                print(" invoking _course_info_people_list with cid=%s", course_instance_id)
+                course_staff_info = self._course_info_instructor_list(course_instance_id=course_instance_id)
+                log_msg = u'Caching course  info people for course_instance_id {}: {}'
+                logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
+                cache.set(cache_key, course_staff_info)
+            except Exception as e:
+                logger.error(e.message)
+        return course_staff_info
 
     def _get_course_instance_id(self, course_instances):
         if not course_instances:
