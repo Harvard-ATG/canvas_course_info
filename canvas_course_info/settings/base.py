@@ -90,14 +90,8 @@ LTI_APPS = {
     }
 }
 
-# Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS['django_secret_key']
-# if SECRET_KEY:
-#     pass
-# else:
-#     raise KeyError
+SECRET_KEY = SECURE_SETTINGS.get('django_secret_key', 'changeme')
 
-#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
