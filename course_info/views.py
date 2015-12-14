@@ -33,6 +33,7 @@ _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+
 
 _INSTRUCTORS_DISPLAY_FIELD_NAME = "instructors_display"
 
+
 @require_GET
 def tool_config(request):
     app_config = settings.LTI_APPS['course_info']
@@ -111,7 +112,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
             course_info = _api.get_course_info(course_instance_id)
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
-                              canvas_course_id)
+                canvas_course_id)
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
         # set to {}
@@ -123,6 +124,8 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         'canvas_course_id': course_info.get('canvas_course_id')
     }
 
+    # if instructor_display is one of the selected keys and instructor data is missing
+    # from registrar feed, then fetch teaching staff names(from course staff table)
     if (_INSTRUCTORS_DISPLAY_FIELD_NAME in requested_keys) and \
             not course_info.get(_INSTRUCTORS_DISPLAY_FIELD_NAME):
         try:
@@ -184,7 +187,7 @@ def editor(request):
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
-            request.POST.get('launch_presentation_return_url')
+        request.POST.get('launch_presentation_return_url')
     course_context['textarea_fields'] = ['description', 'notes']
     return render(request, 'course_info/editor.html', course_context)
 
@@ -195,10 +198,9 @@ def sort_and_format_instructor_display(course_instructor_list):
     and then format it such that it appears as a comma delimited String with an 'and' before that last user.
     # Eg: User1, User2 and User3.
     """
-    instructor_display= ''
-
-    # Note:  when seniority_sort is null, it was getting precedence over 1(null, 1, 2).  so in such a case,
-    #  it is being set to a large number ( picked 100) so it is lower in the sorting order.
+    instructor_display = ''
+    # Note:  when seniority_sort is null, it was getting precedence over 1(null, 1, 2).  so in such cases,
+    # it is being set to a large number ( picked 100) so it is lower in the sorting order.
     course_instructor_list.sort(key=lambda x: (x.get('role')['role_id'],
                                                100 if x.get('seniority_sort') is None else x.get('seniority_sort'),
                                                x.get('profile')['name_last']))
@@ -207,13 +209,11 @@ def sort_and_format_instructor_display(course_instructor_list):
         instructor_display += person.get('profile')['name_first']+' '+person.get('profile')['name_last']+', '
 
     # Replace the last ',' with a period and the one before with an and
-    instructor_display = replace_right(instructor_display, ',', '.', 1)
-    instructor_display = replace_right(instructor_display, ',', ' and ', 1)
-    print("formatted:", instructor_display)
+    instructor_display = replace_right(instructor_display, ', ', '.', 1)
+    instructor_display = replace_right(instructor_display, ', ', ' and ', 1)
 
     return instructor_display
 
 
 def replace_right(source, target, replacement, replacements=None):
     return replacement.join(source.rsplit(target, replacements))
-

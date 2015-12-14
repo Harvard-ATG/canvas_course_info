@@ -15,7 +15,8 @@ CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
 CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
-INSTRUCTOR_ROLE_IDS = [1, 2, 9]
+INSTRUCTOR_ROLE_IDS = [1, 2]
+
 
 # this isn't a full description of the resources, just what we're going to
 # expect to be in them within this library
@@ -31,12 +32,13 @@ school_schema = Schema({
 }, extra=ALLOW_EXTRA)
 
 course_person_schema = Schema({
-   Required('user_id'): basestring,
+    Required('user_id'): basestring,
 }, extra=ALLOW_EXTRA)
 
 
 class ICommonsApiValidationError(RuntimeError):
     pass
+
 
 class ICommonsApi(object):
     def __init__(self, icommons_base_url=settings.ICOMMONS_BASE_URL,
@@ -69,6 +71,7 @@ class ICommonsApi(object):
         if id_:
             path += '{}/'.format(id_)
 
+        # check for 'append_to_path' kwarg and append that value to the resource url
         if kwargs.get("append_to_path"):
             path += '{}/'.format(kwargs.get("append_to_path"))
 
@@ -107,14 +110,14 @@ class ICommonsApi(object):
 
     def _course_info_instructor_list(self, course_instance_id=None, **kwargs):
 
-        # append 'people' to  this resource url to get course people
+        # use kwargs to append 'people' to the resource url and to get course people data
         kwargs['append_to_path'] = 'people'
-        instructors = []
 
+        instructors = None
         rv = self._get_resource('course_instances', course_instance_id, **kwargs)
-
         try:
             if 'results' in rv:
+                instructors = []
                 for instance in rv['results']:
                     course_person_schema(instance)
                     if instance.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
@@ -157,7 +160,7 @@ class ICommonsApi(object):
             # get the course_instance data
             try:
                 course_instances = self._get_course_instances(
-                                       canvas_course_id=canvas_course_id)['results']
+                    canvas_course_id=canvas_course_id)['results']
                 if len(course_instances):
                     course_instance_id = self._get_course_instance_id(course_instances)
                     if course_instance_id:
@@ -195,11 +198,9 @@ class ICommonsApi(object):
         """
         cache_key = CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
         course_staff_info = cache.get(cache_key)
-        # course_staff_info = None
         if course_staff_info is None:
             course_staff_info = {}
             try:
-                print(" invoking _course_info_people_list with cid=%s", course_instance_id)
                 course_staff_info = self._course_info_instructor_list(course_instance_id=course_instance_id)
                 log_msg = u'Caching course  info people for course_instance_id {}: {}'
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
