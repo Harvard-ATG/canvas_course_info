@@ -194,7 +194,7 @@ class ICommonsApi(object):
     def get_course_info_instructor_list(self, course_instance_id=None):
         """
             retrieves course instructors information from the iCommons API
-            or returns an empty dict if there are no instructors
+            or returns None if there are no instructors
         """
         cache_key = CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
         course_staff_info = cache.get(cache_key)
