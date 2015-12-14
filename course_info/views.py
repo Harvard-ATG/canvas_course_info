@@ -24,8 +24,7 @@ _FIELD_DETAILS = {
     'location': {'label': 'Location', 'order': 5},
     'meeting_time': {'label': 'Meeting Time', 'order': 6},
     'exam_group': {'label': 'Exam Group', 'order': 7},
-    'description': {'label': 'Course Description', 'order': 8,
-                    'contains_html': True},
+    'description': {'label': 'Course Description', 'order': 8},
     'notes': {'label': 'Notes', 'order': 9},
 }
 _ORDERED_FIELD_NAMES = [
@@ -128,9 +127,8 @@ def _course_context(request, requested_keys, show_empty_fields=False,
     for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
         if value or show_empty_fields:
-            field = {'key': key, 'label': _FIELD_DETAILS[key]['label'], 'value': value}
-            if _FIELD_DETAILS[key].get('contains_html', False):
-                field['value'] = mark_safe(field['value'])
+            field = {'key': key, 'label': _FIELD_DETAILS[key]['label'],
+                     'value': mark_safe(value)}
             context['fields'].append(field)
 
     try:
