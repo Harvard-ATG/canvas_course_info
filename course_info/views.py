@@ -15,11 +15,12 @@ from icommons import ICommonsApi, ICommonsApiValidationError
 
 _api = ICommonsApi()
 _logger = logging.getLogger(__name__)
+_INSTRUCTORS_DISPLAY_FIELD = "instructors_display"
 _FIELD_LABEL_MAP = {
     'title': {'label': 'Course Title', 'order': 1},
     'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
     'term.display_name': {'label': 'Term', 'order': 3},
-    'instructors_display': {'label': 'Course Instructors', 'order': 4},
+    _INSTRUCTORS_DISPLAY_FIELD: {'label': 'Course Instructors', 'order': 4},
     'location': {'label': 'Location', 'order': 5},
     'meeting_time': {'label': 'Meeting Time', 'order': 6},
     'exam_group': {'label': 'Exam Group', 'order': 7},
@@ -31,7 +32,6 @@ _ORDERED_FIELD_NAMES = [
 ]
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
-_INSTRUCTORS_DISPLAY_FIELD_NAME = "instructors_display"
 
 
 @require_GET
@@ -126,15 +126,15 @@ def _course_context(request, requested_keys, show_empty_fields=False,
 
     # if instructor_display is one of the selected keys and instructor data is missing
     # from registrar feed, then fetch teaching staff names(from course staff table)
-    if (_INSTRUCTORS_DISPLAY_FIELD_NAME in requested_keys) and \
-            not course_info.get(_INSTRUCTORS_DISPLAY_FIELD_NAME):
+    if (_INSTRUCTORS_DISPLAY_FIELD in requested_keys) and \
+            not course_info.get(_INSTRUCTORS_DISPLAY_FIELD):
         try:
             if not course_instance_id:
                 course_instance_id = course_info.get('course_instance_id')
             course_instructor_list = _api.get_course_info_instructor_list(course_instance_id)
             if course_instructor_list:
                 instructor_display = sort_and_format_instructor_display(course_instructor_list)
-                course_info[_INSTRUCTORS_DISPLAY_FIELD_NAME] = instructor_display
+                course_info[_INSTRUCTORS_DISPLAY_FIELD] = instructor_display
         except (ICommonsApiValidationError, KeyError):
             # do nothing, instructor_display is set to ''
             pass
@@ -198,22 +198,31 @@ def sort_and_format_instructor_display(course_instructor_list):
     and then formatted such that it appears as a comma delimited String with an 'and' before that last user.
     # Eg: User1, User2 and User3.
     """
-    instructor_display = ''
-    # Note:  when seniority_sort is null, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
+    # Note:  when seniority_sort is None, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
     # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
-    course_instructor_list.sort(key=lambda x: (x.get('role')['role_id'],
-                                               100 if x.get('seniority_sort') is None else x.get('seniority_sort'),
-                                               x.get('profile')['name_last']))
+    # Also, x.get('seniority_sort', {}) handles null condition  but for None, needed to have the explicit check
+    course_instructor_list.sort(key=lambda x: (x.get('role', {}).get('role_id'),
+                                               100 if x.get('seniority_sort') is None else x.get('seniority_sort', {}),
+                                               x.get('profile', {}).get('name_last')))
 
-    for person in course_instructor_list:
-        instructor_display += person.get('profile')['name_first']+' '+person.get('profile')['name_last']+', '
+    num_instructors = len(course_instructor_list)
 
-    # Replace the last ',' with a period and the one before with an and
-    instructor_display = replace_right(instructor_display, ', ', '.', 1)
-    instructor_display = replace_right(instructor_display, ', ', ' and ', 1)
+    course_instructor_names= [get_display_name(p) for p in course_instructor_list]
 
-    return instructor_display
+    if num_instructors == 1:
+        return course_instructor_names[0] + '.'
+    elif num_instructors == 2:
+        return ' and '.join(course_instructor_names) + '.'
+    elif num_instructors > 2:
+        # add the last instructor name after an 'and'
+        return ', '.join(course_instructor_names[:-1]) + ' and ' + course_instructor_names[-1] + '.'
+    else:
+        # num_instructors == 0
+        return ''
 
 
-def replace_right(source, target, replacement, replacements=None):
-    return replacement.join(source.rsplit(target, replacements))
+def get_display_name(person):
+    if person:
+        return person.get('profile', {}).get('name_first')+' '+person.get('profile', {}).get('name_last')
+    return ''
+

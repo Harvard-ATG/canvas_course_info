@@ -39,7 +39,6 @@ mock_staff_data_from_api = [
         u'profile': {u'name_first': u'user1_first', u'name_last': u'user1_last', u'role_type_cd': u'EMPLOYEE'},
         u'source': u'xmlfeed',
         u'role': {u'role_name': u'Course Head', u'canvas_role': u'Course Head', u'role_id': 1},
-
         u'seniority_sort': 1,
         u'user_id': u'12121212'
     },
@@ -91,7 +90,7 @@ class DisplayTests(TestCase):
     api_course_mock = MagicMock(return_value=mock_course_info)
     api_school_mock = MagicMock(return_value=mock_school_info)
     api_course_mock_without_instructor = MagicMock(return_value=mock_course_info_without_instructor_display)
-    api_staff_data =  MagicMock(return_value=mock_staff_data_from_api)
+    api_staff_data = MagicMock(return_value=mock_staff_data_from_api)
     # as we are mocking return values, only the general format of the
     # referer string is important here
     canvas_course_id = '0000'
@@ -183,7 +182,7 @@ class DisplayTests(TestCase):
         self.assertContains(response, 'Course Instructors:')
         self.assertContains(response, mock_staff_data_from_api[0]['profile']['name_first'])
 
-    def test_sort_and_format_instructor_display_names(self, api_mock):
+    def test_sort_and_format_instructor_display_names(self,api_mock):
         """
         verify that the instructor names are sorted by role_id, seniority sort, last name
         and then formatted such that they are comma delimited String with an 'and' before
@@ -210,6 +209,24 @@ class DisplayTests(TestCase):
         # assert that the response does not contain 'Course Instructors' label
         self.assertNotContains(response, 'Course Instructors:')
 
+    def test_instructor_display_format_for_single_instructor(self, api_mock):
+
+        staff_data = []
+        # Add one user to list
+        staff_data.append(mock_staff_data_from_api[0])
+        expected_instructor_name_format = 'user1_first user1_last.'
+        result = sort_and_format_instructor_display(staff_data)
+        self.assertEqual(str(result), expected_instructor_name_format)
+
+    def test_instructor_display_format_for_two_instructors(self, api_mock):
+
+        staff_data = []
+        # Add 2 users  to list
+        staff_data.append(mock_staff_data_from_api[0])
+        staff_data.append(mock_staff_data_from_api[1])
+        expected_instructor_name_format = 'user1_first user1_last and user2_first user2_last.'
+        result = sort_and_format_instructor_display(staff_data)
+        self.assertEqual(str(result), expected_instructor_name_format)
 
 class IntegrationTests(TestCase):
     """

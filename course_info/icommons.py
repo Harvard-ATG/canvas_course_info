@@ -15,6 +15,7 @@ CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
 CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
+# ROLE_IDS translate following  roles-  1 : "Course Head", 2 : "Faculty"
 INSTRUCTOR_ROLE_IDS = [1, 2]
 
 
@@ -56,7 +57,7 @@ class ICommonsApi(object):
 
     def _get_resource_by_url(self, url, **kwargs):
         # Since session.get doesn't grab the value of 'verify' if it is passed as a kwarg, need to pass it in explicitly
-        verify_value = True if not settings.ICOMMONS_REST_API_SKIP_CERT_VERIFICATION else False
+        verify_value = not settings.ICOMMONS_REST_API_SKIP_CERT_VERIFICATION
 
         response = self.session.get(url, params=kwargs, verify=verify_value)
         try:
@@ -66,14 +67,14 @@ class ICommonsApi(object):
             raise
         return response.json()
 
-    def _get_resource(self, type_, id_, **kwargs):
+    def _get_resource(self, type_, id_,sub_resource_=None, **kwargs):
         path = '{}/'.format(type_)
         if id_:
             path += '{}/'.format(id_)
 
-        # check for 'append_to_path' kwarg and append that value to the resource url
-        if kwargs.get("append_to_path"):
-            path += '{}/'.format(kwargs.get("append_to_path"))
+        # check for sub_resource_ and append it to the resource url
+        if sub_resource_:
+            path += '{}/'.format(sub_resource_)
 
         url = urlparse.urljoin(self.base_url, path)
         return self._get_resource_by_url(url, **kwargs)
@@ -108,25 +109,23 @@ class ICommonsApi(object):
             raise ICommonsApiValidationError(str(e))
         return rv
 
-    def _course_info_instructor_list(self, course_instance_id=None, **kwargs):
+    def _course_info_instructor_list(self, course_instance_id, **kwargs):
 
-        # use kwargs to append 'people' to the resource url and to get course people data
-        kwargs['append_to_path'] = 'people'
+        # uWe need to fetch sub resource 'people'. sned that as a param to append  to the resource url
+        #  to get course people data
+        sub_resource = 'people'
 
         instructors = None
-        rv = self._get_resource('course_instances', course_instance_id, **kwargs)
+        rv = self._get_resource('course_instances', course_instance_id, sub_resource, **kwargs)
         try:
             if 'results' in rv:
                 instructors = []
-                for instance in rv['results']:
-                    course_person_schema(instance)
-                    if instance.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
-                        instructors.append(instance)
-            else:
-                course_person_schema(rv)
+                for person in rv['results']:
+                    course_person_schema(person)
+                    if person.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
+                        instructors.append(person)
 
         except Invalid as e:
-            print e
             logger.exception(
                 u'Unable to validate course instance(s) %s returned from '
                 u'the icommons api.', rv)
@@ -199,10 +198,9 @@ class ICommonsApi(object):
         cache_key = CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
         course_staff_info = cache.get(cache_key)
         if course_staff_info is None:
-            course_staff_info = {}
             try:
                 course_staff_info = self._course_info_instructor_list(course_instance_id=course_instance_id)
-                log_msg = u'Caching course  info people for course_instance_id {}: {}'
+                log_msg = u'Caching course info people for course_instance_id {}: {}'
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
                 cache.set(cache_key, course_staff_info)
             except Exception as e:
