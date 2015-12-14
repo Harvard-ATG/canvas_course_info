@@ -195,12 +195,12 @@ def editor(request):
 def sort_and_format_instructor_display(course_instructor_list):
     """
     Returns a sorted  string  sorted by  the instructors by role_id, seniority sort, last name
-    and then format it such that it appears as a comma delimited String with an 'and' before that last user.
+    and then formatted such that it appears as a comma delimited String with an 'and' before that last user.
     # Eg: User1, User2 and User3.
     """
     instructor_display = ''
-    # Note:  when seniority_sort is null, it was getting precedence over 1(null, 1, 2).  so in such cases,
-    # it is being set to a large number ( picked 100) so it is lower in the sorting order.
+    # Note:  when seniority_sort is null, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
+    # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
     course_instructor_list.sort(key=lambda x: (x.get('role')['role_id'],
                                                100 if x.get('seniority_sort') is None else x.get('seniority_sort'),
                                                x.get('profile')['name_last']))
