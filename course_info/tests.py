@@ -1,6 +1,6 @@
 from django.test import Client, TestCase, RequestFactory
 from mock import patch, MagicMock
-from views import editor
+from views import editor, sort_and_format_instructor_display
 
 # todo: docstrings
 
@@ -21,6 +21,57 @@ mock_course_info = {
     u'title': u'Mock Course',
 }
 
+mock_course_info_without_instructor_display = {
+    u'course': {
+        u'registrar_code_display': u'ABC 1234',
+        u'school_id': u'abc'
+    },
+    u"course_instance_id": 338318,
+    u'description': u'a fake course',
+    u'term': {
+        u'display_name': u'Fall 2012'
+    },
+    u'title': u'Mock Course',
+}
+
+mock_staff_data_from_api = [
+    {
+        u'profile': {u'name_first': u'user1_first', u'name_last': u'user1_last', u'role_type_cd': u'EMPLOYEE'},
+        u'source': u'xmlfeed',
+        u'role': {u'role_name': u'Course Head', u'canvas_role': u'Course Head', u'role_id': 1},
+
+        u'seniority_sort': 1,
+        u'user_id': u'12121212'
+    },
+    {
+        u'profile': {u'name_first': u'user2_first', u'name_last': u'user2_last', u'role_type_cd': u'EMPLOYEE'},
+        u'source': u'xmlfeed',
+        u'role': {u'role_name': u'Faculty', u'canvas_role': u'Faculty', u'role_id': 2},
+        u'seniority_sort': 3,
+        u'user_id': u'34343434'
+    },
+    {
+        u'profile': {u'name_first': u'user3_first', u'name_last': u'user3_last', u'role_type_cd': u'EMPLOYEE'},
+        u'source': u'xmlfeed',
+        u'role': {u'role_name': u'Faculty', u'canvas_role': u'Faculty', u'role_id': 2},
+        u'seniority_sort': 2,
+        u'user_id': u'34343434'
+    },
+    {
+        u'profile': {u'name_first': u'user4_first', u'name_last': u'a_lname', u'role_type_cd': u'EMPLOYEE'},
+        u'source': u'',
+        u'role': {u'role_name': u'Teacher', u'canvas_role': u'teacher', u'role_id': 2},
+        u'seniority_sort': None,
+        u'user_id': u'56565656'
+    },
+    {
+        u'profile': {u'name_first': u'user5_first', u'name_last': u'z_lname', u'role_type_cd': u'EMPLOYEE'},
+        u'source': u'',
+        u'role': {u'role_name': u'Teacher', u'canvas_role': u'teacher', u'role_id': 2},
+        u'user_id': u'56565656'
+    }
+]
+
 mock_school_info = {
     u'title_long': u'Harvard School of ABCs'
 }
@@ -39,6 +90,8 @@ class DisplayTests(TestCase):
     """
     api_course_mock = MagicMock(return_value=mock_course_info)
     api_school_mock = MagicMock(return_value=mock_school_info)
+    api_course_mock_without_instructor = MagicMock(return_value=mock_course_info_without_instructor_display)
+    api_staff_data =  MagicMock(return_value=mock_staff_data_from_api)
     # as we are mocking return values, only the general format of the
     # referer string is important here
     canvas_course_id = '0000'
@@ -114,10 +167,53 @@ class DisplayTests(TestCase):
         # fields with empty API return values should have a friendly message
         self.assertContains(response, 'Field not populated by registrar', count=2)
 
+    def test_widget_alternate_instructor_display(self, api_mock):
+        """ Widget should display instructor display from  teaching staff list if it is missing from registrar feed """
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock_without_instructor
+        api_mock.get_course_info_instructor_list = self.api_staff_data
+        query = 'f=exam_group&f=term.display_name&f=instructors_display'
+        client = Client(HTTP_REFERER=self.referer_string)
+        response = client.get('/course_info/widget.html?{}'.format(query))
+
+        # assert that alternate method to fetch instructor is called  when get_course mock has missing instructor data
+        api_mock.get_course_info_instructor_list.assert_called_with\
+            (mock_course_info_without_instructor_display['course_instance_id'])
+
+        # assert that the response contains 'Course Instructors' label  and mocked instructor name
+        self.assertContains(response, 'Course Instructors:')
+        self.assertContains(response, mock_staff_data_from_api[0]['profile']['name_first'])
+
+    def test_sort_and_format_instructor_display_names(self, api_mock):
+        """
+        verify that the instructor names are sorted by role_id, seniority sort, last name
+        and then formatted such that they are comma delimited String with an 'and' before
+        that last user name.
+        """
+
+        expected_instructor_name_format = 'user1_first user1_last, user3_first' \
+                                          ' user3_last, user2_first user2_last, ' \
+                                          'user4_first a_lname and user5_first z_lname.'
+        result = sort_and_format_instructor_display(mock_staff_data_from_api)
+        self.assertEqual(str(result), expected_instructor_name_format)
+
+    def test_when_alternate_instructor_display_is_blank(self, api_mock):
+        """ Widget should not display instructor name if it is missing from both sources """
+        api_mock.get_course_info_by_canvas_course_id = self.api_course_mock_without_instructor
+        api_mock.get_course_info_instructor_list = MagicMock(return_value=None)
+        query = 'f=exam_group&f=term.display_name&f=instructors_display'
+        client = Client(HTTP_REFERER=self.referer_string)
+        response = client.get('/course_info/widget.html?{}'.format(query))
+        # assert that alternate method to fetch instructor is called  when get_course mock has missing instructor data
+        api_mock.get_course_info_instructor_list.assert_called_with\
+            (mock_course_info_without_instructor_display['course_instance_id'])
+
+        # assert that the response does not contain 'Course Instructors' label
+        self.assertNotContains(response, 'Course Instructors:')
+
 
 class IntegrationTests(TestCase):
     """
-    These tests will ensure that the widget (and by extension, the iCommons API)
+    These tests will ensure that the widget (and by extension, the iCommon API)
     is running as expected. Changes in the iCommons api structure will be caught.
     """
     @classmethod
@@ -139,4 +235,5 @@ class IntegrationTests(TestCase):
         """ School info call should return data in the format we expect """
         c = Client(HTTP_REFERER=self.referer_header)
         response = c.get(self.test_url)
+
         self.assertContains(response, integration_test_course_info['school_display'])
