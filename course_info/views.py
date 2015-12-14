@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
@@ -15,7 +16,7 @@ from icommons import ICommonsApi, ICommonsApiValidationError
 
 _api = ICommonsApi()
 _logger = logging.getLogger(__name__)
-_FIELD_LABEL_MAP = {
+_FIELD_DETAILS = {
     'title': {'label': 'Course Title', 'order': 1},
     'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
     'term.display_name': {'label': 'Term', 'order': 3},
@@ -23,11 +24,12 @@ _FIELD_LABEL_MAP = {
     'location': {'label': 'Location', 'order': 5},
     'meeting_time': {'label': 'Meeting Time', 'order': 6},
     'exam_group': {'label': 'Exam Group', 'order': 7},
-    'description': {'label': 'Course Description', 'order': 8},
+    'description': {'label': 'Course Description', 'order': 8,
+                    'contains_html': True},
     'notes': {'label': 'Notes', 'order': 9},
 }
 _ORDERED_FIELD_NAMES = [
-    f[0] for f in sorted(_FIELD_LABEL_MAP.iteritems(), key=lambda f: f[1]['order'])
+    f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
 ]
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
@@ -126,7 +128,9 @@ def _course_context(request, requested_keys, show_empty_fields=False,
     for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
         if value or show_empty_fields:
-            field = {'key': key, 'label': _FIELD_LABEL_MAP[key]['label'], 'value': value}
+            field = {'key': key, 'label': _FIELD_DETAILS[key]['label'], 'value': value}
+            if _FIELD_DETAILS[key].get('contains_html', False):
+                field['value'] = mark_safe(field['value'])
             context['fields'].append(field)
 
     try:
@@ -156,7 +160,7 @@ def widget(request):
         canvas_course_id = None
 
     # field names are sent as URL params f=field_name when widget is 'launched'
-    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_LABEL_MAP.keys()]
+    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
     course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
