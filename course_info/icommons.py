@@ -58,7 +58,6 @@ class ICommonsApi(object):
     def _get_resource_by_url(self, url, **kwargs):
         # Since session.get doesn't grab the value of 'verify' if it is passed as a kwarg, need to pass it in explicitly
         verify_value = not settings.ICOMMONS_REST_API_SKIP_CERT_VERIFICATION
-
         response = self.session.get(url, params=kwargs, verify=verify_value)
         try:
             response.raise_for_status()
@@ -111,7 +110,7 @@ class ICommonsApi(object):
 
     def _course_info_instructor_list(self, course_instance_id, **kwargs):
 
-        # uWe need to fetch sub resource 'people'. sned that as a param to append  to the resource url
+        # We need to fetch sub resource 'people'. Send that as a param to append  to the resource url
         #  to get course people data
         sub_resource = 'people'
 
@@ -122,7 +121,7 @@ class ICommonsApi(object):
                 instructors = []
                 for person in rv['results']:
                     course_person_schema(person)
-                    if person.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
+                    if person.get('role') and person.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
                         instructors.append(person)
 
         except Invalid as e:
