@@ -140,6 +140,8 @@ LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 ICOMMONS_API_PATH = '/api/course/v2/'
+ICOMMONS_REST_API_SKIP_CERT_VERIFICATION = False
+
 
 # Logging
 

@@ -23,6 +23,10 @@ if COURSE_INSTANCE_ID:
 
 CANVAS_URL = SECURE_SETTINGS.get('canvas_url', 'https://canvas.harvard.edu')
 
+# Allows the REST API passthrough to successfully negotiate an SSL session
+# with an unverified certificate, e.g. the one that ships with django-sslserver
+ICOMMONS_REST_API_SKIP_CERT_VERIFICATION = True
+
 SELENIUM_CONFIG = {
     'canvas_base_url': CANVAS_URL,
     'edit_page_url_path': '/courses/7162/pages/course-information/edit',
