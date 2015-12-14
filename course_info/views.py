@@ -193,7 +193,6 @@ def editor(request):
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
         request.POST.get('launch_presentation_return_url')
-    course_context['textarea_fields'] = ['description', 'notes']
     return render(request, 'course_info/editor.html', course_context)
 
 
