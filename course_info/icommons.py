@@ -121,7 +121,7 @@ class ICommonsApi(object):
                 instructors = []
                 for person in rv['results']:
                     course_person_schema(person)
-                    if person.get('role') and person.get('role')['role_id'] in INSTRUCTOR_ROLE_IDS:
+                    if person.get('role') and person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
                         instructors.append(person)
 
         except Invalid as e:
