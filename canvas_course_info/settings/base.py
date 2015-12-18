@@ -77,27 +77,21 @@ TEMPLATE_DIRS = (
 )
 
 LTI_APPS = {
-    'course_info': {# <- Cannot be changed without causing issues
-        'id': 'course_info_import', # Changed from "course_info"
-        'name': 'Import Course Info', # Changed from "Course Info"
-        'menu_title': 'Import Course Info', # Changed from 'Course Info'
+    'course_info': {
+        'id': 'course_info_import',
+        'name': 'Import Course Info',
+        'menu_title': 'Course Info',
         'extensions_provider': 'canvas.instructure.com',
         'description': "A button to insert course info into canvas pages.",
         'privacy_level': 'public',
         'selection_height': '400px',
-        'selection_width':'400px',
+        'selection_width': '400px',
         'icon_url': STATIC_URL + 'images/course-info.png'
     }
 }
 
-# Trying to copy the env(required=True) functionality
-SECRET_KEY = SECURE_SETTINGS['django_secret_key']
-# if SECRET_KEY:
-#     pass
-# else:
-#     raise KeyError
+SECRET_KEY = SECURE_SETTINGS.get('django_secret_key', 'changeme')
 
-#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -140,6 +134,8 @@ LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get('icommons_api_token')
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get('icommons_base_url')
 ICOMMONS_API_PATH = '/api/course/v2/'
+ICOMMONS_REST_API_SKIP_CERT_VERIFICATION = False
+
 
 # Logging
 

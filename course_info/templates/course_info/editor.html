@@ -75,11 +75,7 @@
                       <strong>{{ field.label }}:</strong>
                     </label>
                     {% if field.value %}
-                      {% if field.key in textarea_fields %}
-                        <textarea class="form-control" rows="1" disabled>{{ field.value }}</textarea>
-                      {% else %}
-                        {{ field.value }}
-                      {% endif %}
+                      {{ field.value }}
                     {% else %}
                       Field not populated by registrar
                     {% endif %}

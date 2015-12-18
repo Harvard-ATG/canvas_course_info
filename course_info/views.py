@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
@@ -15,21 +16,24 @@ from icommons import ICommonsApi, ICommonsApiValidationError
 
 _api = ICommonsApi()
 _logger = logging.getLogger(__name__)
-_FIELD_LABEL_MAP = {
+_INSTRUCTORS_DISPLAY_FIELD = 'instructors_display'
+_FIELD_DETAILS = {
     'title': {'label': 'Course Title', 'order': 1},
     'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
     'term.display_name': {'label': 'Term', 'order': 3},
-    'instructors_display': {'label': 'Course Instructors', 'order': 4},
+    _INSTRUCTORS_DISPLAY_FIELD: {'label': 'Course Instructors', 'order': 4},
     'location': {'label': 'Location', 'order': 5},
     'meeting_time': {'label': 'Meeting Time', 'order': 6},
     'exam_group': {'label': 'Exam Group', 'order': 7},
-    'description': {'label': 'Course Description', 'order': 8},
-    'notes': {'label': 'Notes', 'order': 9},
+    'description': {'label': 'Course Description', 'order': 8,
+                    'contains_html': True},
+    'notes': {'label': 'Notes', 'order': 9, 'contains_html': True},
 }
 _ORDERED_FIELD_NAMES = [
-    f[0] for f in sorted(_FIELD_LABEL_MAP.iteritems(), key=lambda f: f[1]['order'])
+    f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
 ]
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
+
 
 
 @require_GET
@@ -110,7 +114,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
             course_info = _api.get_course_info(course_instance_id)
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
-                              canvas_course_id)
+                canvas_course_id)
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
         # set to {}
@@ -122,11 +126,29 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         'canvas_course_id': course_info.get('canvas_course_id')
     }
 
+    # if instructor_display is one of the selected keys and instructor data is missing
+    # from registrar feed, then fetch teaching staff names(from course staff table)
+    if (_INSTRUCTORS_DISPLAY_FIELD in requested_keys) and \
+            not course_info.get(_INSTRUCTORS_DISPLAY_FIELD):
+        try:
+            if not course_instance_id:
+                course_instance_id = course_info.get('course_instance_id')
+            course_instructor_list = _api.get_course_info_instructor_list(course_instance_id)
+            if course_instructor_list:
+                instructor_display = sort_and_format_instructor_display(course_instructor_list)
+                course_info[_INSTRUCTORS_DISPLAY_FIELD] = instructor_display
+        except (ICommonsApiValidationError, KeyError):
+            # do nothing, instructor_display is set to ''
+            pass
+
     # add field to context in order of its preferred display on the template
     for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
         if value or show_empty_fields:
-            field = {'key': key, 'label': _FIELD_LABEL_MAP[key]['label'], 'value': value}
+            field = {'key': key, 'label': _FIELD_DETAILS[key]['label'],
+                     'value': value}
+            if _FIELD_DETAILS[key].get('contains_html', False):
+                field['value'] = mark_safe(field['value'])
             context['fields'].append(field)
 
     try:
@@ -156,7 +178,7 @@ def widget(request):
         canvas_course_id = None
 
     # field names are sent as URL params f=field_name when widget is 'launched'
-    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_LABEL_MAP.keys()]
+    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
     course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
@@ -170,6 +192,41 @@ def editor(request):
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
-            request.POST.get('launch_presentation_return_url')
-    course_context['textarea_fields'] = ['description', 'notes']
+        request.POST.get('launch_presentation_return_url')
     return render(request, 'course_info/editor.html', course_context)
+
+
+def sort_and_format_instructor_display(course_instructor_list):
+    """
+    Returns a sorted  string  sorted by  the instructors by role_id, seniority sort, last name
+    and then formatted such that it appears as a comma delimited String with an 'and' before that last user.
+    # Eg: User1, User2 and User3.
+    """
+    # Note:  when seniority_sort is None, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
+    # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
+    # Also, x.get('seniority_sort', {}) handles null condition  but for None, needed to have the explicit check
+    course_instructor_list.sort(key=lambda x: (x.get('role', {}).get('role_id'),
+                                               100 if x.get('seniority_sort') is None else x.get('seniority_sort', {}),
+                                               x.get('profile', {}).get('name_last')))
+
+    num_instructors = len(course_instructor_list)
+
+    course_instructor_names= [get_display_name(p) for p in course_instructor_list]
+
+    if num_instructors == 1:
+        return course_instructor_names[0] + '.'
+    elif num_instructors == 2:
+        return ' and '.join(course_instructor_names) + '.'
+    elif num_instructors > 2:
+        # add the last instructor name after an 'and'
+        return ', '.join(course_instructor_names[:-1]) + ' and ' + course_instructor_names[-1] + '.'
+    else:
+        # num_instructors == 0
+        return ''
+
+
+def get_display_name(person):
+    if person:
+        return person.get('profile', {}).get('name_first')+' '+person.get('profile', {}).get('name_last')
+    return ''
+

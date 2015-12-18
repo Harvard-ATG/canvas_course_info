@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
+CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
+# ROLE_IDS translate following  roles-  1 : "Course Head", 2 : "Faculty"
+INSTRUCTOR_ROLE_IDS = [1, 2]
+
 
 # this isn't a full description of the resources, just what we're going to
 # expect to be in them within this library
@@ -28,9 +32,14 @@ school_schema = Schema({
     Required('title_long'): basestring,
 }, extra=ALLOW_EXTRA)
 
+course_person_schema = Schema({
+    Required('user_id'): basestring,
+}, extra=ALLOW_EXTRA)
+
 
 class ICommonsApiValidationError(RuntimeError):
     pass
+
 
 class ICommonsApi(object):
     def __init__(self, icommons_base_url=settings.ICOMMONS_BASE_URL,
@@ -47,7 +56,9 @@ class ICommonsApi(object):
         self.session.params = {'format': 'json'}
 
     def _get_resource_by_url(self, url, **kwargs):
-        response = self.session.get(url, params=kwargs)
+        # Since session.get doesn't grab the value of 'verify' if it is passed as a kwarg, need to pass it in explicitly
+        verify_value = not settings.ICOMMONS_REST_API_SKIP_CERT_VERIFICATION
+        response = self.session.get(url, params=kwargs, verify=verify_value)
         try:
             response.raise_for_status()
         except Exception:
@@ -55,10 +66,15 @@ class ICommonsApi(object):
             raise
         return response.json()
 
-    def _get_resource(self, type_, id_, **kwargs):
+    def _get_resource(self, type_, id_,sub_resource_=None, **kwargs):
         path = '{}/'.format(type_)
         if id_:
             path += '{}/'.format(id_)
+
+        # check for sub_resource_ and append it to the resource url
+        if sub_resource_:
+            path += '{}/'.format(sub_resource_)
+
         url = urlparse.urljoin(self.base_url, path)
         return self._get_resource_by_url(url, **kwargs)
 
@@ -92,6 +108,29 @@ class ICommonsApi(object):
             raise ICommonsApiValidationError(str(e))
         return rv
 
+    def _course_info_instructor_list(self, course_instance_id, **kwargs):
+
+        # We need to fetch sub resource 'people'. Send that as a param to append  to the resource url
+        #  to get course people data
+        sub_resource = 'people'
+
+        instructors = None
+        rv = self._get_resource('course_instances', course_instance_id, sub_resource, **kwargs)
+        try:
+            if 'results' in rv:
+                instructors = []
+                for person in rv['results']:
+                    course_person_schema(person)
+                    if person.get('role') and person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
+                        instructors.append(person)
+
+        except Invalid as e:
+            logger.exception(
+                u'Unable to validate course instance(s) %s returned from '
+                u'the icommons api.', rv)
+            raise ICommonsApiValidationError(str(e))
+        return instructors
+
     def _parse_type_and_id_from_url(self, url):
         return url.replace(self.base_url, '').split('/')[:2]
 
@@ -119,7 +158,7 @@ class ICommonsApi(object):
             # get the course_instance data
             try:
                 course_instances = self._get_course_instances(
-                                       canvas_course_id=canvas_course_id)['results']
+                    canvas_course_id=canvas_course_id)['results']
                 if len(course_instances):
                     course_instance_id = self._get_course_instance_id(course_instances)
                     if course_instance_id:
@@ -149,6 +188,23 @@ class ICommonsApi(object):
             except Exception as e:
                 logger.error(e.message)
         return school_info
+
+    def get_course_info_instructor_list(self, course_instance_id=None):
+        """
+            retrieves course instructors information from the iCommons API
+            or returns None if there are no instructors
+        """
+        cache_key = CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID.format(course_instance_id)
+        course_staff_info = cache.get(cache_key)
+        if course_staff_info is None:
+            try:
+                course_staff_info = self._course_info_instructor_list(course_instance_id=course_instance_id)
+                log_msg = u'Caching course info people for course_instance_id {}: {}'
+                logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
+                cache.set(cache_key, course_staff_info)
+            except Exception as e:
+                logger.error(e.message)
+        return course_staff_info
 
     def _get_course_instance_id(self, course_instances):
         if not course_instances:
