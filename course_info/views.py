@@ -115,6 +115,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)
+
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
         # set to {}
@@ -133,14 +134,16 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         try:
             if not course_instance_id:
                 course_instance_id = course_info.get('course_instance_id')
-            course_instructor_list = _api.get_course_info_instructor_list(course_instance_id)
-            if course_instructor_list:
-                instructor_display = sort_and_format_instructor_display(course_instructor_list)
-                course_info[_INSTRUCTORS_DISPLAY_FIELD] = instructor_display
+
+            # Proceed to fetch course staff from api only if there is a valid course_instance_id
+            if course_instance_id:
+                course_instructor_list = _api.get_course_info_instructor_list(course_instance_id)
+                if course_instructor_list:
+                    instructor_display = sort_and_format_instructor_display(course_instructor_list)
+                    course_info[_INSTRUCTORS_DISPLAY_FIELD] = instructor_display
         except (ICommonsApiValidationError, KeyError):
             # do nothing, instructor_display is set to ''
             pass
-
     # add field to context in order of its preferred display on the template
     for key in [k for k in _ORDERED_FIELD_NAMES if k in requested_keys]:
         value = _get_field_value_for_key(key, course_info)
@@ -158,7 +161,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         school_title = ''
 
     context['school_title'] = school_title
-
+    
     return context
 
 
