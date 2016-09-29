@@ -21,7 +21,7 @@ _FIELD_DETAILS = {
     'title': {'label': 'Course Title', 'order': 1},
     'course.registrar_code_display': {'label': 'Course Code', 'order': 2},
     'term.display_name': {'label': 'Term', 'order': 3},
-    _INSTRUCTORS_DISPLAY_FIELD: {'label': 'Course Instructors', 'order': 4},
+    _INSTRUCTORS_DISPLAY_FIELD: {'label': 'Course Instructor(s)', 'order': 4},
     'location': {'label': 'Location', 'order': 5},
     'meeting_time': {'label': 'Meeting Time', 'order': 6},
     'exam_group': {'label': 'Exam Group', 'order': 7},
@@ -217,12 +217,12 @@ def sort_and_format_instructor_display(course_instructor_list):
     course_instructor_names= [get_display_name(p) for p in course_instructor_list]
 
     if num_instructors == 1:
-        return course_instructor_names[0] + '.'
+        return course_instructor_names[0]
     elif num_instructors == 2:
-        return ' and '.join(course_instructor_names) + '.'
+        return ' and '.join(course_instructor_names)
     elif num_instructors > 2:
         # add the last instructor name after an 'and'
-        return ', '.join(course_instructor_names[:-1]) + ' and ' + course_instructor_names[-1] + '.'
+        return ', '.join(course_instructor_names[:-1]) + ' and ' + course_instructor_names[-1]
     else:
         # num_instructors == 0
         return ''
