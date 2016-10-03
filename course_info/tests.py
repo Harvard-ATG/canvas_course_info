@@ -259,6 +259,7 @@ class DisplayTests(TestCase):
         # assert that the response doesn't contains 'Course Instructors'label
         self.assertNotContains(response, 'Course Instructors:')
 
+
 class IntegrationTests(TestCase):
     """
     These tests will ensure that the widget (and by extension, the iCommon API)
@@ -269,6 +270,7 @@ class IntegrationTests(TestCase):
     """
     @classmethod
     def setUpClass(cls):
+        super(IntegrationTests, cls).setUpClass()
         cls.base_url = 'https://canvas.dev.harvard.edu/'
         cls.referer_header = '{}/courses/{}'.format(
             cls.base_url,
