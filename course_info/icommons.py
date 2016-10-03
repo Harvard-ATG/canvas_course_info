@@ -53,7 +53,21 @@ class ICommonsApi(object):
                                          api_path.lstrip('/'))
         self.session = requests.Session()
         self.session.headers = {'Authorization': 'Token %s' % access_token}
-        self.session.params = {'format': 'json'}
+        self.session.params = {'format': 'json', 'limit': '100'}
+
+    def _get_next(self, response_json):
+        """
+        Generator function that will iterate over a given response's "next"
+        links.
+            :param response_json: a dict representing a JSON response from the
+                                  API; the 'next' link at the base level of the
+                                  dict is iterated on to exhaust the list.
+            :return: next response object retrieved by client
+            :rtype: iterator
+        """
+        while response_json.get('next') is not None:
+            response_json = self._get_resource_by_url(response_json.get('next'))
+            yield response_json
 
     def _get_resource_by_url(self, url, **kwargs):
         # Since session.get doesn't grab the value of 'verify' if it is passed as a kwarg, need to pass it in explicitly
@@ -66,26 +80,42 @@ class ICommonsApi(object):
             raise
         return response.json()
 
-    def _get_resource(self, type_, id_,sub_resource_=None, **kwargs):
+    def _get_resource(self, type_, id_=None, sub_resource_=None,
+                      collection=False, **kwargs):
+        """
+        Parse and fetch a REST resource, subresource (supports one level of
+        nesting only), or collection. Returns the full JSON-parsed dict for a
+        regular resource, or a list for a collection.
+        :param type_: the base-level resource or collection
+        :param id_: resource ID (required if using subresource)
+        :param sub_resource_: an optional sub/child resource or collection
+        :param collection: If True, treat the resource as a collection, ie a
+                           list of resources; fetch all pages and return a
+                           list instead of an individual resource
+        :param kwargs: additional args for request client, e.g. query params
+        :return: a dict for a regular resource, or a list for a collection
+        """
         path = '{}/'.format(type_)
         if id_:
             path += '{}/'.format(id_)
+            # check for sub_resource_ and append it to the resource url
+            if sub_resource_:
+                path += '{}/'.format(sub_resource_)
 
-        # check for sub_resource_ and append it to the resource url
-        if sub_resource_:
-            path += '{}/'.format(sub_resource_)
+        resource_url = urlparse.urljoin(self.base_url, path)
 
-        url = urlparse.urljoin(self.base_url, path)
-        return self._get_resource_by_url(url, **kwargs)
+        response_json = self._get_resource_by_url(resource_url, **kwargs)
+        data = response_json.get('results') if collection else response_json
+        if collection:
+            for next_response_json in self._get_next(response_json):
+                data.extend(next_response_json.get('results'))
+        return data
 
-    def _get_course_instances(self, course_instance_id=None, **kwargs):
-        rv = self._get_resource('course_instances', course_instance_id, **kwargs)
+    def _get_course_instance(self, course_instance_id=None, **kwargs):
+        rv = self._get_resource('course_instances', course_instance_id,
+                                **kwargs)
         try:
-            if 'results' in rv:
-                for instance in rv['results']:
-                    course_instance_schema(instance)
-            else:
-                course_instance_schema(rv)
+            course_instance_schema(rv)
         except Invalid as e:
             logger.exception(
                 u'Unable to validate course instance(s) %s returned from '
@@ -93,41 +123,44 @@ class ICommonsApi(object):
             raise ICommonsApiValidationError(str(e))
         return rv
 
-    def _get_schools(self, school_id=None, **kwargs):
-        rv = self._get_resource('schools', school_id, **kwargs)
+    def _get_course_instances(self, **kwargs):
+        rv = self._get_resource('course_instances', collection=True, **kwargs)
         try:
-            if 'results' in rv:
-                for instance in rv['results']:
-                    school_schema(instance)
-            else:
-                school_schema(rv)
+            for instance in rv:
+                course_instance_schema(instance)
         except Invalid as e:
             logger.exception(
-                u'Unable to validate school(s) %s returned from the icommons '
+                u'Unable to validate course instance(s) %s returned from '
+                u'the icommons api.', rv)
+            raise ICommonsApiValidationError(str(e))
+        return rv
+
+    def _get_school(self, school_id, **kwargs):
+        rv = self._get_resource('schools', school_id, **kwargs)
+        try:
+            school_schema(rv)
+        except Invalid as e:
+            logger.exception(
+                u'Unable to validate school %s returned from the icommons '
                 u'api.', rv)
             raise ICommonsApiValidationError(str(e))
         return rv
 
     def _course_info_instructor_list(self, course_instance_id, **kwargs):
-
-        # We need to fetch sub resource 'people'. Send that as a param to append  to the resource url
-        #  to get course people data
-        sub_resource = 'people'
-
         instructors = None
-        rv = self._get_resource('course_instances', course_instance_id, sub_resource, **kwargs)
+        people_list = self._get_resource('course_instances', course_instance_id,
+                                         'people', collection=True, **kwargs)
         try:
-            if 'results' in rv:
-                instructors = []
-                for person in rv['results']:
-                    course_person_schema(person)
-                    if person.get('role') and person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
-                        instructors.append(person)
+            instructors = []
+            for person in people_list:
+                course_person_schema(person)
+                if person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
+                    instructors.append(person)
 
         except Invalid as e:
             logger.exception(
                 u'Unable to validate course instance(s) %s returned from '
-                u'the icommons api.', rv)
+                u'the icommons api.', people_list)
             raise ICommonsApiValidationError(str(e))
         return instructors
 
@@ -141,7 +174,7 @@ class ICommonsApi(object):
             course_info = {}
             # get the course_instance data
             try:
-                course_info = self._get_course_instances(course_instance_id)
+                course_info = self._get_course_instance(course_instance_id)
                 log_msg = u'Caching course info for course_instance_id {}: {}'
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
@@ -157,14 +190,16 @@ class ICommonsApi(object):
             course_info = {}
             # get the course_instance data
             try:
-                course_instances = self._get_course_instances(
-                    canvas_course_id=canvas_course_id)['results']
-                if len(course_instances):
-                    course_instance_id = self._get_course_instance_id(course_instances)
+                course_instance = self._get_course_instances(
+                    canvas_course_id=canvas_course_id)
+                if len(course_instance):
+                    course_instance_id = self._get_course_instance_id(
+                        course_instance)
                     if course_instance_id:
                         course_info = self.get_course_info(course_instance_id)
                 log_msg = u'Caching course info for canvas_course_id {}: {}'
-                logger.debug(log_msg.format(canvas_course_id, json.dumps(course_info)))
+                logger.debug(log_msg.format(canvas_course_id,
+                                            json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
                 logger.exception(e.message)
@@ -181,7 +216,7 @@ class ICommonsApi(object):
         if school_info is None:
             school_info = {}
             try:
-                school_info = self._get_schools(school_id=school_id)
+                school_info = self._get_school(school_id=school_id)
                 log_msg = u'Caching school info for school_id {}: {}'
                 logger.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)

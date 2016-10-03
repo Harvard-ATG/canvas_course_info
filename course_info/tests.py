@@ -1,5 +1,8 @@
-from django.test import Client, TestCase, RequestFactory
-from mock import patch, MagicMock
+from mock import MagicMock, patch
+
+from django.test import Client, RequestFactory, TestCase
+
+from icommons import ICommonsApi
 from views import editor, sort_and_format_instructor_display
 
 # todo: docstrings
@@ -259,6 +262,7 @@ class DisplayTests(TestCase):
         # assert that the response doesn't contains 'Course Instructors'label
         self.assertNotContains(response, 'Course Instructors:')
 
+
 class IntegrationTests(TestCase):
     """
     These tests will ensure that the widget (and by extension, the iCommon API)
@@ -269,7 +273,8 @@ class IntegrationTests(TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.base_url = 'https://canvas.dev.harvard.edu/'
+        super(IntegrationTests, cls).setUpClass()
+        cls.base_url = 'https://canvas.dev.harvard.edu'
         cls.referer_header = '{}/courses/{}'.format(
             cls.base_url,
             integration_test_course_info['canvas_course_id']
@@ -288,3 +293,40 @@ class IntegrationTests(TestCase):
         response = c.get(self.test_url)
 
         self.assertContains(response, integration_test_course_info['school_display'])
+
+
+@patch('course_info.icommons.requests.Session.get')
+class ApiTests(TestCase):
+    def setUp(self):
+        self.test_ci_id = 1
+        super(ApiTests, self).setUp()
+
+    def test_instructor_list_no_pages(self, session_get_mock):
+        """ fetching collection with one page should show results in a list """
+        test_data = {'results': mock_staff_data_from_api}
+        session_get_mock.return_value.json.return_value = test_data
+        api = ICommonsApi()
+
+        instructors = api.get_course_info_instructor_list(
+            course_instance_id=self.test_ci_id)
+
+        self.assertEqual(len(instructors), 5)
+        self.assertEqual(session_get_mock.call_count, 1)
+
+    def test_instructor_list_multiple_pages(self, session_get_mock):
+        """ fetching collection should return all pages of results in a list """
+        def results_generator(page_count=1):
+            for index in range(page_count):
+                yield {'next': 'fakeurl' if index < page_count-1 else None,
+                       'results': [mock_staff_data_from_api[index]]}
+
+        test_page_count = 3  # i.e. instructor count (1 per page)
+        session_get_mock.return_value.json.side_effect = [
+            x for x in results_generator(test_page_count)]
+        api = ICommonsApi()
+
+        instructors = api.get_course_info_instructor_list(
+            course_instance_id=self.test_ci_id)
+
+        self.assertEqual(len(instructors), test_page_count)
+        self.assertEqual(session_get_mock.call_count, test_page_count)
