@@ -194,7 +194,7 @@ class DisplayTests(TestCase):
             (mock_course_info_without_instructor_display['course_instance_id'])
 
         # assert that the response contains 'Course Instructors' label  and mocked instructor name
-        self.assertContains(response, 'Course Instructors:')
+        self.assertContains(response, 'Course Instructor(s):')
         self.assertContains(response, mock_staff_data_from_api[0]['profile']['name_first'])
 
     def test_sort_and_format_instructor_display_names(self,api_mock):
@@ -206,7 +206,7 @@ class DisplayTests(TestCase):
 
         expected_instructor_name_format = 'user1_first user1_last, user3_first' \
                                           ' user3_last, user2_first user2_last, ' \
-                                          'user4_first a_lname and user5_first z_lname.'
+                                          'user4_first a_lname and user5_first z_lname'
         result = sort_and_format_instructor_display(mock_staff_data_from_api)
         self.assertEqual(str(result), expected_instructor_name_format)
 
@@ -229,7 +229,7 @@ class DisplayTests(TestCase):
         staff_data = []
         # Add one user to list
         staff_data.append(mock_staff_data_from_api[0])
-        expected_instructor_name_format = 'user1_first user1_last.'
+        expected_instructor_name_format = 'user1_first user1_last'
         result = sort_and_format_instructor_display(staff_data)
         self.assertEqual(str(result), expected_instructor_name_format)
 
@@ -240,7 +240,7 @@ class DisplayTests(TestCase):
         staff_data.append(mock_staff_data_from_api[0])
         staff_data.append(mock_staff_data_from_api[1])
         expected_instructor_name_format = 'user1_first user1_last and ' \
-                                          'user2_first user2_last.'
+                                          'user2_first user2_last'
         result = sort_and_format_instructor_display(staff_data)
         self.assertEqual(str(result), expected_instructor_name_format)
 
