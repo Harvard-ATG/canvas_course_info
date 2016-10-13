@@ -1,4 +1,5 @@
-# to activate these settings, execute ./manage.py runserver --settings=canvas_course_info.settings.local
+# to activate these settings, execute
+# ./manage.py runserver --settings=canvas_course_info.settings.local
 
 from .base import *
 from logging.config import dictConfig
@@ -16,12 +17,19 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
 
-# Example ID for local dev: won't be getting a real course instance id from LTI launch params.
+# Example ID for local dev: won't be getting a real course instance id from LTI
+# launch params.
 COURSE_INSTANCE_ID = SECURE_SETTINGS.get('course_instance_id')
 if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
-CANVAS_URL = SECURE_SETTINGS.get('canvas_url', 'https://canvas.harvard.edu')
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+CANVAS_URL = SECURE_SETTINGS.get('canvas_url', 'https://canvas.dev.harvard.edu')
 
 # Allows the REST API passthrough to successfully negotiate an SSL session
 # with an unverified certificate, e.g. the one that ships with django-sslserver

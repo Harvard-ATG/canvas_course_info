@@ -42,3 +42,6 @@ secure.py
 gunicorn.py
 http_static
 gunicorn.py
+
+# Django stuff:
+*.log
