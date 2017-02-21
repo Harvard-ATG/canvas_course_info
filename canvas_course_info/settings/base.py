@@ -33,7 +33,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'course_info'
+    'course_info',
+    'icommons_ui',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -71,10 +72,28 @@ STATIC_ROOT = os.path.normpath(os.path.join(BASE_DIR, 'http_static'))
 #     os.path.normpath(os.path.join(BASE_DIR, 'course_info/static/')),
 # )
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-    os.path.join(BASE_DIR, 'course_info/templates'),
-)
+# see https://docs.djangoproject.com/en/1.10/ref/templates/upgrading/
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'course_info/templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 LTI_APPS = {
     'course_info': {
