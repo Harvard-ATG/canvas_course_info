@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block extra_head %}
+{% block head_extra %}
     <base target="_blank">
-{% endblock %}
+{% endblock head_extra %}
 {% block extra_js %}
   <script src="{% static 'js/iframeResizer.contentWindow.min.js' %}"></script>
-{% endblock %}
+{% endblock extra_js %}
 
 {% block content %}
     <div id="course_info_container" class="container-fluid">
@@ -48,4 +48,4 @@
 
     </div>
 
-{% endblock %}
+{% endblock content %}
