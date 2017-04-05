@@ -1,32 +1,18 @@
-<!DOCTYPE html>
-<html>
+{% extends 'icommons_ui/base_lti.html' %}
 {% load static %}
-<head lang="en">
+
+{% block head_meta %}
+    {{ block.super }}
     <meta charset="UTF-8">
-    <title></title>
+{% endblock head_meta %}
 
-    <!-- Bootstrap3 CSS -->
-    <link rel="stylesheet" href="{% static 'bootstrap3/css/bootstrap.css' %}">
+{% block stylesheet %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'css/course_info.css' %}">
-
-    {% block extra_css %}
-    {% endblock %}
-    {% block extra_head %}
-    {% endblock %}
-</head>
-<body>
-
-{% block content %}{% endblock content %}
+    {% block extra_css %}{% endblock %}
+{% endblock stylesheet %}
 
 {% block javascript %}
-    <!-- jQuery -->
-    <script src="{% static 'js/jquery.js' %}"></script>
-
-    <!-- Bootsrap3 JS -->
-    <script src="{% static 'bootstrap3/js/bootstrap.js' %}"></script>
-
-    {% block extra_js %}
-    {% endblock %}
+    {{ block.super }}
+    {% block extra_js %}{% endblock %}
 {% endblock %}
-</body>
-</html>

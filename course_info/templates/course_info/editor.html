@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block extra_css %}
-{% endblock %}
 
 {% block extra_js %}
     <script type="text/javascript" charset="utf8">
@@ -34,7 +32,7 @@
 
         });
     </script>
-{% endblock %}
+{% endblock extra_js %}
 
 {% block content %}
 
@@ -100,4 +98,4 @@
         </form>
         <br/>
     </div>
-{% endblock %}
+{% endblock content %}

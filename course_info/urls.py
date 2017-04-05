@@ -1,7 +1,10 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns('course_info.views',
-    url(r'^tool_config$', 'tool_config',    name = 'tool_config'),
-    url(r'^lti_launch$',  'lti_launch',     name = 'lti_launch'),
-    url(r'^widget',       'widget',         name = 'widget'),
-)
+from course_info import views
+
+
+urlpatterns = [
+    url(r'^tool_config$', views.tool_config, name='tool_config'),
+    url(r'^lti_launch$', views.lti_launch, name='lti_launch'),
+    url(r'^widget', views.widget, name='widget'),
+]

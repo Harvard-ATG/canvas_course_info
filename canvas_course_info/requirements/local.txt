@@ -1,9 +1,9 @@
 # local environment requirements, including base requirements
 -r aws.txt
-ddt==1.1.0
+ddt==1.1.1
 django-debug-toolbar==1.5
 django-sslserver==0.19
 mock==2.0.0
-pyvirtualdisplay==0.2
-selenium==2.53.0
+pyvirtualdisplay==0.2.1
+selenium==2.53.1
 xlrd==1.0.0
