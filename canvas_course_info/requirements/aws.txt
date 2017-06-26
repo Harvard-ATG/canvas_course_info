@@ -8,3 +8,4 @@ psycopg2==2.7.1
 redis==2.10.5
 requests==2.13.0
 voluptuous==0.9.3
+gunicorn==19.7.1
