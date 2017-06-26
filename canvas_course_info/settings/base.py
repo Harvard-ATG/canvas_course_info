@@ -113,7 +113,7 @@ SECRET_KEY = SECURE_SETTINGS.get('django_secret_key', 'changeme')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': SECURE_SETTINGS.get('db_default_name', 'canvas_course_info'),
         'USER': SECURE_SETTINGS.get('db_default_user', 'canvas_course_info'),
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),

@@ -4,6 +4,8 @@ git+https://github.com/harvard-dce/dce_lti_py.git@v0.7.4#egg=dce-lti-py==0.7.4
 git+https://github.com/harvard-dce/django-auth-lti.git@dce-lti-py#egg=django-auth-lti==1.0
 git+ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git@v1.3.1#egg=django-icommons-ui==1.3.1
 hiredis==0.2.0
+psycopg2==2.7.1
 redis==2.10.5
 requests==2.13.0
 voluptuous==0.9.3
+gunicorn==19.7.1
