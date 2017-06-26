@@ -35,7 +35,7 @@ ICOMMONS_REST_API_SKIP_CERT_VERIFICATION = True
 SELENIUM_CONFIG = {
     'canvas_base_url': CANVAS_URL,
     'edit_page_url_path': '/courses/7162/pages/course-information/edit',
-    'run_locally': False,
+    'run_locally': SECURE_SETTINGS.get('selenium_run_locally', False),
     'selenium_grid_url': SECURE_SETTINGS.get('selenium_grid_url'),
     'selenium_password': SECURE_SETTINGS.get('selenium_password'),
     'selenium_username': SECURE_SETTINGS.get('selenium_user'),
