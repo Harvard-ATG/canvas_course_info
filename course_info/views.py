@@ -35,7 +35,6 @@ _ORDERED_FIELD_NAMES = [
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
 
-
 @require_GET
 def tool_config(request):
     app_config = settings.LTI_APPS['course_info']
@@ -161,7 +160,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         school_title = ''
 
     context['school_title'] = school_title
-    
+
     return context
 
 
@@ -205,6 +204,9 @@ def sort_and_format_instructor_display(course_instructor_list):
     and then formatted such that it appears as a comma delimited String with an 'and' before that last user.
     # Eg: User1, User2 and User3.
     """
+    # First, filter out any instructor entries that do not have a profile - fixes TLT-2976
+    course_instructor_list = [x for x in course_instructor_list if x.get('profile')]
+
     # Note:  when seniority_sort is None, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
     # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
     # Also, x.get('seniority_sort', {}) handles null condition  but for None, needed to have the explicit check
@@ -214,7 +216,7 @@ def sort_and_format_instructor_display(course_instructor_list):
 
     num_instructors = len(course_instructor_list)
 
-    course_instructor_names= [get_display_name(p) for p in course_instructor_list]
+    course_instructor_names = [get_display_name(p) for p in course_instructor_list]
 
     if num_instructors == 1:
         return course_instructor_names[0]
@@ -230,6 +232,5 @@ def sort_and_format_instructor_display(course_instructor_list):
 
 def get_display_name(person):
     if person:
-        return person.get('profile', {}).get('name_first')+' '+person.get('profile', {}).get('name_last')
+        return person.get('profile', {}).get('name_first', '')+' '+person.get('profile', {}).get('name_last', '')
     return ''
-
