@@ -4,11 +4,12 @@
     <base target="_blank">
 {% endblock head_extra %}
 {% block extra_js %}
-  <script src="{% static 'js/iframeResizer.contentWindow.min.js' %}"></script>
-
   <script>
   $(document).ready(function() {
-    window.parent.postMessage('ready_for_resize', '*');
+    h = document.body.offsetHeight;
+    data = {'message': 'ready_for_resize', 'height': h};
+    window.parent.postMessage(data, '{{ referer }}');
+    console.log('child frame ready_for_resize to '+ h);
   });
   </script>
 {% endblock extra_js %}
