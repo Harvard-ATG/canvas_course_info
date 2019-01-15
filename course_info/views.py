@@ -174,10 +174,11 @@ def widget(request):
     implementation.
     """
     referer = request.META.get('HTTP_REFERER', '')
+    _logger.debug('referer: {}'.format(request.META))
     try:
         canvas_course_id = _REFERER_COURSE_ID_RE.match(referer).group('canvas_course_id')
     except AttributeError:
-        canvas_course_id = None
+        canvas_course_id = request.GET.get('backup_canvas_course_id')
 
     # field names are sent as URL params f=field_name when widget is 'launched'
     field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
@@ -190,11 +191,14 @@ def widget(request):
 
 
 def editor(request):
+    _logger.debug('EDITOR: {}'.format(request.POST))
     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
         request.POST.get('launch_presentation_return_url')
+    course_context['canvas_course_id'] = request.POST.get('custom_canvas_course_id')
     return render(request, 'course_info/editor.html', course_context)
 
 

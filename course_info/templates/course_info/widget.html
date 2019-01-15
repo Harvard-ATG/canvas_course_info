@@ -4,18 +4,20 @@
     <base target="_blank">
 {% endblock head_extra %}
 {% block extra_js %}
-  <script>
-  $(document).ready(function() {
-    h = document.body.offsetHeight;
-    data = {'message': 'ready_for_resize', 'height': h};
-    window.parent.postMessage(data, '{{ referer }}');
-    console.log('child frame ready_for_resize to '+ h);
-  });
-  </script>
+  {% if referer %}
+    <script>
+    $(document).ready(function() {
+      h = document.body.offsetHeight;
+      data = {'message': 'ready_for_resize', 'height': h};
+      window.parent.postMessage(data, '{{ referer }}');
+      console.log('child frame ready_for_resize to '+ h);
+    });
+    </script>
+  {% endif %}
 {% endblock extra_js %}
 
 {% block content %}
-    <div id="course_info_container" class="container-fluid" style="border: 1px solid #c6c6c6; padding: 0,0,0,0; margin:0,0,0,0">
+    <div id="course_info_container" class="container-fluid">
     {% if fields %}
         <ul class="list-group course-info-widget-field-list">
 
@@ -33,6 +35,7 @@
                 {% else %}
                   <strong>{{ field.label }}:</strong> Field not populated by registrar
                 {% endif %}
+              </li>
 
             {% else %}
               <li class="list-group-item">
