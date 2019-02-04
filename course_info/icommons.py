@@ -6,7 +6,7 @@ import urlparse
 import requests
 from django.core.cache import cache
 from canvas_course_info.settings import aws as settings
-from voluptuous import All, Invalid, Range, Required, Schema, ALLOW_EXTRA
+from voluptuous import All, Invalid, Range, Required, Schema, ALLOW_EXTRA, Coerce
 
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ def url(value):
     return bool(re.search('^https?://', value))
 
 course_instance_schema = Schema({
-    Required('course_instance_id'): All(int, Range(min=1)),
+    Required('course_instance_id'): All(Coerce(int),  Range(min=1)),
 }, extra=ALLOW_EXTRA)
 
 school_schema = Schema({
