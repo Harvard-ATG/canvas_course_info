@@ -110,7 +110,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
     course_info = {}
     try:
         if course_instance_id:
-            course_info = _api.get_course_info(course_instance_id)
+            course_info = _api.get_course_info(int(course_instance_id))
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)

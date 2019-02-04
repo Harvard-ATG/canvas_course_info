@@ -196,7 +196,7 @@ class ICommonsApi(object):
                     course_instance_id = self._get_course_instance_id(
                         course_instance)
                     if course_instance_id:
-                        course_info = self.get_course_info(course_instance_id)
+                        course_info = self.get_course_info(int(course_instance_id))
                 log_msg = u'Caching course info for canvas_course_id {}: {}'
                 logger.debug(log_msg.format(canvas_course_id,
                                             json.dumps(course_info)))
