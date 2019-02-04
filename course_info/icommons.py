@@ -198,7 +198,7 @@ class ICommonsApi(object):
                     if course_instance_id:
                         course_info = self.get_course_info(int(course_instance_id))
                 log_msg = u'Caching course info for canvas_course_id/course_instance_id {}/{}: {}'
-                logger.debug(log_msg.format(canvas_course_id, int(course_instance_id)
+                logger.debug(log_msg.format(canvas_course_id, int(course_instance_id),
                                             json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
