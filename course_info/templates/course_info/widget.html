@@ -10,7 +10,6 @@
       h = document.body.offsetHeight;
       data = {'message': 'ready_for_resize', 'height': h};
       window.parent.postMessage(data, '{{ referer }}');
-      console.log('child frame ready_for_resize to '+ h);
     });
     </script>
   {% endif %}
@@ -53,9 +52,9 @@
 
         </ul>
     {% endif %}
-        {% if show_registrar_fields_message %}
-          Additional information will be shown if available from the Registrar.
-        {% endif %}
+    {% if show_registrar_fields_message %}
+      Additional information will be shown if available from the Registrar.
+    {% endif %}
 
     </div>
 
