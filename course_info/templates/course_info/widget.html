@@ -12,6 +12,8 @@
       window.parent.postMessage(data, '{{ referer }}');
     });
     </script>
+  {% else %}
+    <!-- no referer -->
   {% endif %}
 {% endblock extra_js %}
 

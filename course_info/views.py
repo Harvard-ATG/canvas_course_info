@@ -181,7 +181,7 @@ def widget(request):
     implementation.
     """
     referer = request.META.get('HTTP_REFERER', '')
-    _logger.debug('referer: {}'.format(request.META))
+    _logger.debug('referer: {}'.format(request.META.get('HTTP_REFERER')))
     try:
         canvas_course_id = _REFERER_COURSE_ID_RE.match(referer).group('canvas_course_id')
     except AttributeError:
