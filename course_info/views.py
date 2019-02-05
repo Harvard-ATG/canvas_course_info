@@ -187,12 +187,10 @@ def widget(request):
     # field names are sent as URL params f=field_name when widget is 'launched'
     field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
 
-    # get the course_context based on course_instance_id if possible
-    course_context = None
-    if course_instance_id:
+    # get the course_context based on course_instance_id if we can't get one by canvas course ID
+    course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
+    if not course_context or not course_context.get('course_instance_id'):
         course_context = _course_context(request, field_names, course_instance_id=course_instance_id)
-    else:
-        course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
