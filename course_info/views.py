@@ -107,15 +107,20 @@ def _get_field_value_for_key(key, course_info):
 
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
+    if course_instance_id:
+        if isinstance(course_instance_id, basestring):
+            course_instance_id = int(float(course_instance_id)) 
+
     course_info = {}
     try:
         if course_instance_id:
-            if isinstance(course_instance_id, basestring):
-                course_instance_id = int(float(course_instance_id)) 
-            course_info = _api.get_course_info(int(course_instance_id))
+            course_info = _api.get_course_info(course_instance_id)
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)
+            course_instance_id = int(float(course_info.get('course_instance_id')))
+            
+            _logger.debug('course instance id from course info is {}'.format(course_instance_id))
 
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
@@ -194,6 +199,7 @@ def widget(request):
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
+    course_context['referer'] = referer
     return render(request, 'course_info/widget.html', course_context)
 
 
