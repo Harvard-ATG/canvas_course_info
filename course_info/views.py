@@ -110,6 +110,8 @@ def _course_context(request, requested_keys, show_empty_fields=False,
     course_info = {}
     try:
         if course_instance_id:
+            if isinstance(course_instance_id, basestring):
+                course_instance_id = int(float(course_instance_id)) 
             course_info = _api.get_course_info(int(course_instance_id))
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
@@ -180,9 +182,17 @@ def widget(request):
     except AttributeError:
         canvas_course_id = request.GET.get('backup_canvas_course_id')
 
+    course_instance_id = request.GET.get('backup_course_instance_id')
+
     # field names are sent as URL params f=field_name when widget is 'launched'
     field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
-    course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
+
+    # get the course_context based on course_instance_id if possible
+    course_context = None
+    if course_instance_id:
+        course_context = _course_context(request, field_names, course_instance_id=course_instance_id)
+    else:
+        course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
