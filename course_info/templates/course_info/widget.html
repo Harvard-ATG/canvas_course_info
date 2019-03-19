@@ -4,11 +4,22 @@
     <base target="_blank">
 {% endblock head_extra %}
 {% block extra_js %}
-  <script src="{% static 'js/iframeResizer.contentWindow.min.js' %}"></script>
+  {% if referer %}
+    <script>
+    $(document).ready(function() {
+      h = document.body.offsetHeight;
+      data = {'message': 'ready_for_resize', 'height': h};
+      window.parent.postMessage(data, '{{ referer }}');
+    });
+    </script>
+  {% else %}
+    <!-- no referer -->
+  {% endif %}
 {% endblock extra_js %}
 
 {% block content %}
     <div id="course_info_container" class="container-fluid">
+    {% if fields %}
         <ul class="list-group course-info-widget-field-list">
 
           {% for field in fields %}
@@ -25,6 +36,7 @@
                 {% else %}
                   <strong>{{ field.label }}:</strong> Field not populated by registrar
                 {% endif %}
+              </li>
 
             {% else %}
               <li class="list-group-item">
@@ -41,10 +53,10 @@
           {% endfor %}
 
         </ul>
-
-        {% if show_registrar_fields_message %}
-          Additional information will be shown if available from the Registrar.
-        {% endif %}
+    {% endif %}
+    {% if show_registrar_fields_message %}
+      Additional information will be shown if available from the Registrar.
+    {% endif %}
 
     </div>
 
