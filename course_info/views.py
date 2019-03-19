@@ -32,7 +32,7 @@ _FIELD_DETAILS = {
 _ORDERED_FIELD_NAMES = [
     f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
 ]
-_REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
+_REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
 
 @require_GET
@@ -107,6 +107,14 @@ def _get_field_value_for_key(key, course_info):
 
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
+    if course_instance_id:
+        if isinstance(course_instance_id, basestring):
+            try:
+                course_instance_id = int(float(course_instance_id))
+            except (ValueError):
+                _logger.debug('non-numeric course_instance_id: {}'.format(course_instance_id))
+                course_instance_id = None
+
     course_info = {}
     try:
         if course_instance_id:
@@ -114,6 +122,10 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)
+            if course_info.get('course_instance_id'):
+                course_instance_id = int(float(course_info.get('course_instance_id')))
+
+            _logger.debug('course instance id from course info is {}'.format(course_instance_id))
 
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
@@ -174,27 +186,37 @@ def widget(request):
     implementation.
     """
     referer = request.META.get('HTTP_REFERER', '')
+    _logger.debug('referer: {}'.format(request.META.get('HTTP_REFERER')))
     try:
         canvas_course_id = _REFERER_COURSE_ID_RE.match(referer).group('canvas_course_id')
     except AttributeError:
-        canvas_course_id = None
+        canvas_course_id = request.GET.get('backup_canvas_course_id')
+
+    course_instance_id = request.GET.get('backup_course_instance_id')
 
     # field names are sent as URL params f=field_name when widget is 'launched'
     field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
+
+    # get the course_context based on course_instance_id if we can't get one by canvas course ID
     course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
+    if not course_context or not course_context.get('course_instance_id'):
+        course_context = _course_context(request, field_names, course_instance_id=course_instance_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
-
+    course_context['referer'] = referer
     return render(request, 'course_info/widget.html', course_context)
 
 
 def editor(request):
+    _logger.debug('EDITOR: {}'.format(request.POST))
     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
         request.POST.get('launch_presentation_return_url')
+    course_context['canvas_course_id'] = request.POST.get('custom_canvas_course_id')
     return render(request, 'course_info/editor.html', course_context)
 
 
