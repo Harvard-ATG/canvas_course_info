@@ -32,7 +32,7 @@ _FIELD_DETAILS = {
 _ORDERED_FIELD_NAMES = [
     f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
 ]
-_REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
+_REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
 
 @require_GET
@@ -109,7 +109,11 @@ def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
     if course_instance_id:
         if isinstance(course_instance_id, basestring):
-            course_instance_id = int(float(course_instance_id)) 
+            try:
+                course_instance_id = int(float(course_instance_id))
+            except (ValueError):
+                _logger.debug('non-numeric course_instance_id: {}'.format(course_instance_id))
+                course_instance_id = None
 
     course_info = {}
     try:
@@ -118,8 +122,9 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)
-            course_instance_id = int(float(course_info.get('course_instance_id')))
-            
+            if course_info.get('course_instance_id'):
+                course_instance_id = int(float(course_info.get('course_instance_id')))
+
             _logger.debug('course instance id from course info is {}'.format(course_instance_id))
 
     except ICommonsApiValidationError:

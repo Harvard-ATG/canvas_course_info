@@ -24,6 +24,7 @@ INSTRUCTOR_ROLE_IDS = [1, 2]
 def url(value):
     return bool(re.search('^https?://', value))
 
+
 course_instance_schema = Schema({
     Required('course_instance_id'): All(Coerce(int),  Range(min=1)),
 }, extra=ALLOW_EXTRA)
@@ -199,7 +200,7 @@ class ICommonsApi(object):
                         course_info = self.get_course_info(int(course_instance_id))
                         log_msg = u'Caching course info for canvas_course_id/course_instance_id {}/{}: {}'
                         logger.debug(log_msg.format(canvas_course_id, int(course_instance_id),
-                                            json.dumps(course_info)))
+                                                    json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
                 logger.exception(e.message)
