@@ -1,7 +1,7 @@
 import json
 import logging
 import re
-import urlparse
+import urllib.parse as urlparse
 
 import requests
 from django.core.cache import cache
@@ -29,11 +29,11 @@ course_instance_schema = Schema({
 }, extra=ALLOW_EXTRA)
 
 school_schema = Schema({
-    Required('title_long'): basestring,
+    Required('title_long'): str,
 }, extra=ALLOW_EXTRA)
 
 course_person_schema = Schema({
-    Required('user_id'): basestring,
+    Required('user_id'): str,
 }, extra=ALLOW_EXTRA)
 
 
@@ -76,7 +76,7 @@ class ICommonsApi(object):
         try:
             response.raise_for_status()
         except Exception:
-            logger.exception(u'Error getting {}: {}'.format(url, response.text))
+            logger.exception('Error getting {}: {}'.format(url, response.text))
             raise
         return response.json()
 
@@ -118,8 +118,8 @@ class ICommonsApi(object):
             course_instance_schema(rv)
         except Invalid as e:
             logger.exception(
-                u'Unable to validate course instance(s) %s returned from '
-                u'the icommons api.', rv)
+                'Unable to validate course instance(s) %s returned from '
+                'the icommons api.', rv)
             raise ICommonsApiValidationError(str(e))
         return rv
 
@@ -130,8 +130,8 @@ class ICommonsApi(object):
                 course_instance_schema(instance)
         except Invalid as e:
             logger.exception(
-                u'Unable to validate course instance(s) %s returned from '
-                u'the icommons api.', rv)
+                'Unable to validate course instance(s) %s returned from '
+                'the icommons api.', rv)
             raise ICommonsApiValidationError(str(e))
         return rv
 
@@ -141,8 +141,8 @@ class ICommonsApi(object):
             school_schema(rv)
         except Invalid as e:
             logger.exception(
-                u'Unable to validate school %s returned from the icommons '
-                u'api.', rv)
+                'Unable to validate school %s returned from the icommons '
+                'api.', rv)
             raise ICommonsApiValidationError(str(e))
         return rv
 
@@ -159,8 +159,8 @@ class ICommonsApi(object):
 
         except Invalid as e:
             logger.exception(
-                u'Unable to validate course instance(s) %s returned from '
-                u'the icommons api.', people_list)
+                'Unable to validate course instance(s) %s returned from '
+                'the icommons api.', people_list)
             raise ICommonsApiValidationError(str(e))
         return instructors
 
@@ -175,7 +175,7 @@ class ICommonsApi(object):
             # get the course_instance data
             try:
                 course_info = self._get_course_instance(course_instance_id)
-                log_msg = u'Caching course info for course_instance_id {}: {}'
+                log_msg = 'Caching course info for course_instance_id {}: {}'
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception:
@@ -197,7 +197,7 @@ class ICommonsApi(object):
                         course_instance)
                     if course_instance_id:
                         course_info = self.get_course_info(course_instance_id)
-                log_msg = u'Caching course info for canvas_course_id {}: {}'
+                log_msg = 'Caching course info for canvas_course_id {}: {}'
                 logger.debug(log_msg.format(canvas_course_id,
                                             json.dumps(course_info)))
                 cache.set(cache_key, course_info)
@@ -217,7 +217,7 @@ class ICommonsApi(object):
             school_info = {}
             try:
                 school_info = self._get_school(school_id=school_id)
-                log_msg = u'Caching school info for school_id {}: {}'
+                log_msg = 'Caching school info for school_id {}: {}'
                 logger.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)
             except Exception as e:
@@ -234,7 +234,7 @@ class ICommonsApi(object):
         if course_staff_info is None:
             try:
                 course_staff_info = self._course_info_instructor_list(course_instance_id=course_instance_id)
-                log_msg = u'Caching course info people for course_instance_id {}: {}'
+                log_msg = 'Caching course info people for course_instance_id {}: {}'
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
                 cache.set(cache_key, course_staff_info)
             except Exception as e:
@@ -249,15 +249,15 @@ class ICommonsApi(object):
             course_instance = course_instances[0]
             if course_instance.get('primary_xlist_instances'):
                 logger.debug(
-                    u'iCommons api returned a single, secondary instance for '
-                    u'canvas course id %s', course_instance['course_instance_id'])
+                    'iCommons api returned a single, secondary instance for '
+                    'canvas course id %s', course_instance['course_instance_id'])
                 primary_urls = course_instance['primary_xlist_instances']
                 # it should never be the case that there are multiple primaries
                 # for a secondary
                 if len(primary_urls) > 1:
                     logger.warning(
-                        u'iCommons api returned multiple primary instances %s '
-                        u'for course instance %s',
+                        'iCommons api returned multiple primary instances %s '
+                        'for course instance %s',
                         primary_urls, course_instance)
                     return None
                 course_instance = self._get_resource_by_url(primary_urls[0])
@@ -270,8 +270,8 @@ class ICommonsApi(object):
             if ci.get('primary_xlist_instances'):
                 if len(ci['primary_xlist_instances']) > 1:
                     logger.warning(
-                        u'iCommons api returned multiple primary instances %s '
-                        u'for course instance %s',
+                        'iCommons api returned multiple primary instances %s '
+                        'for course instance %s',
                         ci['primary_xlist_instances'], ci)
                     return None
                 _, id_ = self._parse_type_and_id_from_url(
@@ -279,12 +279,12 @@ class ICommonsApi(object):
                 primary_cids.add(id_)  # unicode string
             else:
                 # must also be unicode string to match any dupes found above
-                primary_cids.add(u'{}'.format(ci['course_instance_id']))
+                primary_cids.add('{}'.format(ci['course_instance_id']))
         if len(primary_cids) == 1:
             return primary_cids.pop()
         elif len(primary_cids) == 0:
             error_msg = 'No primary course instance found'
         else:
             error_msg = 'Multiple possible primary courses found, cannot determine primary'
-        logger.error(u'{}: {}'.format(error_msg, course_instances))
+        logger.error('{}: {}'.format(error_msg, course_instances))
         return None

@@ -4,14 +4,14 @@ import re
 from dce_lti_py.tool_config import ToolConfig
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from icommons import ICommonsApi, ICommonsApiValidationError
+from .icommons import ICommonsApi, ICommonsApiValidationError
 
 
 _api = ICommonsApi()
@@ -30,7 +30,7 @@ _FIELD_DETAILS = {
     'notes': {'label': 'Notes', 'order': 9, 'contains_html': True},
 }
 _ORDERED_FIELD_NAMES = [
-    f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
+    f[0] for f in sorted(iter(_FIELD_DETAILS.items()), key=lambda f: f[1]['order'])
 ]
 _REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
@@ -181,7 +181,7 @@ def widget(request):
         canvas_course_id = None
 
     # field names are sent as URL params f=field_name when widget is 'launched'
-    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
+    field_names = [f for f in request.GET.getlist('f') if f in list(_FIELD_DETAILS.keys())]
     course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]

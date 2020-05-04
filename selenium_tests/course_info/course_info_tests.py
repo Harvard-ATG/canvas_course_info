@@ -1,4 +1,4 @@
-import urlparse
+import urllib.parse
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
@@ -69,8 +69,8 @@ class CourseInfoTests(CourseInfoBaseTestCase):
 
         # verify all f values are in the widget url
         widget_url = widgets[0].get_attribute('data-mce-p-src')
-        parts = urlparse.urlparse(widget_url)
-        params = urlparse.parse_qs(parts.query)
+        parts = urllib.parse.urlparse(widget_url)
+        params = urllib.parse.parse_qs(parts.query)
         self.assertEqual(set(params['f']), edit_page.get_all_f_values(),
                          'Not all expected fields in the widget url')
 
