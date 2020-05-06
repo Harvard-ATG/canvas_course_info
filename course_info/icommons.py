@@ -203,7 +203,7 @@ class ICommonsApi(object):
                                                     json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
-                logger.exception(e.message)
+                logger.exception(e)
         return course_info
 
     def get_school_info(self, school_id):
@@ -222,7 +222,7 @@ class ICommonsApi(object):
                 logger.debug(log_msg.format(school_id, json.dumps(school_info)))
                 cache.set(cache_key, school_info)
             except Exception as e:
-                logger.error(e.message)
+                logger.error(e)
         return school_info
 
     def get_course_info_instructor_list(self, course_instance_id=None):
@@ -239,7 +239,7 @@ class ICommonsApi(object):
                 logger.debug(log_msg.format(course_instance_id, json.dumps(course_staff_info)))
                 cache.set(cache_key, course_staff_info)
             except Exception as e:
-                logger.error(e.message)
+                logger.error(e)
         return course_staff_info
 
     def _get_course_instance_id(self, course_instances):
