@@ -6,7 +6,7 @@ import urllib.parse as urlparse
 import requests
 from django.core.cache import cache
 from canvas_course_info.settings import aws as settings
-from voluptuous import All, Invalid, Range, Required, Schema, ALLOW_EXTRA
+from voluptuous import All, Invalid, Range, Required, Schema, ALLOW_EXTRA, Coerce
 
 
 logger = logging.getLogger(__name__)
@@ -24,8 +24,9 @@ INSTRUCTOR_ROLE_IDS = [1, 2]
 def url(value):
     return bool(re.search('^https?://', value))
 
+
 course_instance_schema = Schema({
-    Required('course_instance_id'): All(int, Range(min=1)),
+    Required('course_instance_id'): All(Coerce(int),  Range(min=1)),
 }, extra=ALLOW_EXTRA)
 
 school_schema = Schema({
@@ -196,10 +197,10 @@ class ICommonsApi(object):
                     course_instance_id = self._get_course_instance_id(
                         course_instance)
                     if course_instance_id:
-                        course_info = self.get_course_info(course_instance_id)
-                log_msg = 'Caching course info for canvas_course_id {}: {}'
-                logger.debug(log_msg.format(canvas_course_id,
-                                            json.dumps(course_info)))
+                        course_info = self.get_course_info(int(course_instance_id))
+                        log_msg = 'Caching course info for canvas_course_id/course_instance_id {}/{}: {}'
+                        logger.debug(log_msg.format(canvas_course_id, int(course_instance_id),
+                                                    json.dumps(course_info)))
                 cache.set(cache_key, course_info)
             except Exception as e:
                 logger.exception(e.message)

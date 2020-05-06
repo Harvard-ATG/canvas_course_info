@@ -1,5 +1,5 @@
-from django.urls import path, re_path, include
+from django.urls import path, include
 
 urlpatterns = [
-    url(r'^course_info/', include('course_info.urls')),
+    path('course_info/', include(('course_info.urls', 'course_info'), namespace='course_info')),
 ]

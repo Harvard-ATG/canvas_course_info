@@ -2,17 +2,11 @@
 Django settings for canvas_course_info project.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
+https://docs.djangoproject.com/en/<Django Version>/topics/settings/
 
 For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
+https://docs.djangoproject.com/en/<Django Version>/ref/settings/
 """
-
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-
-#import dj_database_url
-#from django.core.exceptions import ImproperlyConfigured
-#from getenv import env
 
 import logging
 import os
@@ -26,7 +20,7 @@ ALLOWED_HOSTS = ['*']
 DEBUG = SECURE_SETTINGS.get('enable_debug', False)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,17 +29,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'course_info',
     'icommons_ui',
-)
+]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django_auth_lti.middleware.LTIAuthMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-)
+]
 
 ROOT_URLCONF = 'canvas_course_info.urls'
 

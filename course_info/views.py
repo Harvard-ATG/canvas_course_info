@@ -1,7 +1,7 @@
 import logging
 import re
 
-from dce_lti_py.tool_config import ToolConfig
+from lti import ToolConfig
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -32,8 +32,7 @@ _FIELD_DETAILS = {
 _ORDERED_FIELD_NAMES = [
     f[0] for f in sorted(iter(_FIELD_DETAILS.items()), key=lambda f: f[1]['order'])
 ]
-_REFERER_COURSE_ID_RE = re.compile('^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
-
+_REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
 
 @require_GET
@@ -108,6 +107,14 @@ def _get_field_value_for_key(key, course_info):
 
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
+    if course_instance_id:
+        if isinstance(course_instance_id, basestring):
+            try:
+                course_instance_id = int(float(course_instance_id))
+            except (ValueError):
+                _logger.debug('non-numeric course_instance_id: {}'.format(course_instance_id))
+                course_instance_id = None
+
     course_info = {}
     try:
         if course_instance_id:
@@ -115,6 +122,10 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         elif canvas_course_id:
             course_info = _api.get_course_info_by_canvas_course_id(
                 canvas_course_id)
+            if course_info.get('course_instance_id'):
+                course_instance_id = int(float(course_info.get('course_instance_id')))
+
+            _logger.debug('course instance id from course info is {}'.format(course_instance_id))
 
     except ICommonsApiValidationError:
         # this is logged in the icommons library, and course_info is already
@@ -161,7 +172,7 @@ def _course_context(request, requested_keys, show_empty_fields=False,
         school_title = ''
 
     context['school_title'] = school_title
-    
+
     return context
 
 
@@ -175,27 +186,37 @@ def widget(request):
     implementation.
     """
     referer = request.META.get('HTTP_REFERER', '')
+    _logger.debug('referer: {}'.format(request.META.get('HTTP_REFERER')))
     try:
         canvas_course_id = _REFERER_COURSE_ID_RE.match(referer).group('canvas_course_id')
     except AttributeError:
-        canvas_course_id = None
+        canvas_course_id = request.GET.get('backup_canvas_course_id')
+
+    course_instance_id = request.GET.get('backup_course_instance_id')
 
     # field names are sent as URL params f=field_name when widget is 'launched'
-    field_names = [f for f in request.GET.getlist('f') if f in list(_FIELD_DETAILS.keys())]
+    field_names = [f for f in request.GET.getlist('f') if f in _FIELD_DETAILS.keys()]
+
+    # get the course_context based on course_instance_id if we can't get one by canvas course ID
     course_context = _course_context(request, field_names, canvas_course_id=canvas_course_id)
+    if not course_context or not course_context.get('course_instance_id'):
+        course_context = _course_context(request, field_names, course_instance_id=course_instance_id)
 
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
-
+    course_context['referer'] = referer
     return render(request, 'course_info/widget.html', course_context)
 
 
 def editor(request):
+    _logger.debug('EDITOR: {}'.format(request.POST))
     course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+
     course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
                                      course_instance_id=course_instance_id)
     course_context['launch_presentation_return_url'] = \
         request.POST.get('launch_presentation_return_url')
+    course_context['canvas_course_id'] = request.POST.get('custom_canvas_course_id')
     return render(request, 'course_info/editor.html', course_context)
 
 
@@ -205,6 +226,9 @@ def sort_and_format_instructor_display(course_instructor_list):
     and then formatted such that it appears as a comma delimited String with an 'and' before that last user.
     # Eg: User1, User2 and User3.
     """
+    # First, filter out any instructor entries that do not have a profile - fixes TLT-2976
+    course_instructor_list = [x for x in course_instructor_list if x.get('profile')]
+
     # Note:  when seniority_sort is None, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
     # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
     # Also, x.get('seniority_sort', {}) handles null condition  but for None, needed to have the explicit check
@@ -214,7 +238,7 @@ def sort_and_format_instructor_display(course_instructor_list):
 
     num_instructors = len(course_instructor_list)
 
-    course_instructor_names= [get_display_name(p) for p in course_instructor_list]
+    course_instructor_names = [get_display_name(p) for p in course_instructor_list]
 
     if num_instructors == 1:
         return course_instructor_names[0]
@@ -230,6 +254,5 @@ def sort_and_format_instructor_display(course_instructor_list):
 
 def get_display_name(person):
     if person:
-        return person.get('profile', {}).get('name_first')+' '+person.get('profile', {}).get('name_last')
+        return person.get('profile', {}).get('name_first', '')+' '+person.get('profile', {}).get('name_last', '')
     return ''
-
