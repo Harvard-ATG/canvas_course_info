@@ -10,13 +10,15 @@ https://docs.djangoproject.com/en/<Django Version>/ref/settings/
 
 import logging
 import os
-from .secure import SECURE_SETTINGS
+from dj_secure_settings.loader import load_secure_settings
 
+SECURE_SETTINGS = load_secure_settings()
 # TODO: does TLT want the static files in project/canvas_course_info or in project/?
 # this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 ALLOWED_HOSTS = ['*']
+ALLOWED_CIDR_NETS = [SECURE_SETTINGS.get('vpc_cidr_block')]
 DEBUG = SECURE_SETTINGS.get('enable_debug', False)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
