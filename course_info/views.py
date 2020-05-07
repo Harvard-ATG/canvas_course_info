@@ -39,7 +39,7 @@ _REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.
 def tool_config(request):
     app_config = settings.LTI_APPS['course_info']
 
-    launch_url = request.build_absolute_uri(reverse('lti_launch'))
+    launch_url = request.build_absolute_uri(reverse('course_info:lti_launch'))
 
     editor_settings = {
         'enabled': 'true',
