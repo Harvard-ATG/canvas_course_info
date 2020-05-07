@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/<Django Version>/ref/settings/
 import logging
 import os
 from dj_secure_settings.loader import load_secure_settings
+from icommons_common.logging import JSON_LOG_FORMAT, ContextFilter
 
 SECURE_SETTINGS = load_secure_settings()
 # TODO: does TLT want the static files in project/canvas_course_info or in project/?
@@ -153,29 +154,86 @@ ICOMMONS_REST_API_SKIP_CERT_VERIFICATION = False
 
 # Logging
 
-_DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', 'DEBUG')
-_LOG_ROOT = SECURE_SETTINGS.get('log_root', '')  # Default to current directory
+class ContextFilter(logging.Filter):
+    def __init__(self, **kwargs):
+        self.extra = kwargs
+
+    def filter(self, record):
+
+        for k in self.extra:
+            setattr(record, k, self.extra[k])
+
+        return True
 
 # Turn off default Django logging
 # https://docs.djangoproject.com/en/1.8/topics/logging/#disabling-logging-configuration
-LOGGING_CONFIG = None
+#LOGGING_CONFIG = None
+
+
+_DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get('log_level', logging.DEBUG)
+_LOG_ROOT = SECURE_SETTINGS.get('log_root', '')
+_JSON_LOG_FORMAT = '%(asctime)s %(created)f %(exc_info)s %(filename)s %(funcName)s %(levelname)s %(levelno)s %(name)s %(lineno)d %(module)s %(message)s %(pathname)s %(process)s'
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',
             'datefmt': '%Y-%m-%dT%H:%M:%S'
         },
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': _JSON_LOG_FORMAT,
+        },
         'simple': {
             'format': '%(levelname)s\t%(name)s:%(lineno)s\t%(message)s',
-        }
+        },
     },
-    # Borrowing some default filters for app loggers
     'filters': {
+        'context': {
+            '()': 'canvas_course_info.settings.base.ContextFilter',
+            'env': SECURE_SETTINGS.get('env_name'),
+            'project': 'canvas_course_info',
+            'department': 'uw',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'default': {
+            'class': 'splunk_handler.SplunkHandler',
+            'formatter': 'json',
+            'sourcetype': 'json',
+            'source': 'django-canvas_course_info',
+            'host': 'http-inputs-harvard.splunkcloud.com',
+            'port': '443',
+            'index': 'soc-isites',
+            'token': SECURE_SETTINGS['splunk_token'],
+            'level': _DEFAULT_LOG_LEVEL,
+            'filters': ['context'],
+        },
+        'gunicorn': {
+            'class': 'splunk_handler.SplunkHandler',
+            'formatter': 'json',
+            'sourcetype': 'json',
+            'source': 'gunicorn-canvas_course_info',
+            'host': 'http-inputs-harvard.splunkcloud.com',
+            'port': '443',
+            'index': 'soc-isites',
+            'token': SECURE_SETTINGS['splunk_token'],
+            'level': _DEFAULT_LOG_LEVEL,
+            'filters': ['context'],
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+            'filters': ['require_debug_true'],
         },
     },
     # This is the default logger for any apps or libraries that use the logger
@@ -185,32 +243,17 @@ LOGGING = {
     # here is a bit more explicit.  See link for more details:
     # https://docs.python.org/2.7/library/logging.config.html#dictionary-schema-details
     'root': {
-        'level': logging.WARNING,
-        'handlers': ['console', 'app_logfile'],
-    },
-    'handlers': {
-        # Log to a text file that can be rotated by logrotate
-        'app_logfile': {
-            'level': _DEFAULT_LOG_LEVEL,
-            'class': 'logging.handlers.WatchedFileHandler',
-            'filename': os.path.join(_LOG_ROOT, 'django-canvas_course_info.log'),
-            'formatter': 'verbose',
-        },
-        'console': {
-            'level': logging.DEBUG,
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
-            'filters': ['require_debug_true'],
-        },
+        'level': logging.INFO,
+        'handlers': ['default', 'console'],
     },
     'loggers': {
-        # TODO: remove this catch-all handler in favor of app-specific handlers
-        '': {
-            'handlers': ['console', 'app_logfile'],
-            'level': _DEFAULT_LOG_LEVEL,
+        'gunicorn': {
+            'handlers': ['gunicorn', 'console'],
+            'level': 'INFO',
+            'propagate': False,
         },
         'django.request': {
-            'handlers': ['console', 'app_logfile'],
+            'handlers': ['console', 'default'],
             'level': 'ERROR',
             'propagate': False,
         },
@@ -224,8 +267,15 @@ LOGGING = {
         },
         'course_info': {
             'level': _DEFAULT_LOG_LEVEL,
-            'handlers': ['console', 'app_logfile'],
+            'handlers': ['console', 'default'],
             'propagate': False,
         }
-    }
+    },
 }
+
+WATCHMAN_TOKENS = SECURE_SETTINGS['watchman_token']
+WATCHMAN_TOKEN_NAME = SECURE_SETTINGS['watchman_token_name']
+WATCHMAN_CHECKS = (
+    'watchman.checks.databases',
+    'watchman.checks.caches',
+)
