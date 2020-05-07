@@ -108,7 +108,7 @@ def _get_field_value_for_key(key, course_info):
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
     if course_instance_id:
-        if isinstance(course_instance_id, basestring):
+        if isinstance(course_instance_id, str):
             try:
                 course_instance_id = int(float(course_instance_id))
             except (ValueError):
