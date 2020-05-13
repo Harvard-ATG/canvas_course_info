@@ -1,8 +1,12 @@
 from django.conf import settings
-from django.urls import path, re_path, include
+from django.urls import include, path, re_path
+
+import watchman.views
 
 urlpatterns = [
     path('course_info/', include(('course_info.urls', 'course_info'), namespace='course_info')),
+    path('w/', include('watchman.urls')),
+    re_path(r'^status/?$', watchman.views.bare_status),
 ]
 
 if settings.DEBUG:
