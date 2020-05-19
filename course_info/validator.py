@@ -16,7 +16,7 @@ class LTIRequestValidator(RequestValidator):
 
     #TODO: Find out if this is used...
     dummy_secret = 'secret'
-    dummy_client = (u'dummy_'
+    dummy_client = ('dummy_'
         '2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae')
 
     def check_client_key(self, key):
@@ -36,7 +36,7 @@ class LTIRequestValidator(RequestValidator):
         try:
             r = redis.from_url(settings.REDIS_URL)
             r.ping()
-        except redis.ConnectionError, e:
+        except redis.ConnectionError as e:
             raise ImproperlyConfigured("redis connect failure: " + str(e))
 
         exists = r.getset('nonce:' + nonce, timestamp)

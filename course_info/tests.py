@@ -2,98 +2,98 @@ from mock import MagicMock, patch
 
 from django.test import Client, RequestFactory, TestCase
 
-from icommons import ICommonsApi
-from views import editor, sort_and_format_instructor_display
+from .icommons import ICommonsApi
+from .views import editor, sort_and_format_instructor_display
 
 # todo: docstrings
 
 mock_course_info = {
-    u'course': {
-        u'registrar_code_display': u'ABC 1234',
-        u'school_id': u'abc'
+    'course': {
+        'registrar_code_display': 'ABC 1234',
+        'school_id': 'abc'
     },
-    u'description': u'a fake course',
-    u'exam_group': u'',
-    u'instructors_display': u'first last',
-    u'location': u'some room',
-    u'meeting_time': u'mon 3-5',
-    u'notes': u'',
-    u'term': {
-        u'display_name': u'Fall 2012'
+    'description': 'a fake course',
+    'exam_group': '',
+    'instructors_display': 'first last',
+    'location': 'some room',
+    'meeting_time': 'mon 3-5',
+    'notes': '',
+    'term': {
+        'display_name': 'Fall 2012'
     },
-    u'title': u'Mock Course',
+    'title': 'Mock Course',
 }
 
 mock_course_info_without_instructor_display = {
-    u'course': {
-        u'registrar_code_display': u'ABC 1234',
-        u'school_id': u'abc'
+    'course': {
+        'registrar_code_display': 'ABC 1234',
+        'school_id': 'abc'
     },
-    u"course_instance_id": 338318,
-    u'description': u'a fake course',
-    u'term': {
-        u'display_name': u'Fall 2012'
+    "course_instance_id": 338318,
+    'description': 'a fake course',
+    'term': {
+        'display_name': 'Fall 2012'
     },
-    u'title': u'Mock Course',
+    'title': 'Mock Course',
 }
 
 mock_course_info_without_cid = {
-    u'course': {
-        u'registrar_code_display': u'ABC 1234',
-        u'school_id': u'abc'
+    'course': {
+        'registrar_code_display': 'ABC 1234',
+        'school_id': 'abc'
     },
-    u'description': u'a fake course',
-    u'term': {
-        u'display_name': u'Fall 2012'
+    'description': 'a fake course',
+    'term': {
+        'display_name': 'Fall 2012'
     },
-    u'title': u'Mock Course',
+    'title': 'Mock Course',
 }
 
 mock_staff_data_from_api = [
     {
-        u'profile': {u'name_first': u'user1_first', u'name_last': u'user1_last', u'role_type_cd': u'EMPLOYEE'},
-        u'source': u'xmlfeed',
-        u'role': {u'role_name': u'Course Head', u'canvas_role': u'Course Head', u'role_id': 1},
-        u'seniority_sort': 1,
-        u'user_id': u'12121212'
+        'profile': {'name_first': 'user1_first', 'name_last': 'user1_last', 'role_type_cd': 'EMPLOYEE'},
+        'source': 'xmlfeed',
+        'role': {'role_name': 'Course Head', 'canvas_role': 'Course Head', 'role_id': 1},
+        'seniority_sort': 1,
+        'user_id': '12121212'
     },
     {
-        u'profile': {u'name_first': u'user2_first', u'name_last': u'user2_last', u'role_type_cd': u'EMPLOYEE'},
-        u'source': u'xmlfeed',
-        u'role': {u'role_name': u'Faculty', u'canvas_role': u'Faculty', u'role_id': 2},
-        u'seniority_sort': 3,
-        u'user_id': u'34343434'
+        'profile': {'name_first': 'user2_first', 'name_last': 'user2_last', 'role_type_cd': 'EMPLOYEE'},
+        'source': 'xmlfeed',
+        'role': {'role_name': 'Faculty', 'canvas_role': 'Faculty', 'role_id': 2},
+        'seniority_sort': 3,
+        'user_id': '34343434'
     },
     {
-        u'profile': {u'name_first': u'user3_first', u'name_last': u'user3_last', u'role_type_cd': u'EMPLOYEE'},
-        u'source': u'xmlfeed',
-        u'role': {u'role_name': u'Faculty', u'canvas_role': u'Faculty', u'role_id': 2},
-        u'seniority_sort': 2,
-        u'user_id': u'34343434'
+        'profile': {'name_first': 'user3_first', 'name_last': 'user3_last', 'role_type_cd': 'EMPLOYEE'},
+        'source': 'xmlfeed',
+        'role': {'role_name': 'Faculty', 'canvas_role': 'Faculty', 'role_id': 2},
+        'seniority_sort': 2,
+        'user_id': '34343434'
     },
     {
-        u'profile': {u'name_first': u'user4_first', u'name_last': u'a_lname', u'role_type_cd': u'EMPLOYEE'},
-        u'source': u'',
-        u'role': {u'role_name': u'Teacher', u'canvas_role': u'teacher', u'role_id': 2},
-        u'seniority_sort': None,
-        u'user_id': u'56565656'
+        'profile': {'name_first': 'user4_first', 'name_last': 'a_lname', 'role_type_cd': 'EMPLOYEE'},
+        'source': '',
+        'role': {'role_name': 'Teacher', 'canvas_role': 'teacher', 'role_id': 2},
+        'seniority_sort': None,
+        'user_id': '56565656'
     },
     {
-        u'profile': {u'name_first': u'user5_first', u'name_last': u'z_lname', u'role_type_cd': u'EMPLOYEE'},
-        u'source': u'',
-        u'role': {u'role_name': u'Teacher', u'canvas_role': u'teacher', u'role_id': 2},
-        u'user_id': u'56565656'
+        'profile': {'name_first': 'user5_first', 'name_last': 'z_lname', 'role_type_cd': 'EMPLOYEE'},
+        'source': '',
+        'role': {'role_name': 'Teacher', 'canvas_role': 'teacher', 'role_id': 2},
+        'user_id': '56565656'
     }
 ]
 
 mock_school_info = {
-    u'title_long': u'Harvard School of ABCs'
+    'title_long': 'Harvard School of ABCs'
 }
 
 integration_test_course_info = {
-    u'canvas_course_id': u'42',
-    u'number_display': u'156208',
-    u'school_display': u'Harvard College/Graduate School of Arts and Sciences'
+    'canvas_course_id': '42',
+    'number_display': '156208',
+    'school_display': 'Harvard College/Graduate School of Arts and Sciences'
 }
 
 
@@ -179,7 +179,7 @@ class DisplayTests(TestCase):
         self.assertEqual(response.status_code, 200)
         # should have a checkbox for every configured field except for title,
         # which is automatically included, thus 8/9 fields
-        self.assertContains(response, 'course_info_checkbox', count=len(mock_course_info.keys())-1)
+        self.assertContains(response, 'course_info_checkbox', count=len(list(mock_course_info.keys()))-1)
         # fields with empty API return values should have a friendly message
         self.assertContains(response, 'Field not populated by registrar', count=2)
 

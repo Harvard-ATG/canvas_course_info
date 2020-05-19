@@ -51,11 +51,10 @@ class BasePageMeta(type):
         return type_
 
 
-class BasePage(object):
+class BasePage(object, metaclass=BasePageMeta):
     """
     This is the base class that all page models can inherit from
     """
-    __metaclass__ = BasePageMeta
     tool_frame_name = 'external_tool_button_frame'
 
     def __init__(self, driver):
