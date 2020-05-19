@@ -20,7 +20,7 @@ class BaseSeleniumTestCase(unittest.TestCase):
 
         if local:
             # Run selenium tests from a headless browser within the VM
-            print "\nSetting up selenium testing locally..."
+            print("\nSetting up selenium testing locally...")
             # set up virtual display
             self.display = Display(visible=0, size=(1480, 1024)).start()
             # create a new local browser session

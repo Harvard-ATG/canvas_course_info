@@ -18,7 +18,7 @@ if not os.getenv('DJANGO_SETTINGS_MODULE'):
 
 # developing test cases is easier with text test runner, lets us drop into pdb
 if settings.SELENIUM_CONFIG.get('use_htmlrunner', True):
-    import HTMLTestRunner
+    from . import HTMLTestRunner
     dateTimeStamp = time.strftime('%Y%m%d_%H_%M_%S')
     buf = file("TestReport" + "_" + dateTimeStamp + ".html", 'wb')
     runner = HTMLTestRunner.HTMLTestRunner(

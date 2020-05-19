@@ -1,17 +1,17 @@
 import logging
 import re
 
-from dce_lti_py.tool_config import ToolConfig
+from lti import ToolConfig
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from icommons import ICommonsApi, ICommonsApiValidationError
+from .icommons import ICommonsApi, ICommonsApiValidationError
 
 
 _api = ICommonsApi()
@@ -30,7 +30,7 @@ _FIELD_DETAILS = {
     'notes': {'label': 'Notes', 'order': 9, 'contains_html': True},
 }
 _ORDERED_FIELD_NAMES = [
-    f[0] for f in sorted(_FIELD_DETAILS.iteritems(), key=lambda f: f[1]['order'])
+    f[0] for f in sorted(iter(_FIELD_DETAILS.items()), key=lambda f: f[1]['order'])
 ]
 _REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)')
 
@@ -39,7 +39,7 @@ _REFERER_COURSE_ID_RE = re.compile(r'^.+/courses/(?P<canvas_course_id>\d+)(?:$|.
 def tool_config(request):
     app_config = settings.LTI_APPS['course_info']
 
-    launch_url = request.build_absolute_uri(reverse('lti_launch'))
+    launch_url = request.build_absolute_uri(reverse('course_info:lti_launch'))
 
     editor_settings = {
         'enabled': 'true',
@@ -108,7 +108,7 @@ def _get_field_value_for_key(key, course_info):
 def _course_context(request, requested_keys, show_empty_fields=False,
                     course_instance_id=None, canvas_course_id=None):
     if course_instance_id:
-        if isinstance(course_instance_id, basestring):
+        if isinstance(course_instance_id, str):
             try:
                 course_instance_id = int(float(course_instance_id))
             except (ValueError):
