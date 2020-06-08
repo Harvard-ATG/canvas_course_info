@@ -1,18 +1,19 @@
 import logging
 import re
 
-from lti import ToolConfig
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.templatetags.static import static
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_POST
 
-from .icommons import ICommonsApi, ICommonsApiValidationError
+from lti import ToolConfig
 
+from .icommons import ICommonsApi, ICommonsApiValidationError
 
 _api = ICommonsApi()
 _logger = logging.getLogger(__name__)
@@ -40,13 +41,14 @@ def tool_config(request):
     app_config = settings.LTI_APPS['course_info']
 
     launch_url = request.build_absolute_uri(reverse('course_info:lti_launch'))
+    icon_url = static(app_config['icon_url'])
 
     editor_settings = {
         'enabled': 'true',
         'text': app_config['menu_title'],
         'width': app_config['selection_width'],
         'height': app_config['selection_height'],
-        'icon_url': request.build_absolute_uri(app_config['icon_url']),
+        'icon_url': icon_url,
         'url': launch_url
     }
 

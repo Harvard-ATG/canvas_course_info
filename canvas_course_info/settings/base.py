@@ -102,7 +102,7 @@ LTI_APPS = {
         'privacy_level': 'public',
         'selection_height': '400px',
         'selection_width': '400px',
-        'icon_url': STATIC_URL + 'images/course-info.png'
+        'icon_url': 'images/course-info.png'
     }
 }
 
