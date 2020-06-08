@@ -177,7 +177,7 @@ _JSON_LOG_FORMAT = '%(asctime)s %(created)f %(exc_info)s %(filename)s %(funcName
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '%(levelname)s\t%(asctime)s.%(msecs)03dZ\t%(name)s:%(lineno)s\t%(message)s',

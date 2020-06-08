@@ -9,6 +9,7 @@ requests==2.22.0
 voluptuous==0.9.3
 gunicorn==19.10.0
 django-allow-cidr==0.3.1
-git+ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git@v0.2#egg=django-ssm-parameter-store==0.2
+git+ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git@v0.3#egg=django-ssm-parameter-store==0.3
 git+ssh://git@github.com/Harvard-University-iCommons/django-icommons-common.git@v2.1rc1#egg=django-icommons-common==2.1
 django-watchman==1.1.0
+django-storages==1.7.2
