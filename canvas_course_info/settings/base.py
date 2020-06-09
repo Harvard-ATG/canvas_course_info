@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'course_info',
     'icommons_ui',
+    'watchman',
 ]
 
 MIDDLEWARE = [
@@ -209,7 +210,7 @@ LOGGING = {
         'default': {
             'class': 'splunk_handler.SplunkHandler',
             'formatter': 'json',
-            'sourcetype': 'json',
+            'sourcetype': '_json',
             'source': 'django-canvas_course_info',
             'host': 'http-inputs-harvard.splunkcloud.com',
             'port': '443',
@@ -221,7 +222,7 @@ LOGGING = {
         'gunicorn': {
             'class': 'splunk_handler.SplunkHandler',
             'formatter': 'json',
-            'sourcetype': 'json',
+            'sourcetype': '_json',
             'source': 'gunicorn-canvas_course_info',
             'host': 'http-inputs-harvard.splunkcloud.com',
             'port': '443',
