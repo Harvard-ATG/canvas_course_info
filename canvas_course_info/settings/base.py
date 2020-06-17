@@ -18,6 +18,11 @@ SECURE_SETTINGS = load_secure_settings()
 # this is only used for static and template files
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+try:
+    from build_info import BUILD_INFO
+except ImportError:
+    BUILD_INFO = {}
+
 ALLOWED_HOSTS = ['*']
 ALLOWED_CIDR_NETS = [SECURE_SETTINGS.get('vpc_cidr_block')]
 DEBUG = SECURE_SETTINGS.get('enable_debug', False)
@@ -199,6 +204,7 @@ LOGGING = {
             'env': SECURE_SETTINGS.get('env_name'),
             'project': 'canvas_course_info',
             'department': 'uw',
+            'build_info': BUILD_INFO,
         },
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
