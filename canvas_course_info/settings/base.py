@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_auth_lti',
     'course_info',
     'icommons_ui',
     'watchman',
@@ -51,7 +52,6 @@ WSGI_APPLICATION = 'canvas_course_info.wsgi.application'
 
 AUTHENTICATION_BACKENDS = (
     'django_auth_lti.backends.LTIAuthBackend',
-    'django.contrib.auth.backends.ModelBackend'
 )
 
 TIME_ZONE = 'UTC'
@@ -117,7 +117,8 @@ DATABASES = {
         'PASSWORD': SECURE_SETTINGS.get('db_default_password'),
         'HOST': SECURE_SETTINGS.get('db_default_host', '127.0.0.1'),
         'PORT': SECURE_SETTINGS.get('db_default_port', 5432),
-} }
+    }
+}
 
 # unused right now
 # GUNICORN_WORKERS = SECURE_SETTINGS.get('gunicorn_workers', 4)
