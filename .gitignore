@@ -45,3 +45,5 @@ gunicorn.py
 
 # Django stuff:
 *.log
+secure.*
+parameters.*
