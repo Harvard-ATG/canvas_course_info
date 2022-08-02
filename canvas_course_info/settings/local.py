@@ -7,7 +7,7 @@ from logging.config import dictConfig
 dictConfig(LOGGING)
 
 ENV_NAME = 'local'
-INSTALLED_APPS += ['debug_toolbar', 'sslserver']
+INSTALLED_APPS += ['debug_toolbar', 'django_extensions']
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 # For Django Debug Toolbar:
