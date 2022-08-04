@@ -207,6 +207,7 @@ def widget(request):
     populated_fields = [f for f in course_context['fields'] if f['value']]
     course_context['show_registrar_fields_message'] = len(populated_fields) < len(field_names)
     course_context['referer'] = referer
+    course_context['build_info'] = settings.BUILD_INFO
     return render(request, 'course_info/widget.html', course_context)
 
 
