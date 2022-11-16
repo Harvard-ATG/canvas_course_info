@@ -151,6 +151,18 @@ CACHES = {
     }
 }
 
+# Sessions
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# NOTE: This setting only affects the session cookie, not the expiration of the session
+# being stored in the cache.  The session keys will expire according to the value of
+# SESSION_COOKIE_AGE, which defaults to 2 weeks when no value is given.
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+
 LTI_REQUEST_VALIDATOR = 'course_info.validator.LTIRequestValidator'
 LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get('lti_oauth_credentials')
 
