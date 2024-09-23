@@ -153,10 +153,12 @@ class ICommonsApi(object):
                                          'people', collection=True, **kwargs)
         try:
             instructors = []
+            print(f'==========================================================> people_list: {people_list}')
             for person in people_list:
                 course_person_schema(person)
                 if person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
                     instructors.append(person)
+                    print(f'==========================================================> person: {person}')
 
         except Invalid as e:
             logger.exception(
