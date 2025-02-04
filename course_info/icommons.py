@@ -15,8 +15,8 @@ CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
 CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
-# ROLE_IDS translate following roles ->  1: "Course Head", 2: "Faculty", 18: "Instructor"
-INSTRUCTOR_ROLE_IDS = [1, 2, 18]
+# ROLE_IDS translate following roles ->  1: "Course Head", 2: "Faculty", 18: "Instructor", 19: "Primary Instructor"
+INSTRUCTOR_ROLE_IDS = [1, 2, 18, 19]
 
 
 # this isn't a full description of the resources, just what we're going to
@@ -153,16 +153,30 @@ class ICommonsApi(object):
                                          'people', collection=True, **kwargs)
         try:
             instructors = []
+            primary_instructor_present = False
+            instructor_present = False
+
             for person in people_list:
                 course_person_schema(person)
-                if person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
+                role_id = person.get('role', {}).get('role_id')
+                if role_id in INSTRUCTOR_ROLE_IDS:
                     instructors.append(person)
+                    if role_id == 19:
+                        primary_instructor_present = True
+                    elif role_id == 18:
+                        instructor_present = True
+
+            if primary_instructor_present and instructor_present:
+                logger.warning(
+                    f"Course {course_instance_id} has both Instructor and Primary Instructor but sorting may be incorrect."
+                )
 
         except Invalid as e:
             logger.exception(
                 'Unable to validate course instance(s) %s returned from '
                 'the icommons api.', people_list)
             raise ICommonsApiValidationError(str(e))
+         
         return instructors
 
     def _parse_type_and_id_from_url(self, url):
