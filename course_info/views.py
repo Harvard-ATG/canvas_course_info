@@ -235,9 +235,12 @@ def sort_and_format_instructor_display(course_instructor_list):
     # Note:  when seniority_sort is None, it was getting precedence over 1(eg: null, 1, 2).  So in such cases,
     # it is being set to a large number (picked 100) so it is lower in the sorting order. [1, 2, ...null(set to 100)]
     # Also, x.get('seniority_sort', {}) handles null condition  but for None, needed to have the explicit check
-    course_instructor_list.sort(key=lambda x: (x.get('role', {}).get('role_id'),
-                                               100 if x.get('seniority_sort') is None else x.get('seniority_sort', {}),
-                                               x.get('profile', {}).get('name_last')))
+    course_instructor_list.sort(key=lambda x: (
+        x.get('role', {}).get('role_id') != 19,  # Primary Instructor (19) should come first
+        x.get('role', {}).get('role_id'),  # Other role IDs in ascending order
+        100 if x.get('seniority_sort') is None else x.get('seniority_sort', {}),  # Handle None values
+        x.get('profile', {}).get('name_last')  # Sort by last name
+    ))
 
     num_instructors = len(course_instructor_list)
 
