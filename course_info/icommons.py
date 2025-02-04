@@ -148,28 +148,18 @@ class ICommonsApi(object):
         return rv
 
     def _course_info_instructor_list(self, course_instance_id, **kwargs):
-        instructors = None
+        instructors = []
         people_list = self._get_resource('course_instances', course_instance_id,
                                          'people', collection=True, **kwargs)
         try:
-            instructors = []
-            primary_instructor_present = False
-            instructor_present = False
-
             for person in people_list:
                 course_person_schema(person)
                 role_id = person.get('role', {}).get('role_id')
                 if role_id in INSTRUCTOR_ROLE_IDS:
                     instructors.append(person)
-                    if role_id == 19:
-                        primary_instructor_present = True
-                    elif role_id == 18:
-                        instructor_present = True
 
-            if primary_instructor_present and instructor_present:
-                logger.warning(
-                    f"Course {course_instance_id} has both Instructor and Primary Instructor but sorting may be incorrect."
-                )
+            # Sort instructors so that users with the Primary Instructor role come listed before those with the Instructor role
+            instructors.sort(key=lambda p: (p.get('role', {}).get('role_id') != 19, p.get('role', {}).get('role_id')))
 
         except Invalid as e:
             logger.exception(
