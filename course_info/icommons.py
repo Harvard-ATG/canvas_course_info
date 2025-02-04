@@ -153,16 +153,30 @@ class ICommonsApi(object):
                                          'people', collection=True, **kwargs)
         try:
             instructors = []
+            primary_instructor_present = False
+            instructor_present = False
+
             for person in people_list:
                 course_person_schema(person)
-                if person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
+                role_id = person.get('role', {}).get('role_id')
+                if role_id in INSTRUCTOR_ROLE_IDS:
                     instructors.append(person)
+                    if role_id == 19:
+                        primary_instructor_present = True
+                    elif role_id == 18:
+                        instructor_present = True
+
+            if primary_instructor_present and instructor_present:
+                logger.warning(
+                    f"Course {course_instance_id} has both Instructor and Primary Instructor but sorting may be incorrect."
+                )
 
         except Invalid as e:
             logger.exception(
                 'Unable to validate course instance(s) %s returned from '
                 'the icommons api.', people_list)
             raise ICommonsApiValidationError(str(e))
+         
         return instructors
 
     def _parse_type_and_id_from_url(self, url):
