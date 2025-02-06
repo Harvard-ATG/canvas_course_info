@@ -148,25 +148,21 @@ class ICommonsApi(object):
         return rv
 
     def _course_info_instructor_list(self, course_instance_id, **kwargs):
-        instructors = []
+        instructors = None
         people_list = self._get_resource('course_instances', course_instance_id,
                                          'people', collection=True, **kwargs)
         try:
+            instructors = []
             for person in people_list:
                 course_person_schema(person)
-                role_id = person.get('role', {}).get('role_id')
-                if role_id in INSTRUCTOR_ROLE_IDS:
+                if person.get('role', {}).get('role_id') in INSTRUCTOR_ROLE_IDS:
                     instructors.append(person)
-
-            # Sort instructors so that users with the Primary Instructor role come listed before those with the Instructor role
-            instructors.sort(key=lambda p: (p.get('role', {}).get('role_id') != 19, p.get('role', {}).get('role_id')))
 
         except Invalid as e:
             logger.exception(
                 'Unable to validate course instance(s) %s returned from '
                 'the icommons api.', people_list)
             raise ICommonsApiValidationError(str(e))
-         
         return instructors
 
     def _parse_type_and_id_from_url(self, url):
