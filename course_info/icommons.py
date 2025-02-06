@@ -15,8 +15,8 @@ CACHE_KEY_COURSE_BY_CANVAS_COURSE_ID = 'course-by-canvas-course-id-{}'
 CACHE_KEY_COURSE_BY_COURSE_INSTANCE_ID = 'course-by-course-instance-id-{}'
 CACHE_KEY_SCHOOL_BY_SCHOOL_ID = 'school-by-school-id-{}'
 CACHE_KEY_COURSE_PEOPLE_BY_COURSE_INSTANCE_ID = 'course-people-by-canvas-course-id-{}'
-# ROLE_IDS translate following roles ->  1: "Course Head", 2: "Faculty", 18: "Instructor"
-INSTRUCTOR_ROLE_IDS = [1, 2, 18]
+# ROLE_IDS translate following roles ->  1: "Course Head", 2: "Faculty", 18: "Instructor", 19: "Primary Instructor"
+INSTRUCTOR_ROLE_IDS = [1, 2, 18, 19]
 
 
 # this isn't a full description of the resources, just what we're going to
