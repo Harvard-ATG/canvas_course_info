@@ -19,7 +19,7 @@ class CourseInfoTests(CourseInfoBaseTestCase):
         pin_page = PinLoginPageObject(self.driver)
         pin_page.login(self.BASE_URL, self.USERNAME, self.PASSWORD)
         edit_page = EditorPage(self.driver)
-        self.assertTrue(edit_page.is_loaded(), 'edit page not loaded')
+        self.assertTrue(edit_page.is_loaded(), "edit page not loaded")
 
         # open the widget editing tool, verify the field selection page comes
         # up in the "modal" iframe
@@ -27,15 +27,18 @@ class CourseInfoTests(CourseInfoBaseTestCase):
         edit_page.focus_on_tool_frame()
         WebDriverWait(self.driver, 30).until(
             lambda d: edit_page.registrar_code_checkbox.is_displayed(),
-            'Timed out waiting for registrar code checkbox to be displayed')
+            "Timed out waiting for registrar code checkbox to be displayed",
+        )
 
         # just for completeness sake, let's verify that *all* checkboxes are there
-        checkbox_properties = [p for p in edit_page.located_properties
-                                   if p.endswith('_checkbox')]
+        checkbox_properties = [
+            p for p in edit_page.located_properties if p.endswith("_checkbox")
+        ]
         for checkbox in checkbox_properties:
-            self.assertTrue(getattr(edit_page, checkbox).is_displayed(),
-                            '{} is not displayed'.format(checkbox))
-
+            self.assertTrue(
+                getattr(edit_page, checkbox).is_displayed(),
+                "{} is not displayed".format(checkbox),
+            )
 
     def test_insert_widget_all_fields(self):
         """
@@ -50,8 +53,11 @@ class CourseInfoTests(CourseInfoBaseTestCase):
         edit_page.remove_existing_widgets()
 
         # now squawk if any are left
-        self.assertEqual(edit_page.get_inserted_widgets(), [],
-                         'Found unexpected instances of widget already in the page')
+        self.assertEqual(
+            edit_page.get_inserted_widgets(),
+            [],
+            "Found unexpected instances of widget already in the page",
+        )
 
         # launch the tool, click save in the tool iframe
         edit_page.open_widget_editor()
@@ -61,25 +67,33 @@ class CourseInfoTests(CourseInfoBaseTestCase):
         edit_page.focus_on_default_content()
         with self.assertRaises(TimeoutException):
             WebDriverWait(self.driver, 10).until(
-                lambda d: d.find_element(*edit_page.locator_class.REGISTRAR_CODE_CHECKBOX).is_visible())
+                lambda d: d.find_element(
+                    *edit_page.locator_class.REGISTRAR_CODE_CHECKBOX
+                ).is_visible()
+            )
 
         # now make sure the widget is in our editor frame
         widgets = edit_page.get_inserted_widgets()
         self.assertEqual(len(widgets), 1)
 
         # verify all f values are in the widget url
-        widget_url = widgets[0].get_attribute('data-mce-p-src')
+        widget_url = widgets[0].get_attribute("data-mce-p-src")
         parts = urllib.parse.urlparse(widget_url)
         params = urllib.parse.parse_qs(parts.query)
-        self.assertEqual(set(params['f']), edit_page.get_all_f_values(),
-                         'Not all expected fields in the widget url')
+        self.assertEqual(
+            set(params["f"]),
+            edit_page.get_all_f_values(),
+            "Not all expected fields in the widget url",
+        )
 
         # save the page
         edit_page.save_page()
 
         # sanity check the result
         main_page = MainPage(self.driver)
-        self.assertTrue(main_page.is_loaded(),
-                        'Unable to confirm main page is loaded')
-        self.assertEqual(len(main_page.get_widgets()), 1,
-                         'Unexpected number of widgets found on main page')
+        self.assertTrue(main_page.is_loaded(), "Unable to confirm main page is loaded")
+        self.assertEqual(
+            len(main_page.get_widgets()),
+            1,
+            "Unexpected number of widgets found on main page",
+        )
