@@ -1,0 +1,798 @@
+version = 1
+revision = 3
+requires-python = "==3.12.*"
+
+[[package]]
+name = "asgiref"
+version = "3.10.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/asgiref/3.10.0/asgiref-3.10.0.tar.gz", hash = "sha256:d89f2d8cd8b56dada7d52fa7dc8075baa08fb836560710d38c292a7a3f78c04e" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/asgiref/3.10.0/asgiref-3.10.0-py3-none-any.whl", hash = "sha256:aef8a81283a34d0ab31630c9b7dfe70c812c95eba78171367ca8745e88124734" },
+]
+
+[[package]]
+name = "attrs"
+version = "25.4.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/attrs/25.4.0/attrs-25.4.0.tar.gz", hash = "sha256:16d5969b87f0859ef33a48b35d55ac1be6e42ae49d5e853b597db70c35c57e11" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/attrs/25.4.0/attrs-25.4.0-py3-none-any.whl", hash = "sha256:adcf7e2a1fb3b36ac48d97835bb6d8ade15b8dcce26aba8bf1d14847b57a3373" },
+]
+
+[[package]]
+name = "boto3"
+version = "1.40.51"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "botocore" },
+    { name = "jmespath" },
+    { name = "s3transfer" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/boto3/1.40.51/boto3-1.40.51.tar.gz", hash = "sha256:ed1b7750df07b2f2ece0141ff2ed0489db2ec2b5311a956d00a496b05fd4fadb" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/boto3/1.40.51/boto3-1.40.51-py3-none-any.whl", hash = "sha256:6aa81b9acb4eff87b5505ae26c948883a2015cc3308ce5168a9df6e00ab815d2" },
+]
+
+[[package]]
+name = "botocore"
+version = "1.40.51"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "jmespath" },
+    { name = "python-dateutil" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/botocore/1.40.51/botocore-1.40.51.tar.gz", hash = "sha256:a06de20408c3009e59e8f161a1146f1801d279d0923ab950349154900951bb20" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/botocore/1.40.51/botocore-1.40.51-py3-none-any.whl", hash = "sha256:d5811a834bbdec6dac540565eab9f5ad954ed439b535686fbc3219e1cbfbfc49" },
+]
+
+[[package]]
+name = "canvas-course-info"
+version = "3.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "django" },
+    { name = "django-allow-cidr" },
+    { name = "django-coursemanager" },
+    { name = "django-icommons-ui" },
+    { name = "django-lti" },
+    { name = "django-lti-authentication" },
+    { name = "django-redis" },
+    { name = "django-ssm-parameter-store" },
+    { name = "django-storages" },
+    { name = "django-watchman" },
+    { name = "hiredis" },
+    { name = "psycopg2" },
+    { name = "python-json-logger" },
+    { name = "requests" },
+    { name = "setuptools" },
+    { name = "splunk-handler" },
+    { name = "voluptuous" },
+]
+
+[package.dev-dependencies]
+aws = [
+    { name = "gunicorn" },
+]
+dev = [
+    { name = "ddt" },
+    { name = "django-debug-toolbar" },
+    { name = "django-extensions" },
+    { name = "mock" },
+    { name = "pyopenssl" },
+    { name = "pyvirtualdisplay" },
+    { name = "selenium" },
+    { name = "werkzeug" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "django", specifier = ">=4.2.11,<5.0" },
+    { name = "django-allow-cidr", specifier = ">=0.8.0,<1" },
+    { name = "django-coursemanager", git = "ssh://git@github.com/Harvard-University-iCommons/django-coursemanager.git?rev=v0.8" },
+    { name = "django-icommons-ui", git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1" },
+    { name = "django-lti", specifier = ">=0.7.1,<1" },
+    { name = "django-lti-authentication", specifier = ">=0.2.0,<1" },
+    { name = "django-redis", specifier = "==6.0.0" },
+    { name = "django-ssm-parameter-store", git = "ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git?rev=v0.7" },
+    { name = "django-storages", specifier = "==1.14.6" },
+    { name = "django-watchman", specifier = "==1.3.0" },
+    { name = "hiredis", specifier = ">=3.2.1,<4" },
+    { name = "psycopg2", specifier = "==2.9.9" },
+    { name = "python-json-logger", specifier = "==2.0.2" },
+    { name = "requests", specifier = "==2.27.1" },
+    { name = "setuptools", specifier = ">=40.8.0" },
+    { name = "splunk-handler", specifier = "==3.0.0" },
+    { name = "voluptuous", specifier = "==0.13.1" },
+]
+
+[package.metadata.requires-dev]
+aws = [{ name = "gunicorn", specifier = ">=23.0.0" }]
+dev = [
+    { name = "ddt", specifier = "==1.1.1" },
+    { name = "django-debug-toolbar", specifier = "==3.4.0" },
+    { name = "django-extensions", specifier = "==3.1.5" },
+    { name = "mock", specifier = "==2.0.0" },
+    { name = "pyopenssl", specifier = "==22.0.0" },
+    { name = "pyvirtualdisplay", specifier = "==3.0" },
+    { name = "selenium", specifier = "==4.3.0" },
+    { name = "werkzeug", specifier = "==2.0.3" },
+]
+
+[[package]]
+name = "certifi"
+version = "2025.10.5"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/certifi/2025.10.5/certifi-2025.10.5.tar.gz", hash = "sha256:47c09d31ccf2acf0be3f701ea53595ee7e0b8fa08801c6624be771df09ae7b43" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/certifi/2025.10.5/certifi-2025.10.5-py3-none-any.whl", hash = "sha256:0f212c2744a9bb6de0c56639a6f68afe01ecd92d91f14ae897c4fe7bbeeef0de" },
+]
+
+[[package]]
+name = "cffi"
+version = "2.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "pycparser", marker = "implementation_name != 'PyPy'" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0.tar.gz", hash = "sha256:44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:6d02d6655b0e54f54c4ef0b94eb6be0607b70853c45ce98bd278dc7de718be5d" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:8eca2a813c1cb7ad4fb74d368c2ffbbb4789d377ee5bb8df98373c2cc0dee76c" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-manylinux1_i686.manylinux2014_i686.manylinux_2_17_i686.manylinux_2_5_i686.whl", hash = "sha256:21d1152871b019407d8ac3985f6775c079416c282e431a4da6afe7aefd2bccbe" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:b21e08af67b8a103c71a250401c78d5e0893beff75e28c53c98f4de42f774062" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:1e3a615586f05fc4065a8b22b8152f0c1b00cdbc60596d187c2a74f9e3036e4e" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-manylinux2014_s390x.manylinux_2_17_s390x.whl", hash = "sha256:81afed14892743bbe14dacb9e36d9e0e504cd204e0b165062c488942b9718037" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:3e17ed538242334bf70832644a32a7aae3d83b57567f9fd60a26257e992b79ba" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:3925dd22fa2b7699ed2617149842d2e6adde22b262fcbfada50e3d195e4b3a94" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:2c8f814d84194c9ea681642fd164267891702542f028a15fc97d4674b6206187" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-win32.whl", hash = "sha256:da902562c3e9c550df360bfa53c035b2f241fed6d9aef119048073680ace4a18" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-win_amd64.whl", hash = "sha256:da68248800ad6320861f129cd9c1bf96ca849a2771a59e0344e88681905916f5" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cffi/2.0.0/cffi-2.0.0-cp312-cp312-win_arm64.whl", hash = "sha256:4671d9dd5ec934cb9a73e7ee9676f9362aba54f7f34910956b84d727b0d73fb6" },
+]
+
+[[package]]
+name = "charset-normalizer"
+version = "2.0.12"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/charset-normalizer/2.0.12/charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/charset-normalizer/2.0.12/charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df" },
+]
+
+[[package]]
+name = "cryptography"
+version = "46.0.2"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "cffi", marker = "platform_python_implementation != 'PyPy'" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2.tar.gz", hash = "sha256:21b6fc8c71a3f9a604f028a329e5560009cc4a3a828bfea5fcba8eb7647d88fe" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-macosx_10_9_universal2.whl", hash = "sha256:f3e32ab7dd1b1ef67b9232c4cf5e2ee4cd517d4316ea910acaaa9c5712a1c663" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:1fd1a69086926b623ef8126b4c33d5399ce9e2f3fac07c9c734c2a4ec38b6d02" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:bb7fb9cd44c2582aa5990cf61a4183e6f54eea3172e54963787ba47287edd135" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:9066cfd7f146f291869a9898b01df1c9b0e314bfa182cef432043f13fc462c92" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_28_armv7l.manylinux_2_31_armv7l.whl", hash = "sha256:97e83bf4f2f2c084d8dd792d13841d0a9b241643151686010866bbd076b19659" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:4a766d2a5d8127364fd936572c6e6757682fc5dfcbdba1632d4554943199f2fa" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:fab8f805e9675e61ed8538f192aad70500fa6afb33a8803932999b1049363a08" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:1e3b6428a3d56043bff0bb85b41c535734204e599c1c0977e1d0f261b02f3ad5" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:1a88634851d9b8de8bb53726f4300ab191d3b2f42595e2581a54b26aba71b7cc" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:be939b99d4e091eec9a2bcf41aaf8f351f312cd19ff74b5c83480f08a8a43e0b" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:9f13b040649bc18e7eb37936009b24fd31ca095a5c647be8bb6aaf1761142bd1" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:9bdc25e4e01b261a8fda4e98618f1c9515febcecebc9566ddf4a70c63967043b" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-win32.whl", hash = "sha256:8b9bf67b11ef9e28f4d78ff88b04ed0929fcd0e4f70bb0f704cfc32a5c6311ee" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-win_amd64.whl", hash = "sha256:758cfc7f4c38c5c5274b55a57ef1910107436f4ae842478c4989abbd24bd5acb" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp311-abi3-win_arm64.whl", hash = "sha256:218abd64a2e72f8472c2102febb596793347a3e65fafbb4ad50519969da44470" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-macosx_10_9_universal2.whl", hash = "sha256:a08e7401a94c002e79dc3bc5231b6558cd4b2280ee525c4673f650a37e2c7685" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:d30bc11d35743bf4ddf76674a0a369ec8a21f87aaa09b0661b04c5f6c46e8d7b" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:bca3f0ce67e5a2a2cf524e86f44697c4323a86e0fd7ba857de1c30d52c11ede1" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_28_aarch64.whl", hash = "sha256:ff798ad7a957a5021dcbab78dfff681f0cf15744d0e6af62bd6746984d9c9e9c" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_28_armv7l.manylinux_2_31_armv7l.whl", hash = "sha256:cb5e8daac840e8879407acbe689a174f5ebaf344a062f8918e526824eb5d97af" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_28_ppc64le.whl", hash = "sha256:3f37aa12b2d91e157827d90ce78f6180f0c02319468a0aea86ab5a9566da644b" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_28_x86_64.whl", hash = "sha256:5e38f203160a48b93010b07493c15f2babb4e0f2319bbd001885adb3f3696d21" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_34_aarch64.whl", hash = "sha256:d19f5f48883752b5ab34cff9e2f7e4a7f216296f33714e77d1beb03d108632b6" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_34_ppc64le.whl", hash = "sha256:04911b149eae142ccd8c9a68892a70c21613864afb47aba92d8c7ed9cc001023" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:8b16c1ede6a937c291d41176934268e4ccac2c6521c69d3f5961c5a1e11e039e" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:747b6f4a4a23d5a215aadd1d0b12233b4119c4313df83ab4137631d43672cc90" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:6b275e398ab3a7905e168c036aad54b5969d63d3d9099a0a66cc147a3cc983be" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-win32.whl", hash = "sha256:0b507c8e033307e37af61cb9f7159b416173bdf5b41d11c4df2e499a1d8e007c" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-win_amd64.whl", hash = "sha256:f9b2dc7668418fb6f221e4bf701f716e05e8eadb4f1988a2487b11aedf8abe62" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cryptography/46.0.2/cryptography-46.0.2-cp38-abi3-win_arm64.whl", hash = "sha256:91447f2b17e83c9e0c89f133119d83f94ce6e0fb55dd47da0a959316e6e9cfa1" },
+]
+
+[[package]]
+name = "ddt"
+version = "1.1.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/ddt/1.1.1/ddt-1.1.1.tar.gz", hash = "sha256:d6dc0fc0ec23c369090456ceaaf8baa43df8171a6906c44e52909edce78c00b0" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/ddt/1.1.1/ddt-1.1.1-py2.py3-none-any.whl", hash = "sha256:c4e5f76f3e34d6a1f1a04f198ceb5f7bf6507734648af7b3555a3b690fede16e" },
+]
+
+[[package]]
+name = "django"
+version = "4.2.25"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "sqlparse" },
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django/4.2.25/django-4.2.25.tar.gz", hash = "sha256:2391ab3d78191caaae2c963c19fd70b99e9751008da22a0adcc667c5a4f8d311" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django/4.2.25/django-4.2.25-py3-none-any.whl", hash = "sha256:9584cf26b174b35620e53c2558b09d7eb180a655a3470474f513ff9acb494f8c" },
+]
+
+[[package]]
+name = "django-allow-cidr"
+version = "0.8.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-allow-cidr/0.8.0/django_allow_cidr-0.8.0.tar.gz", hash = "sha256:d6f80230621dd5b19ec1665b85abf8218b02556ff7cf0ddda41e2607267a3277" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-allow-cidr/0.8.0/django_allow_cidr-0.8.0-py2.py3-none-any.whl", hash = "sha256:724ce76b7b4a25c641ddcd33777e2e95da622dd2c11937f0d76d0cd3d54b1622" },
+]
+
+[[package]]
+name = "django-coursemanager"
+version = "0.8"
+source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-coursemanager.git?rev=v0.8#7a78ca501c7084bb9e3d532ec2a5eb99be0981d5" }
+
+[[package]]
+name = "django-debug-toolbar"
+version = "3.4.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+    { name = "sqlparse" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-debug-toolbar/3.4.0/django-debug-toolbar-3.4.0.tar.gz", hash = "sha256:ae6bec2c1ce0e6900b0ab0443e1427eb233d8e6f57a84a0b2705eeecb8874e22" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-debug-toolbar/3.4.0/django_debug_toolbar-3.4.0-py3-none-any.whl", hash = "sha256:42c1c2e9dc05bb57b53d641e3a6d131fc031b92377b34ae32e604a1fe439bb83" },
+]
+
+[[package]]
+name = "django-extensions"
+version = "3.1.5"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-extensions/3.1.5/django-extensions-3.1.5.tar.gz", hash = "sha256:28e1e1bf49f0e00307ba574d645b0af3564c981a6dfc87209d48cb98f77d0b1a" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-extensions/3.1.5/django_extensions-3.1.5-py3-none-any.whl", hash = "sha256:9238b9e016bb0009d621e05cf56ea8ce5cce9b32e91ad2026996a7377ca28069" },
+]
+
+[[package]]
+name = "django-icommons-ui"
+version = "2.1"
+source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1#00ab21e3e38ec68477d23167635b8c932fffa911" }
+dependencies = [
+    { name = "django" },
+]
+
+[[package]]
+name = "django-lti"
+version = "0.8.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+    { name = "pylti1p3" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.8.1/django_lti-0.8.1.tar.gz", hash = "sha256:ffde509e646ce0a9e8866739fc1297f1e8908131ca8cf619e8c1fc7c6e68ab55" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.8.1/django_lti-0.8.1-py3-none-any.whl", hash = "sha256:97ae0eed763247535d5cb872325efec1827499086460f2e579747ecb8a656d3e" },
+]
+
+[[package]]
+name = "django-lti-authentication"
+version = "0.2.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+    { name = "django-lti" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti-authentication/0.2.0/django_lti_authentication-0.2.0.tar.gz", hash = "sha256:ec4b1a6d9071e5115c11e76a31a89967088800601c0e7d729c7726cdd2701f2a" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti-authentication/0.2.0/django_lti_authentication-0.2.0-py3-none-any.whl", hash = "sha256:815c115940b3555559759616b570219bc3a7a1ba37efb21b4e24f7cd52617034" },
+]
+
+[[package]]
+name = "django-redis"
+version = "6.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+    { name = "redis" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-redis/6.0.0/django_redis-6.0.0.tar.gz", hash = "sha256:2d9cb12a20424a4c4dde082c6122f486628bae2d9c2bee4c0126a4de7fda00dd" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-redis/6.0.0/django_redis-6.0.0-py3-none-any.whl", hash = "sha256:20bf0063a8abee567eb5f77f375143c32810c8700c0674ced34737f8de4e36c0" },
+]
+
+[[package]]
+name = "django-ssm-parameter-store"
+version = "0.7"
+source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git?rev=v0.7#7d97eb4a968d3492369946f9c7fa900a3f210004" }
+dependencies = [
+    { name = "boto3" },
+    { name = "pyyaml" },
+    { name = "requests" },
+]
+
+[[package]]
+name = "django-storages"
+version = "1.14.6"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-storages/1.14.6/django_storages-1.14.6.tar.gz", hash = "sha256:7a25ce8f4214f69ac9c7ce87e2603887f7ae99326c316bc8d2d75375e09341c9" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-storages/1.14.6/django_storages-1.14.6-py3-none-any.whl", hash = "sha256:11b7b6200e1cb5ffcd9962bd3673a39c7d6a6109e8096f0e03d46fab3d3aabd9" },
+]
+
+[[package]]
+name = "django-watchman"
+version = "1.3.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-watchman/1.3.0/django-watchman-1.3.0.tar.gz", hash = "sha256:33b5fc734d689b83cb96fc17beda624ae2955f4cede0856897d990c363eac962" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-watchman/1.3.0/django_watchman-1.3.0-py2.py3-none-any.whl", hash = "sha256:5f04300bd7fbdd63b8a883b2730ed1e4d9b0f9991133b33a1281134b81f466eb" },
+]
+
+[[package]]
+name = "gunicorn"
+version = "23.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/gunicorn/23.0.0/gunicorn-23.0.0.tar.gz", hash = "sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/gunicorn/23.0.0/gunicorn-23.0.0-py3-none-any.whl", hash = "sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d" },
+]
+
+[[package]]
+name = "h11"
+version = "0.16.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/h11/0.16.0/h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/h11/0.16.0/h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86" },
+]
+
+[[package]]
+name = "hiredis"
+version = "3.2.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1.tar.gz", hash = "sha256:5a5f64479bf04dd829fe7029fad0ea043eac4023abc6e946668cbbec3493a78d" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-macosx_10_15_universal2.whl", hash = "sha256:3742d8b17e73c198cabeab11da35f2e2a81999d406f52c6275234592256bf8e8" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-macosx_10_15_x86_64.whl", hash = "sha256:9c2f3176fb617a79f6cccf22cb7d2715e590acb534af6a82b41f8196ad59375d" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:a8bd46189c7fa46174e02670dc44dfecb60f5bd4b67ed88cb050d8f1fd842f09" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:f86ee4488c8575b58139cdfdddeae17f91e9a893ffee20260822add443592e2f" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3717832f4a557b2fe7060b9d4a7900e5de287a15595e398c3f04df69019ca69d" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:e5cb12c21fb9e2403d28c4e6a38120164973342d34d08120f2d7009b66785644" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:080fda1510bbd389af91f919c11a4f2aa4d92f0684afa4709236faa084a42cac" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1252e10a1f3273d1c6bf2021e461652c2e11b05b83e0915d6eb540ec7539afe2" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:d9e320e99ab7d2a30dc91ff6f745ba38d39b23f43d345cdee9881329d7b511d6" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:641668f385f16550fdd6fdc109b0af6988b94ba2acc06770a5e06a16e88f320c" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-musllinux_1_2_ppc64le.whl", hash = "sha256:1e1f44208c39d6c345ff451f82f21e9eeda6fe9af4ac65972cc3eeb58d41f7cb" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-musllinux_1_2_s390x.whl", hash = "sha256:f882a0d6415fffe1ffcb09e6281d0ba8b1ece470e866612bbb24425bf76cf397" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:b4e78719a0730ebffe335528531d154bc8867a246418f74ecd88adbc4d938c49" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-win32.whl", hash = "sha256:33c4604d9f79a13b84da79950a8255433fca7edaf292bbd3364fd620864ed7b2" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/hiredis/3.2.1/hiredis-3.2.1-cp312-cp312-win_amd64.whl", hash = "sha256:7b9749375bf9d171aab8813694f379f2cff0330d7424000f5e92890ad4932dc9" },
+]
+
+[[package]]
+name = "idna"
+version = "3.11"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/idna/3.11/idna-3.11.tar.gz", hash = "sha256:795dafcc9c04ed0c1fb032c2aa73654d8e8c5023a7df64a53f39190ada629902" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/idna/3.11/idna-3.11-py3-none-any.whl", hash = "sha256:771a87f49d9defaf64091e6e6fe9c18d4833f140bd19464795bc32d966ca37ea" },
+]
+
+[[package]]
+name = "jmespath"
+version = "1.0.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/jmespath/1.0.1/jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/jmespath/1.0.1/jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980" },
+]
+
+[[package]]
+name = "jwcrypto"
+version = "1.5.6"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "cryptography" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/jwcrypto/1.5.6/jwcrypto-1.5.6.tar.gz", hash = "sha256:771a87762a0c081ae6166958a954f80848820b2ab066937dc8b8379d65b1b039" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/jwcrypto/1.5.6/jwcrypto-1.5.6-py3-none-any.whl", hash = "sha256:150d2b0ebbdb8f40b77f543fb44ffd2baeff48788be71f67f03566692fd55789" },
+]
+
+[[package]]
+name = "mock"
+version = "2.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "pbr" },
+    { name = "six" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/mock/2.0.0/mock-2.0.0.tar.gz", hash = "sha256:b158b6df76edd239b8208d481dc46b6afd45a846b7812ff0ce58971cf5bc8bba" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/mock/2.0.0/mock-2.0.0-py2.py3-none-any.whl", hash = "sha256:5ce3c71c5545b472da17b72268978914d0252980348636840bd34a00b5cc96c1" },
+]
+
+[[package]]
+name = "outcome"
+version = "1.3.0.post0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "attrs" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/outcome/1.3.0.post0/outcome-1.3.0.post0.tar.gz", hash = "sha256:9dcf02e65f2971b80047b377468e72a268e15c0af3cf1238e6ff14f7f91143b8" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/outcome/1.3.0.post0/outcome-1.3.0.post0-py2.py3-none-any.whl", hash = "sha256:e771c5ce06d1415e356078d3bdd68523f284b4ce5419828922b6871e65eda82b" },
+]
+
+[[package]]
+name = "packaging"
+version = "25.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/packaging/25.0/packaging-25.0.tar.gz", hash = "sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/packaging/25.0/packaging-25.0-py3-none-any.whl", hash = "sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484" },
+]
+
+[[package]]
+name = "pbr"
+version = "7.0.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "setuptools" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pbr/7.0.1/pbr-7.0.1.tar.gz", hash = "sha256:3ecbcb11d2b8551588ec816b3756b1eb4394186c3b689b17e04850dfc20f7e57" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pbr/7.0.1/pbr-7.0.1-py2.py3-none-any.whl", hash = "sha256:32df5156fbeccb6f8a858d1ebc4e465dcf47d6cc7a4895d5df9aa951c712fc35" },
+]
+
+[[package]]
+name = "psycopg2"
+version = "2.9.9"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/psycopg2/2.9.9/psycopg2-2.9.9.tar.gz", hash = "sha256:d1454bde93fb1e224166811694d600e746430c006fbb031ea06ecc2ea41bf156" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/psycopg2/2.9.9/psycopg2-2.9.9-cp312-cp312-win32.whl", hash = "sha256:d735786acc7dd25815e89cc4ad529a43af779db2e25aa7c626de864127e5a024" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/psycopg2/2.9.9/psycopg2-2.9.9-cp312-cp312-win_amd64.whl", hash = "sha256:a7653d00b732afb6fc597e29c50ad28087dcb4fbfb28e86092277a559ae4e693" },
+]
+
+[[package]]
+name = "pycparser"
+version = "2.23"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pycparser/2.23/pycparser-2.23.tar.gz", hash = "sha256:78816d4f24add8f10a06d6f05b4d424ad9e96cfebf68a4ddc99c65c0720d00c2" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pycparser/2.23/pycparser-2.23-py3-none-any.whl", hash = "sha256:e5c6e8d3fbad53479cab09ac03729e0a9faf2bee3db8208a550daf5af81a5934" },
+]
+
+[[package]]
+name = "pyjwt"
+version = "2.10.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyjwt/2.10.1/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyjwt/2.10.1/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb" },
+]
+
+[[package]]
+name = "pylti1p3"
+version = "2.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "jwcrypto" },
+    { name = "pyjwt" },
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pylti1p3/2.0.0/PyLTI1p3-2.0.0.tar.gz", hash = "sha256:ebb95ff1397c21190f63cf47427e3b57cdc80e0fc524f2e35e68d78c603cae5a" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pylti1p3/2.0.0/PyLTI1p3-2.0.0-py2.py3-none-any.whl", hash = "sha256:e0c6c53f8633abc3a20c20c71d7d26a4c946c9e8d33143dd8b1a5a1c3797e89a" },
+]
+
+[[package]]
+name = "pyopenssl"
+version = "22.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "cryptography" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyopenssl/22.0.0/pyOpenSSL-22.0.0.tar.gz", hash = "sha256:660b1b1425aac4a1bea1d94168a85d99f0b3144c869dd4390d27629d0087f1bf" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyopenssl/22.0.0/pyOpenSSL-22.0.0-py2.py3-none-any.whl", hash = "sha256:ea252b38c87425b64116f808355e8da644ef9b07e429398bfece610f893ee2e0" },
+]
+
+[[package]]
+name = "pysocks"
+version = "1.7.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pysocks/1.7.1/PySocks-1.7.1.tar.gz", hash = "sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pysocks/1.7.1/PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5" },
+]
+
+[[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/python-dateutil/2.9.0.post0/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/python-dateutil/2.9.0.post0/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427" },
+]
+
+[[package]]
+name = "python-json-logger"
+version = "2.0.2"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/python-json-logger/2.0.2/python-json-logger-2.0.2.tar.gz", hash = "sha256:202a4f29901a4b8002a6d1b958407eeb2dd1d83c18b18b816f5b64476dde9096" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/python-json-logger/2.0.2/python_json_logger-2.0.2-py3-none-any.whl", hash = "sha256:99310d148f054e858cd5f4258794ed6777e7ad2c3fd7e1c1b527f1cba4d08420" },
+]
+
+[[package]]
+name = "pyvirtualdisplay"
+version = "3.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyvirtualdisplay/3.0/PyVirtualDisplay-3.0.tar.gz", hash = "sha256:09755bc3ceb6eb725fb07eca5425f43f2358d3bf08e00d2a9b792a1aedd16159" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyvirtualdisplay/3.0/PyVirtualDisplay-3.0-py3-none-any.whl", hash = "sha256:40d4b8dfe4b8de8552e28eb367647f311f88a130bf837fe910e7f180d5477f0e" },
+]
+
+[[package]]
+name = "pyyaml"
+version = "6.0.3"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3.tar.gz", hash = "sha256:d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:7f047e29dcae44602496db43be01ad42fc6f1cc0d8cd6c83d342306c32270196" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:fc09d0aa354569bc501d4e787133afc08552722d3ab34836a80547331bb5d4a0" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-manylinux2014_aarch64.manylinux_2_17_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:9149cad251584d5fb4981be1ecde53a1ca46c891a79788c0df828d2f166bda28" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-manylinux2014_s390x.manylinux_2_17_s390x.manylinux_2_28_s390x.whl", hash = "sha256:5fdec68f91a0c6739b380c83b951e2c72ac0197ace422360e6d5a959d8d97b2c" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ba1cc08a7ccde2d2ec775841541641e4548226580ab850948cbfda66a1befcdc" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:8dc52c23056b9ddd46818a57b78404882310fb473d63f17b07d5c40421e47f8e" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:41715c910c881bc081f1e8872880d3c650acf13dfa8214bad49ed4cede7c34ea" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-win32.whl", hash = "sha256:96b533f0e99f6579b3d4d4995707cf36df9100d67e0c8303a0c55b27b5f99bc5" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:5fcd34e47f6e0b794d17de1b4ff496c00986e1c83f7ab2fb8fcfe9616ff7477b" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/pyyaml/6.0.3/pyyaml-6.0.3-cp312-cp312-win_arm64.whl", hash = "sha256:64386e5e707d03a7e172c0701abfb7e10f0fb753ee1d773128192742712a98fd" },
+]
+
+[[package]]
+name = "redis"
+version = "6.4.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/redis/6.4.0/redis-6.4.0.tar.gz", hash = "sha256:b01bc7282b8444e28ec36b261df5375183bb47a07eb9c603f284e89cbc5ef010" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/redis/6.4.0/redis-6.4.0-py3-none-any.whl", hash = "sha256:f0544fa9604264e9464cdf4814e7d4830f74b165d52f2a330a760a88dd248b7f" },
+]
+
+[[package]]
+name = "requests"
+version = "2.27.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "certifi" },
+    { name = "charset-normalizer" },
+    { name = "idna" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/requests/2.27.1/requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/requests/2.27.1/requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d" },
+]
+
+[[package]]
+name = "s3transfer"
+version = "0.14.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "botocore" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/s3transfer/0.14.0/s3transfer-0.14.0.tar.gz", hash = "sha256:eff12264e7c8b4985074ccce27a3b38a485bb7f7422cc8046fee9be4983e4125" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/s3transfer/0.14.0/s3transfer-0.14.0-py3-none-any.whl", hash = "sha256:ea3b790c7077558ed1f02a3072fb3cb992bbbd253392f4b6e9e8976941c7d456" },
+]
+
+[[package]]
+name = "selenium"
+version = "4.3.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "trio" },
+    { name = "trio-websocket" },
+    { name = "urllib3", extra = ["secure", "socks"] },
+]
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/selenium/4.3.0/selenium-4.3.0-py3-none-any.whl", hash = "sha256:f67402b8f973aaa98d9c55b8f9aa63532009cd1859b2222a8b9800354942d8bc" },
+]
+
+[[package]]
+name = "setuptools"
+version = "80.9.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/setuptools/80.9.0/setuptools-80.9.0.tar.gz", hash = "sha256:f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/setuptools/80.9.0/setuptools-80.9.0-py3-none-any.whl", hash = "sha256:062d34222ad13e0cc312a4c02d73f059e86a4acbfbdea8f8f76b28c99f306922" },
+]
+
+[[package]]
+name = "six"
+version = "1.17.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/six/1.17.0/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/six/1.17.0/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274" },
+]
+
+[[package]]
+name = "sniffio"
+version = "1.3.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sniffio/1.3.1/sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sniffio/1.3.1/sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2" },
+]
+
+[[package]]
+name = "sortedcontainers"
+version = "2.4.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sortedcontainers/2.4.0/sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sortedcontainers/2.4.0/sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0" },
+]
+
+[[package]]
+name = "splunk-handler"
+version = "3.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "requests" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/splunk-handler/3.0.0/splunk_handler-3.0.0.tar.gz", hash = "sha256:a835b0a7161148aceb977301c6dba21bb96e7635279c7e90e0216c78a4bcbb24" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/splunk-handler/3.0.0/splunk_handler-3.0.0-py2.py3-none-any.whl", hash = "sha256:76e85ee70c6ca00c6d8be1f64715653fc00af3c97853b70d91e156704dbc8486" },
+]
+
+[[package]]
+name = "sqlparse"
+version = "0.5.3"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sqlparse/0.5.3/sqlparse-0.5.3.tar.gz", hash = "sha256:09f67787f56a0b16ecdbde1bfc7f5d9c3371ca683cfeaa8e6ff60b4807ec9272" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/sqlparse/0.5.3/sqlparse-0.5.3-py3-none-any.whl", hash = "sha256:cf2196ed3418f3ba5de6af7e82c694a9fbdbfecccdfc72e281548517081f16ca" },
+]
+
+[[package]]
+name = "trio"
+version = "0.31.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "attrs" },
+    { name = "cffi", marker = "implementation_name != 'pypy' and os_name == 'nt'" },
+    { name = "idna" },
+    { name = "outcome" },
+    { name = "sniffio" },
+    { name = "sortedcontainers" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/trio/0.31.0/trio-0.31.0.tar.gz", hash = "sha256:f71d551ccaa79d0cb73017a33ef3264fde8335728eb4c6391451fe5d253a9d5b" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/trio/0.31.0/trio-0.31.0-py3-none-any.whl", hash = "sha256:b5d14cd6293d79298b49c3485ffd9c07e3ce03a6da8c7dfbe0cb3dd7dc9a4774" },
+]
+
+[[package]]
+name = "trio-websocket"
+version = "0.12.2"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "outcome" },
+    { name = "trio" },
+    { name = "wsproto" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/trio-websocket/0.12.2/trio_websocket-0.12.2.tar.gz", hash = "sha256:22c72c436f3d1e264d0910a3951934798dcc5b00ae56fc4ee079d46c7cf20fae" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/trio-websocket/0.12.2/trio_websocket-0.12.2-py3-none-any.whl", hash = "sha256:df605665f1db533f4a386c94525870851096a223adcb97f72a07e8b4beba45b6" },
+]
+
+[[package]]
+name = "typing-extensions"
+version = "4.15.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/typing-extensions/4.15.0/typing_extensions-4.15.0.tar.gz", hash = "sha256:0cea48d173cc12fa28ecabc3b837ea3cf6f38c6d1136f85cbaaf598984861466" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/typing-extensions/4.15.0/typing_extensions-4.15.0-py3-none-any.whl", hash = "sha256:f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548" },
+]
+
+[[package]]
+name = "tzdata"
+version = "2025.2"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/tzdata/2025.2/tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/tzdata/2025.2/tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8" },
+]
+
+[[package]]
+name = "urllib3"
+version = "1.26.20"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/urllib3/1.26.20/urllib3-1.26.20.tar.gz", hash = "sha256:40c2dc0c681e47eb8f90e7e27bf6ff7df2e677421fd46756da1161c39ca70d32" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/urllib3/1.26.20/urllib3-1.26.20-py2.py3-none-any.whl", hash = "sha256:0ed14ccfbf1c30a9072c7ca157e4319b70d65f623e91e7b32fadb2853431016e" },
+]
+
+[package.optional-dependencies]
+secure = [
+    { name = "certifi" },
+    { name = "cryptography" },
+    { name = "idna" },
+    { name = "pyopenssl" },
+    { name = "urllib3-secure-extra" },
+]
+socks = [
+    { name = "pysocks" },
+]
+
+[[package]]
+name = "urllib3-secure-extra"
+version = "0.1.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/urllib3-secure-extra/0.1.0/urllib3-secure-extra-0.1.0.tar.gz", hash = "sha256:ee9409cbfeb4b8609047be4c32fb4317870c602767e53fd8a41005ebe6a41dff" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/urllib3-secure-extra/0.1.0/urllib3_secure_extra-0.1.0-py2.py3-none-any.whl", hash = "sha256:f7adcb108b4d12a4b26b99eb60e265d087f435052a76aefa396b6ee85e9a6ef9" },
+]
+
+[[package]]
+name = "voluptuous"
+version = "0.13.1"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/voluptuous/0.13.1/voluptuous-0.13.1.tar.gz", hash = "sha256:e8d31c20601d6773cb14d4c0f42aee29c6821bbd1018039aac7ac5605b489723" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/voluptuous/0.13.1/voluptuous-0.13.1-py3-none-any.whl", hash = "sha256:4b838b185f5951f2d6e8752b68fcf18bd7a9c26ded8f143f92d6d28f3921a3e6" },
+]
+
+[[package]]
+name = "werkzeug"
+version = "2.0.3"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/werkzeug/2.0.3/Werkzeug-2.0.3.tar.gz", hash = "sha256:b863f8ff057c522164b6067c9e28b041161b4be5ba4d0daceeaa50a163822d3c" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/werkzeug/2.0.3/Werkzeug-2.0.3-py3-none-any.whl", hash = "sha256:1421ebfc7648a39a5c58c601b154165d05cf47a3cd0ccb70857cbdacf6c8f2b8" },
+]
+
+[[package]]
+name = "wsproto"
+version = "1.2.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "h11" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/wsproto/1.2.0/wsproto-1.2.0.tar.gz", hash = "sha256:ad565f26ecb92588a3e43bc3d96164de84cd9902482b130d0ddbaa9664a85065" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/wsproto/1.2.0/wsproto-1.2.0-py3-none-any.whl", hash = "sha256:b9acddd652b585d75b20477888c56642fdade28bdfd3579aa24a4d2c037dd736" },
+]
