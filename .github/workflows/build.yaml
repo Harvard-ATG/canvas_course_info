@@ -54,14 +54,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug OIDC token claims
-        run: |
-          echo "Fetching OIDC token..."
-          TOKEN_JSON=$(curl -s -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL")
-          TOKEN=$(echo "$TOKEN_JSON" | jq -r '.value')
-          echo "Decoded OIDC token payload:"
-          echo "$TOKEN" | awk -F '.' '{print $2}' | base64 --decode | jq
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -86,6 +78,7 @@ jobs:
       # SSH agent will no longer be required once we switch to
       # using CodeArtifact for all private package dependencies
       - name: Setup ssh agent
+        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
