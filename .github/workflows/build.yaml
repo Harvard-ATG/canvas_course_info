@@ -69,6 +69,7 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
           mask-aws-account-id: 'no'
+          audience: https://github.com/Harvard-ATG
 
       - name: Get CodeArtifact authorization token
         id: codeartifact-auth
