@@ -10,7 +10,6 @@ https://docs.djangoproject.com/en/<Django Version>/ref/settings/
 
 import logging
 import os
-
 from dj_secure_settings.loader import load_secure_settings
 from django.urls import reverse_lazy
 
@@ -36,24 +35,27 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 'django_auth_lti',
     "course_info",
     "icommons_ui",
     "watchman",
     "lti_tool",
+    "django_lti_authentication",
 ]
 
 MIDDLEWARE = [
     "allow_cidr.middleware.AllowCIDRMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "lti_tool.middleware.LtiLaunchMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "lti_authentication.middleware.LtiLaunchAuthenticationMiddleware",
-    # 'django_auth_lti.middleware.LTIAuthMiddleware',
     "django.contrib.messages.middleware.MessageMiddleware",
+    "lti_tool.middleware.LtiLaunchMiddleware",
+    "django_lti_authentication.middleware.LtiAuthenticationMiddleware",
 ]
+
+AUTHENTICATION_BACKENDS = (
+    "django_lti_authentication.backends.LtiAuthenticationBackend",
+)
 
 LTI_AUTHENTICATION = {
     "use_person_sourcedid": SECURE_SETTINGS.get("use_person_sourcedid", True),
@@ -64,11 +66,6 @@ LOGIN_URL = reverse_lazy("not_authorized")
 ROOT_URLCONF = "canvas_course_info.urls"
 
 WSGI_APPLICATION = "canvas_course_info.wsgi.application"
-
-AUTHENTICATION_BACKENDS = (
-    # 'django_auth_lti.backends.LTIAuthBackend',
-    "lti_authentication.backends.LtiLaunchAuthenticationBackend",
-)
 
 TIME_ZONE = "UTC"
 
@@ -109,20 +106,6 @@ TEMPLATES = [
         },
     },
 ]
-
-LTI_APPS = {
-    "course_info": {
-        "id": "course_info_import",
-        "name": "Import Course Info",
-        "menu_title": "Course Info",
-        "extensions_provider": "canvas.instructure.com",
-        "description": "A button to insert course info into canvas pages.",
-        "privacy_level": "public",
-        "selection_height": "400px",
-        "selection_width": "400px",
-        "icon_url": "images/course-info.png",
-    }
-}
 
 SECRET_KEY = SECURE_SETTINGS.get("django_secret_key", "changeme")
 
@@ -221,7 +204,6 @@ class ContextFilter(logging.Filter):
 
 
 _DEFAULT_LOG_LEVEL = SECURE_SETTINGS.get("log_level", logging.DEBUG)
-_LOG_ROOT = SECURE_SETTINGS.get("log_root", "")
 _JSON_LOG_FORMAT = "%(asctime)s %(created)f %(exc_info)s %(filename)s %(funcName)s %(levelname)s %(levelno)s %(name)s %(lineno)d %(module)s %(message)s %(pathname)s %(process)s"
 
 LOGGING = {
