@@ -77,8 +77,8 @@ jobs:
 
       # SSH agent will no longer be required once we switch to
       # using CodeArtifact for all private package dependencies
-      - name: Setup ssh agent
-        if: ${{ secrets.DEPLOY_SSH_KEY != '' }}
+      - name: Setup ssh agent (optional)
+        continue-on-error: true
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
