@@ -104,7 +104,8 @@ jobs:
         with:
           context: .
           ssh: default=${{ env.SSH_AUTH_SOCK }}
-          secrets: UV_INDEX_PRIVATE_REGISTRY_PASSWORD=${{ env.UV_INDEX_PRIVATE_REGISTRY_PASSWORD }}
+          secrets: |
+            UV_INDEX_PRIVATE_REGISTRY_PASSWORD=${{ env.UV_INDEX_PRIVATE_REGISTRY_PASSWORD }}
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
