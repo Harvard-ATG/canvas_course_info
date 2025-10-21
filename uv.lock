@@ -91,12 +91,12 @@ dev = [
 requires-dist = [
     { name = "django", specifier = ">=4.2.11,<5.0" },
     { name = "django-allow-cidr", specifier = ">=0.8.0,<1" },
-    { name = "django-coursemanager", git = "ssh://git@github.com/Harvard-University-iCommons/django-coursemanager.git?rev=v0.8" },
-    { name = "django-icommons-ui", git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1" },
+    { name = "django-coursemanager", specifier = ">=0.8,<1" },
+    { name = "django-icommons-ui", specifier = ">=2.5.3,<3" },
     { name = "django-lti", specifier = ">=0.7.1,<1" },
     { name = "django-lti-authentication", specifier = ">=0.2.0,<1" },
     { name = "django-redis", specifier = "==6.0.0" },
-    { name = "django-ssm-parameter-store", git = "ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git?rev=v0.7" },
+    { name = "django-ssm-parameter-store", specifier = ">=0.7,<1" },
     { name = "django-storages", specifier = "==1.14.6" },
     { name = "django-watchman", specifier = "==1.3.0" },
     { name = "hiredis", specifier = ">=3.2.1,<4" },
@@ -241,7 +241,11 @@ wheels = [
 [[package]]
 name = "django-coursemanager"
 version = "0.8"
-source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-coursemanager.git?rev=v0.8#7a78ca501c7084bb9e3d532ec2a5eb99be0981d5" }
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-coursemanager/0.8/django_coursemanager-0.8.tar.gz", hash = "sha256:8a4f43b17e1f75db13ea13e882071f4b46790cad3e000f3cc340ffad8cc11a2e" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-coursemanager/0.8/django_coursemanager-0.8-py3-none-any.whl", hash = "sha256:a8a01bb4e1685a112f08fc73bec9236491978b6f6be20061486cbbe5424b2746" },
+]
 
 [[package]]
 name = "django-debug-toolbar"
@@ -270,10 +274,14 @@ wheels = [
 
 [[package]]
 name = "django-icommons-ui"
-version = "2.1"
-source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1#00ab21e3e38ec68477d23167635b8c932fffa911" }
+version = "2.5.3"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
 dependencies = [
     { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3.tar.gz", hash = "sha256:78a8ed0c707d3bd5c8f169d5410480214082342eb50d89bdf6cd53371a924d7d" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3-py3-none-any.whl", hash = "sha256:555c429ed1ae12bd542179c3c179ce8580b9693bc6b237bf77364c62fbcca707" },
 ]
 
 [[package]]
@@ -318,11 +326,15 @@ wheels = [
 [[package]]
 name = "django-ssm-parameter-store"
 version = "0.7"
-source = { git = "ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git?rev=v0.7#7d97eb4a968d3492369946f9c7fa900a3f210004" }
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
 dependencies = [
     { name = "boto3" },
     { name = "pyyaml" },
     { name = "requests" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-ssm-parameter-store/0.7/django_ssm_parameter_store-0.7.tar.gz", hash = "sha256:eea3f81b2d4ffcbbca796e82d7ba0d860713084f69cf9bf306c98417b594e87e" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-ssm-parameter-store/0.7/django_ssm_parameter_store-0.7-py3-none-any.whl", hash = "sha256:e8b3e0f971a29c050f0876e6a84e3a3ae1f22da0c9a5ba9848d9ae5d2426a50f" },
 ]
 
 [[package]]
