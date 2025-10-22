@@ -106,7 +106,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          ssh: default=${{ env.SSH_AUTH_SOCK }}
           secrets: |
             UV_INDEX_PRIVATE_REGISTRY_PASSWORD=${{ env.UV_INDEX_PRIVATE_REGISTRY_PASSWORD }}
           push: true
