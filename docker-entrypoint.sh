@@ -5,4 +5,4 @@ python manage.py collectstatic --noinput  # Collect static files
 
 # Start Gunicorn processes
 echo Starting Gunicorn.
-exec gunicorn -c ops_tools/settings/gunicorn.conf.py ops_tools.wsgi:application
+exec gunicorn -c canvas_course_info/settings/gunicorn.conf.py canvas_course_info.wsgi:application
