@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "icommons_ui",
     "watchman",
     "lti_tool",
-    "django_lti_authentication",
 ]
 
 MIDDLEWARE = [
@@ -48,13 +47,13 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
     "lti_tool.middleware.LtiLaunchMiddleware",
-    "django_lti_authentication.middleware.LtiAuthenticationMiddleware",
+    "lti_authentication.middleware.LtiLaunchAuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
 AUTHENTICATION_BACKENDS = (
-    "django_lti_authentication.backends.LtiAuthenticationBackend",
+    'lti_authentication.backends.LtiLaunchAuthenticationBackend',
 )
 
 LTI_AUTHENTICATION = {
