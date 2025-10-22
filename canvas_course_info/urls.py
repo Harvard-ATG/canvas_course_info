@@ -1,9 +1,10 @@
+from django.contrib import admin
 from django.conf import settings
 from django.urls import include, path, re_path
-
 import watchman.views
 
 urlpatterns = [
+    path("admin/", admin.site.urls),
     path(
         "course_info/",
         include(("course_info.urls", "course_info"), namespace="course_info"),
