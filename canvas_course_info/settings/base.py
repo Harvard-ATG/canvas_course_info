@@ -53,7 +53,7 @@ MIDDLEWARE = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'lti_authentication.backends.LtiLaunchAuthenticationBackend',
+    "lti_authentication.backends.LtiLaunchAuthenticationBackend",
 )
 
 LTI_AUTHENTICATION = {
