@@ -74,14 +74,6 @@ jobs:
         with:
           mask-password: 'true'
 
-      # SSH agent will no longer be required once we switch to
-      # using CodeArtifact for all private package dependencies
-      - name: Setup ssh agent (optional)
-        continue-on-error: true
-        uses: webfactory/ssh-agent@v0.9.1
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_SSH_KEY }}
-
       - name: Configure docker image metadata
         id: docker_meta
         uses: docker/metadata-action@v5
@@ -96,6 +88,18 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=raw,value=${{ github.event.after }}
+
+      - name: Generate build_info.py
+        run: |
+          # Get the short version of the SHA (Note: this commit SHA is the last commit in the push event that triggered the workflow).
+          SHORT_SHA=$(echo ${{ github.event.after }} | cut -c1-7)
+          echo "BUILD_INFO = {" > build_info.py
+          echo "    'resolved_source_version': '${{ github.sha }}'," >> build_info.py
+          echo "    'source_version': '${{ github.ref_name }}'," >> build_info.py
+          echo "    'build_timestamp': '$(date "+%Y-%m-%dT%H:%M:%S%z")'," >> build_info.py
+          echo "    'image_tag': '${{ github.ref_name }}'," >> build_info.py
+          echo "    'image_hash_tag': '$SHORT_SHA'," >> build_info.py
+          echo "}" >> build_info.py
 
       - name: Build and push
         id: build_and_push
