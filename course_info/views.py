@@ -50,15 +50,18 @@ def lti_launch(request: HttpRequest) -> HttpResponse:
 
 
 def editor(request):
-    logger.debug('EDITOR: {}'.format(request.POST))
-    course_instance_id = request.POST.get('lis_course_offering_sourcedid')
+    logger.debug("EDITOR: {}".format(request.POST))
+    course_instance_id = request.POST.get("lis_course_offering_sourcedid")
 
-    course_context = _course_context(request, _ORDERED_FIELD_NAMES, True,
-                                     course_instance_id=course_instance_id)
-    course_context['launch_presentation_return_url'] = \
-        request.POST.get('launch_presentation_return_url')
-    course_context['canvas_course_id'] = request.POST.get('custom_canvas_course_id')
-    return render(request, 'course_info/editor.html', course_context)
+    course_context = _course_context(
+        request, _ORDERED_FIELD_NAMES, True, course_instance_id=course_instance_id
+    )
+    course_context["launch_presentation_return_url"] = request.POST.get(
+        "launch_presentation_return_url"
+    )
+    course_context["canvas_course_id"] = request.POST.get("custom_canvas_course_id")
+    return render(request, "course_info/editor.html", course_context)
+
 
 def _get_course_code(value):
     try:
