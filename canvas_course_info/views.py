@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class ApplicationLaunchView(LtiLaunchBaseView):
     def handle_resource_launch(self, request, lti_launch):
-        # For now, just log the launch and redirect to the Course Info LTI tool index
+        # For now, just log the launch and redirect to the Canvas Course Info tool index
         logger.info("Handling resource launch")
         logger.info(f"lti_launch: {lti_launch}")
         return course_info_launch(request)

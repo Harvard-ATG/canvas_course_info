@@ -23,11 +23,6 @@ COURSE_INSTANCE_ID = SECURE_SETTINGS.get("course_instance_id")
 if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    }
-}
 
 CANVAS_URL = SECURE_SETTINGS.get("canvas_url", "https://canvas.dev.harvard.edu")
 
@@ -45,3 +40,10 @@ SELENIUM_CONFIG = {
     "use_htmlrunner": SECURE_SETTINGS.get("selenium_use_htmlrunner", True),
     "widget_url": "https://canvas-course-info.dev.tlt.harvard.edu/course_info/widget.html",
 }
+
+# Allow LTI cross-site POSTs from Canvas to your local dev tool
+SESSION_COOKIE_SAMESITE = None
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = None
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_NAME = "sessionid"
