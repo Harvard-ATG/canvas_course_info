@@ -3,6 +3,7 @@ name = "canvas-course-info"
 version = "3.0.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
+    "boto3>=1.40.49,<2",
     "django>=4.2.11,<5.0",
     "django-allow-cidr>=0.8.0,<1",
     "django-ssm-parameter-store>=0.7,<1",
@@ -41,7 +42,7 @@ dev = [
     "django-debug-toolbar==3.4.0",
     "django-extensions==3.1.5",
     "mock==2.0.0",
-    "pyopenssl==22.0.0",
+    "pyopenssl>=25.3.0,<26",
     "pyvirtualdisplay==3.0",
     "selenium==4.3.0",
     "werkzeug==2.0.3",
