@@ -142,6 +142,7 @@ def config(request: HttpRequest, registration_uuid: str) -> JsonResponse:
     tool_registration_config = {
         "title": f"{tool_friendly_name}{env}",
         "description": description,
+        "lti_1p3_legacy_migration": True,
         "oidc_initiation_url": oidc_initiation_url,
         # "oidc_initiation_urls": {},
         "target_link_uri": target_link_uri,

@@ -42,6 +42,7 @@ SELENIUM_CONFIG = {
 }
 
 # Allow LTI cross-site POSTs from Canvas to your local dev tool
+DEBUG = True
 SESSION_COOKIE_SAMESITE = None
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = None
