@@ -54,6 +54,7 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = (
     "lti_authentication.backends.LtiLaunchAuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
 )
 
 LTI_AUTHENTICATION = {
@@ -145,7 +146,6 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "OPTIONS": {
-            "parser_class": "redis.connection._HiredisParser",
             "socket_timeout": 15,
             "socket_connect_timeout": 15,
         },
