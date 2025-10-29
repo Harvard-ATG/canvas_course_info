@@ -1,0 +1,49 @@
+[project]
+name = "canvas-course-info"
+version = "3.0.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "boto3>=1.40.49,<2",
+    "django>=4.2.11,<5.0",
+    "django-allow-cidr>=0.8.0,<1",
+    "django-ssm-parameter-store>=0.7,<1",
+    "django-coursemanager>=0.8,<1",
+    "django-lti>=0.8.1,<0.9.0",
+    "django-lti-authentication>=0.2.0,<1",
+    "django-redis-cache>=3.0.1,<4",
+    "django-storages==1.14.6",
+    "django-watchman==1.3.0",
+    "hiredis>=3.2.1,<4",
+    "redis>=3.5.3,<4",
+    "psycopg2==2.9.9",
+    "python-json-logger==2.0.2",
+    "requests==2.27.1",
+    "setuptools>=40.8.0",
+    "splunk-handler==3.0.0",
+    "voluptuous==0.13.1",
+]
+
+[tool.ruff.lint]
+ignore = ["F403", "F405"]
+
+[tool.uv]
+keyring-provider = "subprocess"
+
+[[tool.uv.index]]
+name = "private-registry"
+url = "https://aws@huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/"
+
+[dependency-groups]
+aws = [
+    "gunicorn>=23.0.0",
+]
+dev = [
+    "ddt==1.1.1",
+    "django-debug-toolbar==6.0.0",
+    "django-extensions==4.1",
+    "mock==2.0.0",
+    "pyopenssl>=25.3.0,<26",
+    "pyvirtualdisplay==3.0",
+    "selenium==4.3.0",
+    "werkzeug==2.0.3",
+]

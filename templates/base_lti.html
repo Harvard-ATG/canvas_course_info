@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head_meta %}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock head_meta %}
+        {% block fonts %}
+        {% endblock fonts %}
+        {% block stylesheet %}
+        {% endblock stylesheet %}
+        <title>{% block page_title %}{% endblock page_title %}</title>
+
+        {% block head_extra %}{% endblock head_extra %}
+    </head>
+    <body role="application">
+        {% block navbar %}{% endblock navbar %}
+
+        {% block jumbotron %}{% endblock jumbotron %}
+
+        <nav>
+            <!--https://getbootstrap.com/docs/5.3/utilities/spacing/-->
+            <h3 class="mt-3 mb-2">
+                {% block breadcrumb %}{% endblock breadcrumb %}
+            </h3>
+        </nav>
+
+        {% block messages %}
+        {% endblock messages %}
+
+        {% block content %}{% endblock content %}
+
+        {% block footer %}{% endblock footer %}
+
+        {% block javascript %}
+        {% endblock javascript %}
+        {% block extra_javascript %}{% endblock extra_javascript %}
+    </body>
+</html>

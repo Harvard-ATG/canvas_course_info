@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: runserver_plus (dev)",
+      "type": "debugpy",
+      "request": "launch",
+      "args": [
+        "runserver_plus",
+        "--cert-file",
+        "ssl.crt",
+        "0.0.0.0:8443"
+      ],
+      "django": true,
+      "autoStartBrowser": false,
+      "program": "${workspaceFolder}/manage.py",
+      "env": {
+        "ENV": "dev",
+        "DJANGO_SETTINGS_MODULE": "canvas_course_info.settings.local"
+      }
+    },
+  ]
+}

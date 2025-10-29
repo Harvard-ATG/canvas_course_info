@@ -14,7 +14,9 @@ class CourseInfoBaseTestCase(BaseSeleniumTestCase):
         setup values for the tests
         """
         super(CourseInfoBaseTestCase, cls).setUpClass()
-        cls.USERNAME = settings.SELENIUM_CONFIG.get('selenium_username')
-        cls.PASSWORD = settings.SELENIUM_CONFIG.get('selenium_password')
-        cls.BASE_URL = '%s%s' % (settings.SELENIUM_CONFIG.get('canvas_base_url'),
-                                 settings.SELENIUM_CONFIG.get('edit_page_url_path'))
+        cls.USERNAME = settings.SELENIUM_CONFIG.get("selenium_username")
+        cls.PASSWORD = settings.SELENIUM_CONFIG.get("selenium_password")
+        cls.BASE_URL = "%s%s" % (
+            settings.SELENIUM_CONFIG.get("canvas_base_url"),
+            settings.SELENIUM_CONFIG.get("edit_page_url_path"),
+        )

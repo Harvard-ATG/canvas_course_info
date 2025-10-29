@@ -1,10 +1,9 @@
-from django.urls import path, re_path
+from django.urls import path
+import course_info.views as views
 
-from course_info import views
-
+app_name = "course_info"
 
 urlpatterns = [
-    path('tool_config', views.tool_config, name='tool_config'),
-    path('lti_launch', views.lti_launch, name='lti_launch'),
-    re_path(r'^widget', views.widget, name='widget'),
+    path("widget/", views.widget, name="widget"),
+    path("editor/", views.editor, name="editor"),
 ]
