@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "course_info",
-    "icommons_ui",
     "watchman",
     "lti_tool",
 ]
