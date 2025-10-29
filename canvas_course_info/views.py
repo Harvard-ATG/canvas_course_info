@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from lti_tool.models import LtiRegistration
 from lti_tool.types import LtiLaunch
@@ -17,6 +18,11 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         logger.info("Handling resource launch")
         logger.info(f"lti_launch: {lti_launch}")
         return course_info_launch(request)
+
+    def handle_deep_linking_launch(self, request: HttpRequest, lti_launch: LtiLaunch) -> HttpResponse:
+        logger.info("Handling deep linking launch")
+        logger.info(f"lti_launch: {lti_launch}")
+        return redirect("course_info:editor")
 
     def launch_setup(self, request: HttpRequest, lti_launch: LtiLaunch) -> None:
         # we want to just activate the deployment if it's not already active
@@ -142,7 +148,7 @@ def config(request: HttpRequest, registration_uuid: str) -> JsonResponse:
     tool_registration_config = {
         "title": f"{tool_friendly_name}{env}",
         "description": description,
-        "lti_1p3_legacy_migration": True,
+        # "lti_1p3_legacy_migration": True,
         "oidc_initiation_url": oidc_initiation_url,
         # "oidc_initiation_urls": {},
         "target_link_uri": target_link_uri,

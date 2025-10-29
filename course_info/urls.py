@@ -5,4 +5,5 @@ app_name = "course_info"
 
 urlpatterns = [
     path("widget/", views.widget, name="widget"),
+    path("editor/", views.editor, name="editor"),
 ]
