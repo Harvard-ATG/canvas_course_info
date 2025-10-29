@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = "==3.12.*"
 
 [[package]]
@@ -57,7 +57,6 @@ dependencies = [
     { name = "django" },
     { name = "django-allow-cidr" },
     { name = "django-coursemanager" },
-    { name = "django-icommons-ui" },
     { name = "django-lti" },
     { name = "django-lti-authentication" },
     { name = "django-redis-cache" },
@@ -95,8 +94,7 @@ requires-dist = [
     { name = "django", specifier = ">=4.2.11,<5.0" },
     { name = "django-allow-cidr", specifier = ">=0.8.0,<1" },
     { name = "django-coursemanager", specifier = ">=0.8,<1" },
-    { name = "django-icommons-ui", specifier = ">=2.5.3,<3" },
-    { name = "django-lti", specifier = ">=0.8.1,<1" },
+    { name = "django-lti", specifier = ">=0.8.1,<0.9.0" },
     { name = "django-lti-authentication", specifier = ">=0.2.0,<1" },
     { name = "django-redis-cache", specifier = ">=3.0.1,<4" },
     { name = "django-ssm-parameter-store", specifier = ">=0.7,<1" },
@@ -277,28 +275,16 @@ wheels = [
 ]
 
 [[package]]
-name = "django-icommons-ui"
-version = "2.5.3"
-source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3.tar.gz", hash = "sha256:78a8ed0c707d3bd5c8f169d5410480214082342eb50d89bdf6cd53371a924d7d" }
-wheels = [
-    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3-py3-none-any.whl", hash = "sha256:555c429ed1ae12bd542179c3c179ce8580b9693bc6b237bf77364c62fbcca707" },
-]
-
-[[package]]
 name = "django-lti"
-version = "0.9.0"
+version = "0.8.1"
 source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
 dependencies = [
     { name = "django" },
     { name = "pylti1p3" },
 ]
-sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.9.0/django_lti-0.9.0.tar.gz", hash = "sha256:b9befbcb17ebacdcc4e2150280be039cf30e3b8d1602bbc1cf134457a2e08629" }
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.8.1/django_lti-0.8.1.tar.gz", hash = "sha256:ffde509e646ce0a9e8866739fc1297f1e8908131ca8cf619e8c1fc7c6e68ab55" }
 wheels = [
-    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.9.0/django_lti-0.9.0-py3-none-any.whl", hash = "sha256:459933ba63d7934068f501114fb56d0ec185fc6db6356d880a82a15f7cdde057" },
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-lti/0.8.1/django_lti-0.8.1-py3-none-any.whl", hash = "sha256:97ae0eed763247535d5cb872325efec1827499086460f2e579747ecb8a656d3e" },
 ]
 
 [[package]]
