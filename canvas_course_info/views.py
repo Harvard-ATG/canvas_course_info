@@ -19,7 +19,9 @@ class ApplicationLaunchView(LtiLaunchBaseView):
         logger.info(f"lti_launch: {lti_launch}")
         return course_info_launch(request)
 
-    def handle_deep_linking_launch(self, request: HttpRequest, lti_launch: LtiLaunch) -> HttpResponse:
+    def handle_deep_linking_launch(
+        self, request: HttpRequest, lti_launch: LtiLaunch
+    ) -> HttpResponse:
         logger.info("Handling deep linking launch")
         logger.info(f"lti_launch: {lti_launch}")
         return redirect("course_info:editor")
