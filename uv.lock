@@ -75,6 +75,9 @@ dependencies = [
 ]
 
 [package.dev-dependencies]
+aws = [
+    { name = "gunicorn" },
+]
 dev = [
     { name = "ddt" },
     { name = "django-debug-toolbar" },
@@ -107,6 +110,7 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
+aws = [{ name = "gunicorn", specifier = ">=23.0.0" }]
 dev = [
     { name = "ddt", specifier = "==1.7.2" },
     { name = "django-debug-toolbar", specifier = "==3.8.1" },
@@ -401,6 +405,18 @@ dependencies = [
 sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/exceptiongroup/1.3.0/exceptiongroup-1.3.0.tar.gz", hash = "sha256:b241f5885f560bc56a59ee63ca4c6a8bfa46ae4ad651af316d4e81817bb9fd88" }
 wheels = [
     { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/exceptiongroup/1.3.0/exceptiongroup-1.3.0-py3-none-any.whl", hash = "sha256:4d111e6e0c13d0644cad6ddaa7ed0261a0b36971f6d23e7ec9b4b9097da78a10" },
+]
+
+[[package]]
+name = "gunicorn"
+version = "23.0.0"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
+dependencies = [
+    { name = "packaging" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/gunicorn/23.0.0/gunicorn-23.0.0.tar.gz", hash = "sha256:f014447a0101dc57e294f6c18ca6b40227a4c90e9bdb586042628030cba004ec" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/gunicorn/23.0.0/gunicorn-23.0.0-py3-none-any.whl", hash = "sha256:ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d" },
 ]
 
 [[package]]
