@@ -1,7 +1,7 @@
 # to activate these settings, execute
 # ./manage.py runserver --settings=canvas_course_info.settings.local
 
-from .base import *
+from .base import * 
 from logging.config import dictConfig
 
 dictConfig(LOGGING)
@@ -23,11 +23,6 @@ COURSE_INSTANCE_ID = SECURE_SETTINGS.get("course_instance_id")
 if COURSE_INSTANCE_ID:
     COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    }
-}
 
 CANVAS_URL = SECURE_SETTINGS.get("canvas_url", "https://canvas.dev.harvard.edu")
 

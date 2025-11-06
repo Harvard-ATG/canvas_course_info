@@ -35,8 +35,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_auth_lti",
-    "course_info",
     "icommons_ui",
+    "course_info",
     "watchman",
 ]
 
@@ -58,6 +58,10 @@ AUTHENTICATION_BACKENDS = (
     "django_auth_lti.backends.LTIAuthBackend",
     "django.contrib.auth.backends.ModelBackend",
 )
+
+LTI_AUTHENTICATION = {
+    "use_person_sourcedid": SECURE_SETTINGS.get("use_person_sourcedid", True),
+}
 
 TIME_ZONE = "UTC"
 
@@ -92,6 +96,7 @@ TEMPLATES = [
                 "django.template.context_processors.media",
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
+                "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
             ],
         },
@@ -140,13 +145,22 @@ REDIS_URL = "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT)
 CACHES = {
     "default": {
         "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {"PARSER_CLASS": "redis.connection.HiredisParser"},
-        "KEY_PREFIX": "canvas_course_info",  # Provide a unique value for intra-app cache
-        # See following for default timeout (5 minutes as of 1.7):
-        # https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-CACHES-TIMEOUT
+        "LOCATION": REDIS_URL, 
+        "OPTIONS": {
+            "PARSER_CLASS": "redis.connection.HiredisParser",
+        },
+        "KEY_PREFIX": "canvas_course_info",
         "TIMEOUT": SECURE_SETTINGS.get("default_cache_timeout_secs", 300),
-    }
+    },
+    "shared": {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": REDIS_URL,
+        "OPTIONS": {
+            "PARSER_CLASS": "redis.connection.HiredisParser",
+        },
+        "KEY_PREFIX": "tlt_shared",
+        "TIMEOUT": SECURE_SETTINGS.get("default_cache_timeout_secs", 300),
+    },
 }
 
 # Sessions
