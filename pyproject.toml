@@ -8,6 +8,7 @@ dependencies = [
   "django-auth-lti>=2.1.0",
   "django-icommons-common",
   "django-icommons-ui",
+  "django-coursemanager>=0.8,<1",
   "django-redis-cache==3.0.1",
   "django-ssm-parameter-store>=0.7,<1",
   "django-storages==1.14.6",
@@ -29,10 +30,9 @@ name = "private-registry"
 url = "https://aws@huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/"
 
 [tool.uv.sources]
-django-auth-lti = { git = "ssh://git@github.com/Harvard-University-iCommons/django-auth-lti.git", rev = "v2.1.0" }
-django-icommons-ui = { git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-ui.git", rev = "v2.1" }
-django-ssm-parameter-store = { git = "ssh://git@github.com/Harvard-University-iCommons/django-ssm-parameter-store.git", rev = "v0.6" }
-django-icommons-common = { git = "ssh://git@github.com/Harvard-University-iCommons/django-icommons-common.git", rev = "v3.0" }
+django-auth-lti = { git = "https://github.com/Harvard-University-iCommons/django-auth-lti.git", rev = "v2.1.0" }
+django-icommons-ui = { git = "https://github.com/Harvard-University-iCommons/django-icommons-ui.git", rev = "v2.1" }
+django-icommons-common = { git = "https://github.com/Harvard-University-iCommons/django-icommons-common.git", rev = "v3.0" }
 
 [tool.ruff.lint]
 ignore = ["F403", "F405", "E722"]  # Ignore wildcard import warnings, star imports, and bare excepts
