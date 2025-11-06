@@ -106,8 +106,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          secrets: |
-            UV_INDEX_PRIVATE_REGISTRY_PASSWORD=${{ env.UV_INDEX_PRIVATE_REGISTRY_PASSWORD }}
+          secrets: UV_INDEX_PRIVATE_REGISTRY_PASSWORD=${{ env.UV_INDEX_PRIVATE_REGISTRY_PASSWORD }}
           push: true
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
