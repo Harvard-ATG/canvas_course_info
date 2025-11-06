@@ -60,7 +60,6 @@ dependencies = [
     { name = "django-allow-cidr" },
     { name = "django-auth-lti" },
     { name = "django-coursemanager" },
-    { name = "django-icommons-common" },
     { name = "django-icommons-ui" },
     { name = "django-redis-cache" },
     { name = "django-ssm-parameter-store" },
@@ -95,8 +94,7 @@ requires-dist = [
     { name = "django-allow-cidr", specifier = ">=0.7.0,<0.8.0" },
     { name = "django-auth-lti", git = "https://github.com/Harvard-University-iCommons/django-auth-lti.git?rev=v2.1.0" },
     { name = "django-coursemanager", specifier = ">=0.8,<1" },
-    { name = "django-icommons-common", git = "https://github.com/Harvard-University-iCommons/django-icommons-common.git?rev=v3.0" },
-    { name = "django-icommons-ui", git = "https://github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1" },
+    { name = "django-icommons-ui", specifier = "==2.5.3" },
     { name = "django-redis-cache", specifier = "==3.0.1" },
     { name = "django-ssm-parameter-store", specifier = ">=0.7,<1" },
     { name = "django-storages", specifier = "==1.14.6" },
@@ -224,17 +222,6 @@ wheels = [
 ]
 
 [[package]]
-name = "cx-oracle"
-version = "8.3.0"
-source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
-sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cx-oracle/8.3.0/cx_Oracle-8.3.0.tar.gz", hash = "sha256:3b2d215af4441463c97ea469b9cc307460739f89fdfa8ea222ea3518f1a424d9" }
-wheels = [
-    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cx-oracle/8.3.0/cx_Oracle-8.3.0-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:b6a23da225f03f50a81980c61dbd6a358c3575f212ca7f4c22bb65a9faf94f7f" },
-    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cx-oracle/8.3.0/cx_Oracle-8.3.0-cp310-cp310-win32.whl", hash = "sha256:715a8bbda5982af484ded14d184304cc552c1096c82471dd2948298470e88a04" },
-    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/cx-oracle/8.3.0/cx_Oracle-8.3.0-cp310-cp310-win_amd64.whl", hash = "sha256:07f01608dfb6603a8f2a868fc7c7bdc951480f187df8dbc50f4d48c884874e6a" },
-]
-
-[[package]]
 name = "ddt"
 version = "1.7.2"
 source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
@@ -330,22 +317,15 @@ wheels = [
 ]
 
 [[package]]
-name = "django-icommons-common"
-version = "3.0"
-source = { git = "https://github.com/Harvard-University-iCommons/django-icommons-common.git?rev=v3.0#9991867d5fe4efd4230f79bf8ed6f60cf10c970d" }
-dependencies = [
-    { name = "cx-oracle" },
-    { name = "django" },
-    { name = "pytz" },
-    { name = "requests" },
-]
-
-[[package]]
 name = "django-icommons-ui"
-version = "2.1"
-source = { git = "https://github.com/Harvard-University-iCommons/django-icommons-ui.git?rev=v2.1#00ab21e3e38ec68477d23167635b8c932fffa911" }
+version = "2.5.3"
+source = { registry = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/" }
 dependencies = [
     { name = "django" },
+]
+sdist = { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3.tar.gz", hash = "sha256:78a8ed0c707d3bd5c8f169d5410480214082342eb50d89bdf6cd53371a924d7d" }
+wheels = [
+    { url = "https://huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/django-icommons-ui/2.5.3/django_icommons_ui-2.5.3-py3-none-any.whl", hash = "sha256:555c429ed1ae12bd542179c3c179ce8580b9693bc6b237bf77364c62fbcca707" },
 ]
 
 [[package]]

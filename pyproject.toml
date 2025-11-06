@@ -6,8 +6,7 @@ dependencies = [
   "django==3.2.14",
   "django-allow-cidr>=0.7.0,<0.8.0",
   "django-auth-lti>=2.1.0",
-  "django-icommons-common",
-  "django-icommons-ui",
+  "django-icommons-ui==2.5.3",
   "django-coursemanager>=0.8,<1",
   "django-redis-cache==3.0.1",
   "django-ssm-parameter-store>=0.7,<1",
@@ -31,8 +30,6 @@ url = "https://aws@huit-academic-technology-482956169056.d.codeartifact.us-east-
 
 [tool.uv.sources]
 django-auth-lti = { git = "https://github.com/Harvard-University-iCommons/django-auth-lti.git", rev = "v2.1.0" }
-django-icommons-ui = { git = "https://github.com/Harvard-University-iCommons/django-icommons-ui.git", rev = "v2.1" }
-django-icommons-common = { git = "https://github.com/Harvard-University-iCommons/django-icommons-common.git", rev = "v3.0" }
 
 [tool.ruff.lint]
 ignore = ["F403", "F405", "E722"]  # Ignore wildcard import warnings, star imports, and bare excepts
