@@ -16,7 +16,7 @@ class BaseSeleniumTestCase(unittest.TestCase):
         Sets up the test case, including the selenium browser driver to use
         """
 
-        local = settings.SELENIUM_CONFIG.get('run_locally', False)
+        local = settings.SELENIUM_CONFIG.get("run_locally", False)
 
         if local:
             # Run selenium tests from a headless browser within the VM
@@ -28,11 +28,11 @@ class BaseSeleniumTestCase(unittest.TestCase):
 
         else:
             # Run selenium tests from the Selenium Grid server
-            selenium_grid_url = settings.SELENIUM_CONFIG.get('selenium_grid_url', None)
+            selenium_grid_url = settings.SELENIUM_CONFIG.get("selenium_grid_url", None)
             if selenium_grid_url:
                 self.driver = webdriver.Remote(
                     command_executor=selenium_grid_url,
-                    desired_capabilities=DesiredCapabilities.FIREFOX
+                    desired_capabilities=DesiredCapabilities.FIREFOX,
                 )
 
         # shared defaults
