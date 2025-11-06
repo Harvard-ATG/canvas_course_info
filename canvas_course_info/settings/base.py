@@ -145,7 +145,7 @@ REDIS_URL = "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT)
 CACHES = {
     "default": {
         "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": REDIS_URL, 
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "PARSER_CLASS": "redis.connection.HiredisParser",
         },
