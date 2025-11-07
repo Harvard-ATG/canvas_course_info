@@ -91,7 +91,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "django", specifier = "==3.2.14" },
+    { name = "django", specifier = ">=3.2,<3.3" },
     { name = "django-allow-cidr", specifier = ">=0.7.0,<0.8.0" },
     { name = "django-auth-lti", git = "https://github.com/Harvard-University-iCommons/django-auth-lti.git?rev=v2.1.0" },
     { name = "django-coursemanager", specifier = ">=0.8,<1" },
