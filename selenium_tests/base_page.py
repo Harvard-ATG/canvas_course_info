@@ -3,7 +3,7 @@ from functools import partial
 
 from selenium.common.exceptions import (
     NoSuchElementException,
-    InvalidSwitchToTargetException
+    InvalidSwitchToTargetException,
 )
 
 
@@ -31,22 +31,25 @@ class BasePageMeta(type):
     up the element found by SomePageLocators.TITLE, and SomePage.button,
     returning the element found by SomePageLocators.BUTTON.
     """
+
     def __new__(class_, name, bases, dict_):
         type_ = super(BasePageMeta, class_).__new__(class_, name, bases, dict_)
-        if hasattr(type_, 'locator_class'):
-            for attribute in getattr(type_, 'located_properties', []):
+        if hasattr(type_, "locator_class"):
+            for attribute in getattr(type_, "located_properties", []):
+
                 def fn(self, attr):
                     locator = getattr(type_.locator_class, attr.upper())
                     if not locator:
                         raise RuntimeError(
-                                  '{} locator class {} is missing {}'.format(
-                                      name, type_.locator_class.__name__,
-                                      attr.upper()))
+                            "{} locator class {} is missing {}".format(
+                                name, type_.locator_class.__name__, attr.upper()
+                            )
+                        )
                     try:
                         return self.find_element(*locator)
                     except NoSuchElementException:
-                        raise RuntimeError('Unable to find {} on {}'.format(
-                                               attr, name))
+                        raise RuntimeError("Unable to find {} on {}".format(attr, name))
+
                 setattr(type_, attribute, property(partial(fn, attr=attribute)))
         return type_
 
@@ -55,7 +58,8 @@ class BasePage(object, metaclass=BasePageMeta):
     """
     This is the base class that all page models can inherit from
     """
-    tool_frame_name = 'external_tool_button_frame'
+
+    tool_frame_name = "external_tool_button_frame"
 
     def __init__(self, driver):
         self._driver = driver
@@ -118,11 +122,10 @@ class BasePage(object, metaclass=BasePageMeta):
         try:
             self._driver.switch_to.frame(self.tool_frame_name)
         except InvalidSwitchToTargetException:
-            logger.warning('Unable to switch to tool frame %s',
-                           self.tool_frame_name)
+            logger.warning("Unable to switch to tool frame %s", self.tool_frame_name)
 
     def focus_on_default_content(self):
         try:
             self._driver.switch_to.default_content()
         except InvalidSwitchToTargetException:
-            logger.warning('Unable to switch to whole window')
+            logger.warning("Unable to switch to whole window")

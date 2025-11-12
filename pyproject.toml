@@ -1,0 +1,51 @@
+[project]
+name = "canvas-course-info"
+version = "3.0.0"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+  "django>=3.2,<3.3",
+  "django-allow-cidr>=0.7.0,<0.8.0",
+  "django-auth-lti>=2.1.0",
+  "django-icommons-ui==2.5.3",
+  "django-coursemanager>=0.8,<1",    
+  "django-redis-cache>=3.0.1,<4",
+  "django-ssm-parameter-store>=0.7,<1",
+  "django-storages==1.14.6",
+  "django-watchman==1.3.0",
+  "hiredis==2.0.0",
+  "psycopg2==2.9.9",
+  "python-json-logger==2.0.7",
+  "requests==2.32.5",
+  "splunk-handler==3.0.0",
+  "voluptuous==0.15.2",
+]
+
+
+[tool.uv]
+keyring-provider = "subprocess"
+
+[[tool.uv.index]]
+name = "private-registry"
+url = "https://aws@huit-academic-technology-482956169056.d.codeartifact.us-east-1.amazonaws.com/pypi/uw/simple/"
+
+[tool.uv.sources]
+django-auth-lti = { git = "https://github.com/Harvard-University-iCommons/django-auth-lti.git", rev = "v2.1.0" }
+
+[tool.ruff.lint]
+ignore = ["F403", "F405", "E722"]  # Ignore wildcard import warnings, star imports, and bare excepts
+
+[dependency-groups]
+dev = [
+    "cryptography>=42",
+    "ddt==1.7.2",
+    "django-debug-toolbar==3.8.1",
+    "django-extensions>=3.2.3",
+    "mock==2.0.0",
+    "pyopenssl==24.2.1",
+    "pyvirtualdisplay==3.0",
+    "selenium==4.3.0",
+    "werkzeug==3.1.3",
+]
+aws = [
+    "gunicorn>=23.0.0",
+]
