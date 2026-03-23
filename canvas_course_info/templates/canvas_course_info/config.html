@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course Info Tool Configuration</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2em; }
+      table { border-collapse: collapse; width: 100%; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      th { background-color: #f2f2f2; }
+      tr:nth-child(even) { background-color: #f9f9f9; }
+      pre { background: #f4f4f4; padding: 1em; border-radius: 4px; overflow-x: auto; }
+    </style>
+  </head>
+  <body>
+    <h1>Course Info — Tool Configuration</h1>
+
+    {% if registrations %}
+    <h2>Available registrations</h2>
+    <p>Manage registrations in the <a href="/admin/lti_tool/ltiregistration/">admin interface</a>.</p>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Client ID</th>
+        <th>UUID</th>
+      </tr>
+      {% for registration in registrations %}
+      <tr>
+        <td>{{ registration.id }}</td>
+        <td><a href="?uuid={{ registration.uuid }}">{{ registration.name }}</a></td>
+        <td>{{ registration.client_id }}</td>
+        <td>{{ registration.uuid }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if tool_config %}
+    <h2>Registration: {{ registration.name }}{% if registration.client_id %}, client_id: {{ registration.client_id }}{% endif %}</h2>
+    <p>Copy the JSON below and paste it into the Canvas developer key configuration (paste JSON tab).</p>
+    <code><pre>{{ tool_config }}</pre></code>
+    {% endif %}
+  </body>
+</html>

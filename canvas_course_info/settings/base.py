@@ -27,6 +27,8 @@ ALLOWED_CIDR_NETS = [SECURE_SETTINGS.get("vpc_cidr_block")]
 DEBUG = SECURE_SETTINGS.get("enable_debug", False)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -34,7 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_auth_lti",
+    "lti_tool",
     "icommons_ui",
     "course_info",
     "watchman",
@@ -43,25 +45,22 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "allow_cidr.middleware.AllowCIDRMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "lti_tool.middleware.LtiLaunchMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django_auth_lti.middleware.LTIAuthMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "lti_authentication.middleware.LtiLaunchAuthenticationMiddleware",
 ]
 
 ROOT_URLCONF = "canvas_course_info.urls"
 
 WSGI_APPLICATION = "canvas_course_info.wsgi.application"
 
-AUTHENTICATION_BACKENDS = (
-    "django_auth_lti.backends.LTIAuthBackend",
+AUTHENTICATION_BACKENDS = [
+    "lti_authentication.backends.LtiLaunchAuthenticationBackend",
     "django.contrib.auth.backends.ModelBackend",
-)
-
-LTI_AUTHENTICATION = {
-    "use_person_sourcedid": SECURE_SETTINGS.get("use_person_sourcedid", True),
-}
+]
 
 TIME_ZONE = "UTC"
 
@@ -85,6 +84,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "canvas_course_info/templates"),
             os.path.join(BASE_DIR, "course_info/templates"),
         ],
         "APP_DIRS": True,
@@ -102,20 +102,6 @@ TEMPLATES = [
         },
     },
 ]
-
-LTI_APPS = {
-    "course_info": {
-        "id": "course_info_import",
-        "name": "Import Course Info",
-        "menu_title": "Course Info",
-        "extensions_provider": "canvas.instructure.com",
-        "description": "A button to insert course info into canvas pages.",
-        "privacy_level": "public",
-        "selection_height": "400px",
-        "selection_width": "400px",
-        "icon_url": "images/course-info.png",
-    }
-}
 
 SECRET_KEY = SECURE_SETTINGS.get("django_secret_key", "changeme")
 
@@ -139,25 +125,18 @@ DATABASES = {
 
 REDIS_HOST = SECURE_SETTINGS.get("redis_host", "127.0.0.1")
 REDIS_PORT = SECURE_SETTINGS.get("redis_port", "6379")
-# used by LTIRequestValidator
-REDIS_URL = "redis://{}:{}/0".format(REDIS_HOST, REDIS_PORT)
 
 CACHES = {
     "default": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "PARSER_CLASS": "redis.connection.HiredisParser",
-        },
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
         "KEY_PREFIX": "canvas_course_info",
         "TIMEOUT": SECURE_SETTINGS.get("default_cache_timeout_secs", 300),
     },
     "shared": {
-        "BACKEND": "redis_cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "PARSER_CLASS": "redis.connection.HiredisParser",
-        },
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/0",
+        "OPTIONS": {"parser_class": "redis.connection._HiredisParser"},
         "KEY_PREFIX": "tlt_shared",
         "TIMEOUT": SECURE_SETTINGS.get("default_cache_timeout_secs", 300),
     },
@@ -172,11 +151,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_NAME = "canvas_course_info_sessionid"
 CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = "None"
-
-LTI_REQUEST_VALIDATOR = "course_info.validator.LTIRequestValidator"
-LTI_OAUTH_CREDENTIALS = SECURE_SETTINGS.get("lti_oauth_credentials")
 
 ICOMMONS_API_TOKEN = SECURE_SETTINGS.get("icommons_api_token")
 ICOMMONS_BASE_URL = SECURE_SETTINGS.get("icommons_base_url")

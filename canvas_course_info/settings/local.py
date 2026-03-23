@@ -17,13 +17,6 @@ INTERNAL_IPS = (
 )
 DEBUG = SECURE_SETTINGS.get("enable_debug", True)
 
-# Example ID for local dev: won't be getting a real course instance id from LTI
-# launch params.
-COURSE_INSTANCE_ID = SECURE_SETTINGS.get("course_instance_id")
-if COURSE_INSTANCE_ID:
-    COURSE_INSTANCE_ID = str(COURSE_INSTANCE_ID)
-
-
 CANVAS_URL = SECURE_SETTINGS.get("canvas_url", "https://canvas.dev.harvard.edu")
 
 # Allows the REST API passthrough to successfully negotiate an SSL session
