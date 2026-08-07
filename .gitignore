@@ -47,3 +47,6 @@ gunicorn.py
 *.log
 secure.*
 parameters.*
+
+.ruff_cache
+.venv
