@@ -7,7 +7,7 @@
   {% if referer %}
     <script>
     $(document).ready(function() {
-      h = document.body.offsetHeight;
+      h = document.body.offsetHeight+20;
       data = {'message': 'ready_for_resize', 'height': h};
       window.parent.postMessage(data, '{{ referer }}');
     });
