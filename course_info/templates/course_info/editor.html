@@ -4,35 +4,18 @@
 {% block extra_js %}
     <script type="text/javascript" charset="utf8">
         $(document).ready(function () {
-
-            // Give Canvas the right information on Submit
-            // (builds the query string used by the tool to determine which
-            // fields to display in the on-page embedded widget iframe)
             $('#widget_edit_form').submit(function(event){
+                // Clear any previously injected field inputs
+                $(this).find('input.field-param').remove();
 
-                // set up the base url
-                var p = $(location).attr('protocol');
-                var h = $(location).attr('host');
-                var widget_url = p + '//' + h + '/course_info/widget.html?';
+                // Always include course title
+                $('<input>').attr({type: 'hidden', name: 'f', value: 'title', 'class': 'field-param'}).appendTo(this);
 
-                // always include course title in widget data
-                widget_url += 'f=title';
-
-                // modify the submission url to reflect the checked boxes
-                // does this have to be 'f' or can we change it?
-                // in this situation, I guess 'f' signifies "unchecked == false"
-                $('#widget_edit_form input:checkbox:checked').each(
-                        function(){
-                            widget_url += '&f=' + $(this).val();
-                        }
-                );
-
-                widget_url += '&backup_canvas_course_id={{ canvas_course_id }}'
-                widget_url += '&backup_course_instance_id={{ course_instance_id }}'
-
-              $('#widget_url').val(widget_url);
+                // Add a hidden input for each checked field
+                $('#widget_edit_form input:checkbox:checked').each(function(){
+                    $('<input>').attr({type: 'hidden', name: 'f', value: $(this).val(), 'class': 'field-param'}).appendTo('#widget_edit_form');
+                });
             });
-
         });
     </script>
 {% endblock extra_js %}
@@ -49,7 +32,10 @@
 
     <div id="widget_edit_form_container" class="container-fluid course-info-edit-form">
 
-        <form action="{{ launch_presentation_return_url }}" id="widget_edit_form" method="get">
+        <form action="{% url 'course_info:deep_link_return' %}" id="widget_edit_form" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="canvas_course_id"   value="{{ canvas_course_id }}" />
+          <input type="hidden" name="course_instance_id" value="{{ course_instance_id }}" />
 
           <ul class="list-group">
             {% for field in fields %}
@@ -87,17 +73,7 @@
             {% endfor %}
           </ul>
 
-            {# widget_url is inserted dynamically by the JS above #}
-            {# They are the indicators passed to Canvas to format/act upon the response html #}
-            {# https://canvas.instructure.com/doc/api/file.editor_button_tools.html #}
-            <input type="hidden" id="return_type"   name="return_type"   value="iframe" />
-            <input type="hidden" id="widget_url"    name="url"           value="" />
-            {# this height is for the embedded 'media' placeholder in the rich #}
-            {# text editor view; will be resized later via javascript #}
-            <input type="hidden" id="widget_height" name="height"        value="200px" />
-            <input type="hidden"                    name="width"         value="100%" />
-            <input type="hidden"                    name="title"         value="Course Info" />
-            <button onclick="this.form.submit()" class="btn btn-primary pull-right">Save</button>
+            <button type="submit" class="btn btn-primary pull-right">Save</button>
         </form>
         <br/>
     </div>

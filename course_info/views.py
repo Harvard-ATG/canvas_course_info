@@ -1,19 +1,26 @@
 import logging
 import re
 
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.templatetags.static import static
+from django.conf import settings
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_GET
 
-from lti import ToolConfig
+from pylti1p3.deep_link_resource import DeepLinkResource
+from lti_tool.constants import SESSION_KEY
+from lti_tool.types import LtiLaunch
+from lti_tool.utils import get_launch_from_request, sync_data_from_launch
+from lti_tool.views import LtiLaunchBaseView
 
 from .icommons import ICommonsApi, ICommonsApiValidationError
+from .utils import (
+    get_canvas_course_id_from_request,
+    get_course_instance_id_from_request,
+)
 
 _api = ICommonsApi()
 _logger = logging.getLogger(__name__)
@@ -34,52 +41,35 @@ _ORDERED_FIELD_NAMES = [
 ]
 _REFERER_COURSE_ID_RE = re.compile(r"^.+/courses/(?P<canvas_course_id>\d+)(?:$|.+$)")
 
+class ApplicationLaunchView(LtiLaunchBaseView):
+    def post(self, request, *args, **kwargs):
+        request.session.clear()
+        lti_launch = get_launch_from_request(request)
+        sync_data_from_launch(lti_launch, lti1p1_secret=None)
+        self.launch_setup(request, lti_launch)
+        if not lti_launch.deployment.is_active:
+            return self.handle_inactive_deployment(request, lti_launch)
+        request.session[SESSION_KEY] = lti_launch.get_launch_id()
+        request.lti_launch = lti_launch
+        if lti_launch.is_resource_launch:
+            return self.handle_resource_launch(request, lti_launch)
+        if lti_launch.is_deep_link_launch:
+            return self.handle_deep_linking_launch(request, lti_launch)
 
-@require_GET
-def tool_config(request):
-    app_config = settings.LTI_APPS["course_info"]
+    def handle_resource_launch(
+        self, request: HttpRequest, lti_launch: LtiLaunch
+    ) -> HttpResponse:
+        return redirect(reverse("course_info:editor"))
 
-    launch_url = request.build_absolute_uri(reverse("course_info:lti_launch"))
-    icon_url = static(app_config["icon_url"])
+    def handle_deep_linking_launch(
+        self, request: HttpRequest, lti_launch: LtiLaunch
+    ) -> HttpResponse:
+        return redirect(reverse("course_info:editor"))
 
-    editor_settings = {
-        "enabled": "true",
-        "text": app_config["menu_title"],
-        "width": app_config["selection_width"],
-        "height": app_config["selection_height"],
-        "icon_url": icon_url,
-        "url": launch_url,
-    }
-
-    extensions = {
-        app_config["extensions_provider"]: {
-            "editor_button": editor_settings,
-            "tool_id": app_config["id"],
-            "privacy_level": app_config["privacy_level"],
-        }
-    }
-
-    custom_fields = {"include_text_option": "false"}
-
-    lti_tool_config = ToolConfig(
-        title=app_config["name"],
-        launch_url=launch_url,
-        secure_launch_url=launch_url,
-        extensions=extensions,
-        description=app_config["description"],
-    )
-    lti_tool_config.set_ext_param(
-        "canvas.instructure.com", "custom_fields", custom_fields
-    )
-
-    return HttpResponse(lti_tool_config.to_xml(), content_type="text/xml")
-
-
-@login_required
-@require_POST
-@csrf_exempt
-def lti_launch(request):
-    return editor(request)
+    def launch_setup(self, request: HttpRequest, lti_launch: LtiLaunch) -> None:
+        if not lti_launch.deployment.is_active:
+            lti_launch.deployment.is_active = True
+            lti_launch.deployment.save()
 
 
 def _get_course_code(value):
@@ -230,18 +220,55 @@ def widget(request):
     return render(request, "course_info/widget.html", course_context)
 
 
+@login_required
 def editor(request):
-    _logger.debug("EDITOR: {}".format(request.POST))
-    course_instance_id = request.POST.get("lis_course_offering_sourcedid")
+    _logger.debug("EDITOR: lti_launch=%s", getattr(request, "lti_launch", None))
+
+    course_instance_id = None
+    canvas_course_id = None
+
+    lti_launch_obj = getattr(request, "lti_launch", None)
+    if lti_launch_obj is not None and not lti_launch_obj.is_absent:
+        course_instance_id = get_course_instance_id_from_request(request)
+        canvas_course_id = get_canvas_course_id_from_request(request)
 
     course_context = _course_context(
         request, _ORDERED_FIELD_NAMES, True, course_instance_id=course_instance_id
     )
-    course_context["launch_presentation_return_url"] = request.POST.get(
-        "launch_presentation_return_url"
-    )
-    course_context["canvas_course_id"] = request.POST.get("custom_canvas_course_id")
+    course_context["canvas_course_id"] = canvas_course_id
     return render(request, "course_info/editor.html", course_context)
+
+
+@login_required
+@csrf_exempt
+def deep_link_return(request):
+    """
+    Handles the editor form submission for LTI 1.3 deep linking.
+    Builds a widget URL from the selected fields and returns a deep link response
+    that Canvas uses to embed the widget iframe in the rich text editor.
+    """
+    lti_launch_obj = getattr(request, "lti_launch", None)
+    if lti_launch_obj is None or lti_launch_obj.is_absent:
+        return HttpResponse("No active LTI session.", status=403)
+
+    canvas_course_id = request.POST.get("canvas_course_id", "")
+    course_instance_id = request.POST.get("course_instance_id", "")
+    field_keys = request.POST.getlist("f")
+
+    widget_url = request.build_absolute_uri(reverse("course_info:widget"))
+    params = "&".join(["f=title"] + [f"f={k}" for k in field_keys])
+    if canvas_course_id:
+        params += f"&backup_canvas_course_id={canvas_course_id}"
+    if course_instance_id:
+        params += f"&backup_course_instance_id={course_instance_id}"
+    widget_url = f"{widget_url}?{params}"
+
+    resource = (
+        DeepLinkResource()
+        .set_url(widget_url)
+        .set_title("Course Info")
+    )
+    return lti_launch_obj.deep_link_response([resource])
 
 
 def sort_and_format_instructor_display(course_instructor_list):
